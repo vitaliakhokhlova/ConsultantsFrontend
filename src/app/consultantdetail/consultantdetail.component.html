@@ -1,0 +1,125 @@
+   <div *ngIf="consultant">
+   <div class="row">
+    <div class="column" id="name_block">
+        <div class="cadre" id="name">
+            <span id="prenom">  
+                {{consultant.firstname }}
+            </span> 
+            <span id="nom">
+                {{consultant.lastname | uppercase}}
+            </span>
+        </div>
+        <div id="metier">
+            {{consultant.title}}
+        </div>
+    </div>
+    <div id="logo"><img src='assets/logo.jpg'></div>
+</div>
+<div class="row">
+    <div class="column">
+            <div id="photo">
+              <img src='assets/{{consultant.firstname|lowercase}}{{consultant.lastname|lowercase}}.jpg' height="160">
+            </div>
+            <div id="age">{{age}}  ans</div>
+    </div>
+    <div class="column">
+        <fieldset class="cadre" id="forces">
+            <legend>FORCES GOGNITIVES</legend>
+            <ul>
+                <li *ngFor="let f of consultant.forces">
+                        {{f.name}}
+                </li>
+
+            </ul>
+        </fieldset>
+        <div id="expression">{{consultant.expression}}</div>
+        <div id="author">{{consultant.author}}</div>
+    </div>
+</div>
+<fieldset class="cadre">
+    <legend>PROFIL</legend>
+    <div id="profil">{{consultant.profile}}</div>
+</fieldset>
+<fieldset class="cadre">
+    <legend>COMPETENCES TECHNIQUES</legend>
+    <div id="competences">
+
+        <div *ngFor="let g of consultant.groups">
+            <span class="comp_group">{{g.description}}</span> : <span *ngFor="let c of g.competences" class="comp">
+                {{c.name}} </span>
+        </div>
+
+    </div>
+</fieldset>
+<div class="row">
+    <fieldset class="cadre">
+        <legend>FORMATIONS</legend>
+        <div id="formations">
+            <div *ngFor="let f of consultant.formations">
+                {{f.title}} - {{f.institution}} - {{f.place}} - <span class="year">{{f.dates}}</span>
+            </div>
+        </div>
+    </fieldset>
+    <div class="column">
+        <fieldset class="cadre" id="disponibilite">
+            <legend>DISPONIBILITE</legend>
+            <div id="temps">{{consultant.occupancy}}</div>
+            <div id="mobilite">{{consultant.mobility}}</div>
+        </fieldset>
+        <fieldset class="cadre">
+            <legend>LANGUES</legend>
+            <div  id="langues"></div>
+        </fieldset>
+    </div>
+</div>
+<p style="page-break-before: always">
+
+<div class="row">
+    <div class="column" id="name_block">
+        <div class="cadre" id="name">
+            <span id="prenom">  
+                {{consultant.firstname }}
+            </span> 
+            <span id="nom">
+                {{consultant.lastname | uppercase}}
+            </span>
+        </div>
+        <div id="metier">
+            {{consultant.title}}
+        </div>
+    </div>
+    <div id="logo">
+        <img src="assets/logo.jpg">
+    </div>
+</div>
+<fieldset class="cadre" id="projets">
+    <legend>PROJETS AUTICONSULT</legend>
+    <div *ngFor="let p of consultant.projets">
+            <div id="parcours_header">
+                {{p.dates}} : {{p.title}} - {{p.institution}}, {{p.place}}
+            </div>
+                <li *ngFor="let d of p.details" id="parcours_details">
+                        {{d.description}}
+                </li>
+        </div>
+</fieldset>
+<fieldset class="cadre" id="parcours">
+    <legend>PARCOURS</legend>
+    <div *ngFor="let p of consultant.parcours">
+        <div id="parcours_header">
+            {{p.dates}} : {{p.title}} - {{p.institution}} - {{p.place}}
+        </div>
+            <li *ngFor="let d of p.details" id="parcours_details">
+                    {{d.description}}
+            </li>
+    </div>
+
+</fieldset>
+
+<fieldset class="cadre">
+    <legend>INTERETS</legend>
+    <div id="interets">{{consultant.interests}}</div>
+</fieldset>
+</div>
+<p style="page-break-before: always"></p>
+consultantJSON: {{consultant | json}}

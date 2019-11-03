@@ -1,0 +1,35 @@
+Chercher dans:
+<form>
+        <input [(ngModel)]="searchPrenom" placeholder="Prénom..." name="prenom"/>
+        <input [(ngModel)]="searchNom" placeholder="Nom..." name="nom"/>
+        <input [(ngModel)]="search" placeholder="Profil..." name="profil"/>
+        <input [(ngModel)]="searchString" placeholder="Partout..." name="partout"/>
+        <button (click)="submit()">OK</button>
+     </form>
+    
+    
+    <table mdbTable>
+      <thead>
+        <tr>
+          <th *ngFor="let head of headElements" scope="col">{{head}} </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr mdbTableCol *ngFor="let c of consultants">
+          <th scope="row">{{c.id}}</th>
+          <td>{{c.lastname | uppercase}}</td>
+          <td>{{c.firstname}}</td>   
+          <td>{{c.title}}</td>
+          <a routerLink="/detail/{{c.id}}">
+            <td>
+            <button class="btn btn-primary"> Print</button>
+            </td>      
+          </a>
+          <a routerLink="/edit/{{c.id}}">
+            <td>
+                <button class="btn btn-primary"> Edit</button>
+              </td>
+            </a>
+        </tr>
+      </tbody>
+    </table>
