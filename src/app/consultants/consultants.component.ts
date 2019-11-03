@@ -21,4 +21,9 @@ export class ConsultantsComponent implements OnInit {
     this.consultantService.readAll().subscribe(results => this.consultants = results);
   }
 
+  delete(consultant: Consultant): void {
+    this.consultants = this.consultants.filter(h => h !== consultant);
+    this.consultantService.delete(consultant.id).subscribe();
+  }
+
 }

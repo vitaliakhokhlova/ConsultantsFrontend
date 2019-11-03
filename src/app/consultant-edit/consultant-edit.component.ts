@@ -38,11 +38,11 @@ export class ConsultantEditComponent implements OnInit {
     if(this.consultant.id === undefined)
     {
       console.log("consultant-edit component adding consultant");
-     this.consultantService.create(this.consultant).subscribe();
+     this.consultantService.create(this.consultant).subscribe(result=>this.consultant=result);
     }
     else{
       console.log("saving consultant");
-       this.consultantService.update(this.consultant).subscribe();
+       this.consultantService.update(this.consultant).subscribe(result=>this.consultant=result);
     }
    }
 

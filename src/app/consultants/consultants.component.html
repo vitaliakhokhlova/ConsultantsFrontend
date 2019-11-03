@@ -1,4 +1,4 @@
-<table mdbTable>
+<table mdbTable striped="true" bordered="true">
   <thead>
     <tr>
       <th *ngFor="let head of headElements" scope="col">{{head}} </th>
@@ -20,6 +20,7 @@
             <button class="btn btn-primary"> Edit</button>
           </td>
         </a>
+        <td><button class="delete" title="delete" (click)="delete(c)">Delete</button></td>
     </tr>
   </tbody>
 </table>
