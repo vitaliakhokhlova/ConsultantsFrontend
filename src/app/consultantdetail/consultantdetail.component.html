@@ -27,7 +27,7 @@
             <legend>FORCES GOGNITIVES</legend>
             <ul>
                 <li *ngFor="let f of consultant.forces">
-                        {{f.name}}
+                        {{f.parent2.description}}
                 </li>
 
             </ul>
@@ -44,9 +44,11 @@
     <legend>COMPETENCES TECHNIQUES</legend>
     <div id="competences">
 
-        <div *ngFor="let g of consultant.groups">
-            <span class="comp_group">{{g.description}}</span> : <span *ngFor="let c of g.competences" class="comp">
-                {{c.name}} </span>
+        <div *ngFor="let g of groups">
+            <span class="comp_group">{{g.description}}</span> : 
+            <span *ngFor="let c of g.competenceItems ; last as isLast" class="comp">
+                {{c.description}}<span *ngIf="!isLast">,</span>
+            </span>
         </div>
 
     </div>
@@ -56,7 +58,7 @@
         <legend>FORMATIONS</legend>
         <div id="formations">
             <div *ngFor="let f of consultant.formations">
-                {{f.title}} - {{f.institution}} - {{f.place}} - <span class="year">{{f.dates}}</span>
+                {{f.description}} - {{f.institution}} - {{f.place}} - <span class="year">{{f.dates}}</span>
             </div>
         </div>
     </fieldset>
@@ -68,7 +70,11 @@
         </fieldset>
         <fieldset class="cadre">
             <legend>LANGUES</legend>
-            <div  id="langues"></div>
+            <div  id="langues">
+                <div *ngFor="let l of consultant.langues">
+                    <span style="font-weight: bold;">{{l.parent2.description}} :</span> {{l.niveau}} 
+                </div>
+            </div>
         </fieldset>
     </div>
 </div>
@@ -96,7 +102,7 @@
     <legend>PROJETS AUTICONSULT</legend>
     <div *ngFor="let p of consultant.projets">
             <div id="parcours_header">
-                {{p.dates}} : {{p.title}} - {{p.institution}}, {{p.place}}
+                {{p.dates}} : {{p.description}} - {{p.institution}}, {{p.place}}
             </div>
                 <li *ngFor="let d of p.details" id="parcours_details">
                         {{d.description}}
@@ -107,7 +113,7 @@
     <legend>PARCOURS</legend>
     <div *ngFor="let p of consultant.parcours">
         <div id="parcours_header">
-            {{p.dates}} : {{p.title}} - {{p.institution}} - {{p.place}}
+            {{p.dates}} : {{p.description}} - {{p.institution}} - {{p.place}}
         </div>
             <li *ngFor="let d of p.details" id="parcours_details">
                     {{d.description}}
@@ -123,3 +129,4 @@
 </div>
 <p style="page-break-before: always"></p>
 <!-- consultantJSON: {{consultant | json}} -->
+<!-- {{this.groups | json}} -->

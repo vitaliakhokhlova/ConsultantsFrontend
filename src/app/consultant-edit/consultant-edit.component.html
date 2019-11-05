@@ -44,24 +44,18 @@
      <fieldset class="cadre">
          <legend>COMPETENCES TECHNIQUES</legend>
          <div id="competences">
-     
-             <div *ngFor="let g of consultant.groups">
-                 <span class="comp_group">{{g.description}}</span> : <span *ngFor="let c of g.competences" class="comp">
-                     {{c.name}} </span>
-             </div>
-     
+            <div class="module">Ouvrir formulaire de competences</div>
          </div>
      </fieldset>
      <div class="row">
          <fieldset class="cadre">
              <legend>FORMATIONS</legend>
              <div id="formations">
-                 
                  <div *ngFor="let f of consultant.formations">
                         <input [(ngModel)]="f.title" placeholder="diplome"/> -  
                         <input [(ngModel)]="f.institution" placeholder="institution"/> -  
                         <input [(ngModel)]="f.place" placeholder="place"/> - 
-                        <span class="year"> <input [(ngModel)]="f.dates" placeholder="dates"/></span>
+                       <input [(ngModel)]="f.dates" placeholder="dates"/>
                  </div>
              </div>
          </fieldset>
@@ -98,11 +92,15 @@
          <legend>PARCOURS</legend>
          <div *ngFor="let p of consultant.parcours">
              <div id="parcours_header">
-                 {{p.dates}} : {{p.title}} - {{p.institution}} - {{p.place}}
+                    <input [(ngModel)]="p.dates" placeholder="Durée..."/> 
+                    <input [(ngModel)]="p.title" placeholder="Description..."/> 
+                    <input [(ngModel)]="p.institution" placeholder="Organisation..."/>
+                    <input [(ngModel)]="p.place" placeholder="Ville..."/>  
              </div>
                  <li *ngFor="let d of p.details" id="parcours_details">
-                         {{d.description}}
-                 </li>
+                        <input [(ngModel)]="d.description" placeholder="Tâche accomplie..."/> 
+                  
+           </li>
          </div>
      
      </fieldset>

@@ -2,6 +2,10 @@ export abstract class Resource {
     id?: number
   }
 
+export abstract class ResourceWithDescription extends Resource{
+    description: string;
+}
+
 export class Consultant extends Resource{      
         lastname: string;
         firstname: string;
@@ -15,6 +19,7 @@ export class Consultant extends Resource{
         occupancy?: string;
         mobility?: string;
         formations?: Array<Formation>;
+        competences?: Array<Competence>;
 }
 
 export class Force extends Resource{
@@ -26,4 +31,21 @@ export class Formation extends Resource{
     institution: string;
     place: string;
     dates: string;
+}
+
+export class CompetenceGroup extends ResourceWithDescription{
+    competenceItems: CompetenceItem[];
+}
+
+export class CompetenceItem extends ResourceWithDescription{
+    parent2: CompetenceGroup;
+}
+
+export class Competence extends ResourceWithDescription{
+    parent2: CompetenceItem;
+    annee: number;
+    contexte: string;
+    interet: string;
+    niveau: number;
+    experience: number;
 }
