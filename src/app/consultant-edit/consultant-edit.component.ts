@@ -18,13 +18,16 @@ export class ConsultantEditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getConsultant();
+    const id = +this.route.params.subscribe(result=>{
+      this.getConsultant(result.id);
+    });
+
   }
 
-  getConsultant(): void {
-    const id = +this.route.snapshot.paramMap.get('id');
-    if(id === 0){
+  getConsultant(id: number): void {    
+    if(id == 0){
       this.consultant = new Consultant();
+      console.log(this.consultant.id);
     }
     else{
       this.consultantService.read(id).subscribe(results => 
@@ -45,5 +48,9 @@ export class ConsultantEditComponent implements OnInit {
        this.consultantService.update(this.consultant).subscribe(result=>this.consultant=result);
     }
    }
+
+   setCompetence(competences: Array<Competence>){
+    this.consultant.competences = competences;
+  }
 
 }

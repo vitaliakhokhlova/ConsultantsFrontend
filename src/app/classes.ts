@@ -34,11 +34,11 @@ export class Formation extends Resource{
 }
 
 export class CompetenceGroup extends ResourceWithDescription{
-    competenceItems: CompetenceItem[];
+    items: CompetenceItem[];
 }
 
 export class CompetenceItem extends ResourceWithDescription{
-    parent2: CompetenceGroup;
+    items: Competence[];
 }
 
 export class Competence extends ResourceWithDescription{

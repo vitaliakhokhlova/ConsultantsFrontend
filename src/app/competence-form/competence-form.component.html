@@ -1,0 +1,8 @@
+<div *ngFor="let group of groups">
+        <div id="parcours_header">
+            {{p.dates}} : {{p.description}} - {{p.institution}} - {{p.place}}
+        </div>
+            <li *ngFor="let competence of group.competences" id="parcours_details">
+                    {{d.description}}
+            </li>
+    </div>

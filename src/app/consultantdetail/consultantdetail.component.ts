@@ -22,6 +22,7 @@ export class ConsultantdetailComponent implements OnInit {
 
   ngOnInit() {
     this.getConsultant();
+    this.makeGroups();
   }
 
   getConsultant(): void {
@@ -44,24 +45,38 @@ export class ConsultantdetailComponent implements OnInit {
     this.age = new Date().getFullYear() - new Date(this.consultant.birthday).getFullYear();	  
   }
 
+  // makeGroups(){
+  //   let groupIDs: number[];
+  //   this.groups = new Array();
+  //   groupIDs=Array.from(new Set(this.consultant.competences.map((item: any) => item.parent2.parent2.id)));
+  //   for (let id of groupIDs){
+  //     let group: CompetenceGroup = new CompetenceGroup();
+  //     group.id = id;
+  //     group.competenceItems = new Array();
+  //     for (let c of this.consultant.competences){
+  //       if (c.parent2.parent2.id==id){
+  //           let competenceItem: CompetenceItem = new CompetenceItem();
+  //           competenceItem.id = c.parent2.id;
+  //           competenceItem.description = c.parent2.description;
+  //           group.description=c.parent2.parent2.description;
+  //           group.competenceItems.push(competenceItem);
+  //       }
+  //     }
+  //   this.groups.push(group);
+  //   }
+  // }
+
   makeGroups(){
-    let groupIDs: number[];
-    this.groups = new Array();
-    groupIDs=Array.from(new Set(this.consultant.competences.map((item: any) => item.parent2.parent2.id)));
-    for (let id of groupIDs){
-      let group: CompetenceGroup = new CompetenceGroup();
-      group.id = id;
-      group.competenceItems = new Array();
-      for (let c of this.consultant.competences){
-        if (c.parent2.parent2.id==id){
-            let competenceItem: CompetenceItem = new CompetenceItem();
-            competenceItem.id = c.parent2.id;
-            competenceItem.description = c.parent2.description;
-            group.description=c.parent2.parent2.description;
-            group.competenceItems.push(competenceItem);
+    const id = +this.route.snapshot.paramMap.get('id');
+    if(id === 0){
+      this.groups = new Array<CompetenceGroup>();
+    }
+    else{
+      this.consultantService.getGroupedCompetences(id).subscribe(results => 
+        {
+          this.groups = results; 
         }
-      }
-    this.groups.push(group);
+      );
     }
   }
 }

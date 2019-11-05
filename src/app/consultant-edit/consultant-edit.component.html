@@ -1,5 +1,4 @@
   <div *ngIf="consultant">
-      {{consultant.firstname}}
         <div class="row">
          <div class="column" id="name_block">
              <div class="cadre" id="name">
@@ -16,6 +15,7 @@
          </div>
         
      </div>
+     <div *ngIf="consultant.id">
      <div class="row">
          <div class="column">
                  <div id="photo">
@@ -43,8 +43,10 @@
      </fieldset>
      <fieldset class="cadre">
          <legend>COMPETENCES TECHNIQUES</legend>
-         <div id="competences">
-            <div class="module">Ouvrir formulaire de competences</div>
+         <div id="competences">  
+            <a routerLink="/competences/{{consultant.id}}">     
+                <div class="module">Ouvrir formulaire de competences</div>
+            </a>
          </div>
      </fieldset>
      <div class="row">
@@ -111,10 +113,11 @@
                 <input [(ngModel)]="consultant.interests" placeholder="Interests"/>
            </div>
      </fieldset>
+    </div>
      <a routerLink="/detail/{{consultant.id}}">
         <button (click)="save()">save</button>   
         </a>
-        <!-- consultantJSON: {{consultant | json}} -->
+         consultantJSON: {{consultant | json}} 
      </div>
 
   

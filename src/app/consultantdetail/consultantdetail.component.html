@@ -46,7 +46,7 @@
 
         <div *ngFor="let g of groups">
             <span class="comp_group">{{g.description}}</span> : 
-            <span *ngFor="let c of g.competenceItems ; last as isLast" class="comp">
+            <span *ngFor="let c of g.items ; last as isLast" class="comp">
                 {{c.description}}<span *ngIf="!isLast">,</span>
             </span>
         </div>
@@ -129,4 +129,4 @@
 </div>
 <p style="page-break-before: always"></p>
 <!-- consultantJSON: {{consultant | json}} -->
-<!-- {{this.groups | json}} -->
+{{this.groups | json}} 

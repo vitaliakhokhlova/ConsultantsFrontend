@@ -12,11 +12,11 @@ const httpOptions = {
 export class CrudService <T extends Resource> {
 
   startpoint= environment.appUrl;
-  private endpoint : string;
-  private urlcomplete : string;
+  protected endpoint : string;
+  protected urlcomplete : string;
 
   constructor(    
-      private httpClient: HttpClient,
+      protected httpClient: HttpClient,
       endpoint: string) {
         this.endpoint = endpoint;
         this.urlcomplete = `${this.startpoint}/${this.endpoint}`;
