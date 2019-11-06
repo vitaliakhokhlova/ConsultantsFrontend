@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Consultant } from '../classes';
+import { Consultant, Competence } from '../classes';
 import { ActivatedRoute } from '@angular/router';
 import { ConsultantService} from '../services/consultant.service';
 
@@ -51,6 +51,12 @@ export class ConsultantEditComponent implements OnInit {
 
    setCompetence(competences: Array<Competence>){
     this.consultant.competences = competences;
+  }
+
+  add(items: Array<any>) {
+    let type = this.consultant.constructor.name;
+    console.log(type);
+
   }
 
 }

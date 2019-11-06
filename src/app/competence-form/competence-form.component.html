@@ -1,8 +1,31 @@
-<div *ngFor="let group of groups">
-        <div id="parcours_header">
-            {{p.dates}} : {{p.description}} - {{p.institution}} - {{p.place}}
+<div *ngIf="consultant">
+<div *ngFor="let group of items">
+        <div>
+            {{group.description}}
         </div>
-            <li *ngFor="let competence of group.competences" id="parcours_details">
-                    {{d.description}}
-            </li>
-    </div>
+        <table mdbTable striped="true" bordered="true">
+                <thead>
+                  <tr>
+                   <th *ngFor="let head of headElements" scope="col">{{head}} </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr mdbTableCol *ngFor="let competence of group.items">
+                    <th scope="row">{{competence.description}}</th>
+                    <td><input [(ngModel)]="competence.items[0].niveau"/></td>
+                    <td><input [(ngModel)]="competence.items[0].experience"/></td>
+                    <td><input [(ngModel)]="competence.items[0].annee"/></td>
+                    <td><input [(ngModel)]="competence.items[0].contexte"/></td>
+                    <td><input [(ngModel)]="competence.items[0].interet"/></td>
+                  </tr>
+                </tbody>
+        </table>
+</div>
+<a routerLink="/edit/{{consultant.id}}">
+        <button (click)="save()">Save and go back to edit consultant</button>   
+</a>
+    consultantJSON: {{consultant | json}}
+<br>
+<br>
+    groups: {{items | json}}
+  </div>

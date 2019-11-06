@@ -10,19 +10,19 @@ import { ConsultantService} from '../services/consultant.service';
 export class ConsultantsComponent implements OnInit {
 
   headElements = ['ID', 'Prénom', 'Nom', 'Métier'];
-  consultants: Consultant[];
+  items: Consultant[];
   constructor(private consultantService: ConsultantService) { }
 
   ngOnInit() {
-    this.getAllConsultants();
+    this.getAll();
   }
 
-  getAllConsultants(){
-    this.consultantService.readAll().subscribe(results => this.consultants = results);
+  getAll(){
+    this.consultantService.readAll().subscribe(results => this.items = results);
   }
 
   delete(consultant: Consultant): void {
-    this.consultants = this.consultants.filter(h => h !== consultant);
+    this.items = this.items.filter(h => h !== consultant);
     this.consultantService.delete(consultant.id).subscribe();
   }
 

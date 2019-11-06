@@ -6,7 +6,8 @@ export abstract class ResourceWithDescription extends Resource{
     description: string;
 }
 
-export class Consultant extends Resource{      
+export class Consultant extends Resource{ 
+        type: string;     
         lastname: string;
         firstname: string;
         title?: string;
@@ -18,19 +19,30 @@ export class Consultant extends Resource{
         interests?: string;
         occupancy?: string;
         mobility?: string;
-        formations?: Array<Formation>;
+        formations?: Array<HistoryObject>;
         competences?: Array<Competence>;
+        langues?: Array<Competence>;
+        parcours?: Array<HistoryObject>;
+        projets?: Array<HistoryObject>;
 }
 
 export class Force extends Resource{
-    name: string
+    name: string;
 }
 
-export class Formation extends Resource{
+export class HistoryObject extends Resource{
     title: string;
     institution: string;
     place: string;
     dates: string;
+
+    constructor() {
+        super();
+        this.title="";
+        this.institution="";
+        this.place="";
+        this.dates="";
+      }
 }
 
 export class CompetenceGroup extends ResourceWithDescription{

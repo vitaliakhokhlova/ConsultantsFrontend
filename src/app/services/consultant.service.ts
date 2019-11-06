@@ -15,7 +15,12 @@ export class ConsultantService extends CrudService<Consultant> {
 		{ 
 		  super(httpClient, `consultant`);
 		}
+
 public getGroupedCompetences(id: number): Observable<CompetenceGroup[]> {
 	return this.httpClient.get<CompetenceGroup[]>(`${this.urlcomplete}/${id}/grouped_competences`);
+	}
+
+public getGroupedEmptyCompetences(id: number): Observable<CompetenceGroup[]> {
+	return this.httpClient.get<CompetenceGroup[]>(`${this.urlcomplete}/${id}/grouped_empty_competences`);
 	}
 }

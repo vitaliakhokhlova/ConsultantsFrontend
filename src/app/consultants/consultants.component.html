@@ -5,22 +5,22 @@
     </tr>
   </thead>
   <tbody>
-    <tr mdbTableCol *ngFor="let c of consultants">
-      <th scope="row">{{c.id}}</th>
-      <td>{{c.lastname | uppercase}}</td>
-      <td>{{c.firstname}}</td>   
-      <td>{{c.title}}</td>
-      <a routerLink="/detail/{{c.id}}">
+    <tr mdbTableCol *ngFor="let item of items">
+      <th scope="row">{{item.id}}</th>
+      <td>{{item.lastname | uppercase}}</td>
+      <td>{{item.firstname}}</td>   
+      <td>{{item.title}}</td>
+      <a routerLink="/detail/{{item.id}}">
         <td>
         <button class="btn btn-primary"> Print</button>
         </td>      
       </a>
-      <a routerLink="/edit/{{c.id}}">
+      <a routerLink="/edit/{{item.id}}">
         <td>
             <button class="btn btn-primary"> Edit</button>
           </td>
         </a>
-        <td><button class="delete" title="delete" (click)="delete(c)">Delete</button></td>
+        <td><button class="delete" title="delete" (click)="delete(item)">Delete</button></td>
     </tr>
   </tbody>
 </table>
