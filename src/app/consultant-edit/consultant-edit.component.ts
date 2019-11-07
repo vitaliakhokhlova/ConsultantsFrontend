@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Consultant, Competence } from '../classes';
+import { Consultant, Competence, HistoryObject } from '../classes';
 import { ActivatedRoute } from '@angular/router';
 import { ConsultantService} from '../services/consultant.service';
 import { HistoryEditComponent } from '../history-edit/history-edit.component';
@@ -21,12 +21,9 @@ export class ConsultantEditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    
-    
     const id = +this.route.params.subscribe(result=>{
       this.getConsultant(result.id);
     });
-
   }
 
   getConsultant(id: number): void {    
@@ -58,13 +55,8 @@ export class ConsultantEditComponent implements OnInit {
     this.consultant.competences = competences;
   }
 
-  add(items: any) {
-
-    let type = items.constructor.name;
-    //let type = items[0].constructor;
-    console.log(type);
-
-
+  setArray(newArray: Array<HistoryObject>, key: string){
+    this.consultant[key]=newArray;
+    console.log(this.consultant[key]);
   }
-
 }

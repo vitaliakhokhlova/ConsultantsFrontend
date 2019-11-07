@@ -12,10 +12,10 @@
                 </thead>
                 <tbody>
                   <tr mdbTableCol *ngFor="let item of inputArray">
-                    <td><input [(ngModel)]="item.dates"/></td>
-                    <td><input [(ngModel)]="item.description"/></td>
-                    <td><input [(ngModel)]="item.institution"/></td>
-                    <td><input [(ngModel)]="item.place"/></td>
+                    <td><input (change)=onChange() [(ngModel)]="item.dates"/></td>
+                    <td><input (change)=onChange() [(ngModel)]="item.description"/></td>
+                    <td><input (change)=onChange() [(ngModel)]="item.institution"/></td>
+                    <td><input (change)=onChange() [(ngModel)]="item.place"/></td>
                     <td><button class="delete" title="delete" (click)="delete(item)">Delete</button></td>
                   </tr>
                 </tbody>
@@ -29,4 +29,4 @@
 </div>
 <button (click)="add()">Ajouter une ligne</button>
 
-
+{{this.inputArray | json}} 

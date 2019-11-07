@@ -26,10 +26,14 @@ export class HistoryEditComponent implements OnInit {
     }
     this.inputArray.push(new HistoryObject());
   }
-
   
   delete(item: HistoryObject): void {
     this.inputArray=this.inputArray.filter(h => h !== item);
+    this.onChange();
+  }
+
+  onChange(){
+    this.childForm.emit(this.inputArray);
   }
 
 }
