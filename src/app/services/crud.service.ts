@@ -3,6 +3,7 @@ import { Resource } from '../classes';
 
 import { Observable} from "rxjs";
 import { environment } from "../../environments/environment";
+import { tap, catchError, map } from "rxjs/operators";
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -11,15 +12,15 @@ const httpOptions = {
 
 export class CrudService <T extends Resource> {
 
-  startpoint= environment.appUrl;
-  protected endpoint : string;
+  private startpoint= environment.appUrl;
   protected urlcomplete : string;
 
   constructor(    
       protected httpClient: HttpClient,
-      endpoint: string) {
-        this.endpoint = endpoint;
-        this.urlcomplete = `${this.startpoint}/${this.endpoint}`;
+      private endpoint: string,
+      private tType:   new () => T
+      ) {
+        this.urlcomplete = `${this.startpoint}/${endpoint}`; 
       }
       
   
@@ -29,7 +30,9 @@ export class CrudService <T extends Resource> {
     }
 
     public read(id: number): Observable<T> {
-      return this.httpClient.get<T>(`${this.urlcomplete}/${id}`);
+      return this.httpClient.get<T>(`${this.urlcomplete}/${id}`).pipe(
+        map(result => (new this.tType).deserialize(result))
+      );
     }
 
     public update(item: T): Observable<T> {

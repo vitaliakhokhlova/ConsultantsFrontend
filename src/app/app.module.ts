@@ -10,6 +10,7 @@ import { ConsultantdetailComponent } from './consultantdetail/consultantdetail.c
 import { ConsultantEditComponent } from './consultant-edit/consultant-edit.component';
 import { ConsultantSearchComponent } from './consultant-search/consultant-search.component';
 import { CompetenceFormComponent } from './competence-form/competence-form.component';
+import { HistoryEditComponent } from './history-edit/history-edit.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { CompetenceFormComponent } from './competence-form/competence-form.compo
     ConsultantdetailComponent,
     ConsultantEditComponent,
     ConsultantSearchComponent,
-    CompetenceFormComponent
+    CompetenceFormComponent,
+    HistoryEditComponent
   ],
   imports: [
     BrowserModule,
