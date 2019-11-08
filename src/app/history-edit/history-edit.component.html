@@ -1,32 +1,18 @@
 <div *ngIf="inputArray">
-    <!-- <div *ngFor="let item of inputArray"> -->
-            <!-- <input [(ngModel)]="item.dates" />
-        <input [(ngModel)]="item.description" /> -  
-        <input [(ngModel)]="item.institution" /> -  
-        <input [(ngModel)]="item.place" /> -  -->
-        <table mdbTable striped="true" bordered="true">
-                <thead>
-                  <tr>
-                   <th *ngFor="let head of headElements" scope="col">{{head}} </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr mdbTableCol *ngFor="let item of inputArray">
-                    <td><input (change)=onChange() [(ngModel)]="item.dates"/></td>
-                    <td><input (change)=onChange() [(ngModel)]="item.description"/></td>
-                    <td><input (change)=onChange() [(ngModel)]="item.institution"/></td>
-                    <td><input (change)=onChange() [(ngModel)]="item.place"/></td>
-                    <td><button class="delete" title="delete" (click)="delete(item)">Delete</button></td>
-                  </tr>
-                </tbody>
-        </table>
-    <!-- <div *ngIf="item.details">
-            <li *ngFor="let detail of item.details">
-                <input [(ngModel)]="detail.description" placeholder="Tâche accomplie..."/> 
-            </li>
-        </div>
-    </div> -->
+  <div mdbTableCol *ngFor="let item of inputArray">
+    <input  [(ngModel)]="item.dates" placeholder="Durée"/>
+    <input  [(ngModel)]="item.description" placeholder="Description"/>
+    <input [(ngModel)]="item.institution" placeholder="Organisation"/>
+    <input [(ngModel)]="item.place" placeholder="Ville"/>
+    <button class="delete" title="delete" (click)="deleteHistory(item)">Delete</button>
+    <div *ngIf="item.details">
+      <li *ngFor="let detail of item.details">
+        <input [(ngModel)]="detail.description" placeholder="Tâche accomplie..."/> 
+        <button class="delete" title="delete" (click)="deleteDetail(detail, item)">Delete</button> 
+      </li>  
+    </div>                    
+    <button (click)="addDetail(item)">Ajouter une tâche</button>
+  </div>
 </div>
-<button (click)="add()">Ajouter une ligne</button>
-
-{{this.inputArray | json}} 
+<button (click)="addHeader()">Ajouter une ligne</button>
+<!-- {{this.inputArray | json}}  -->

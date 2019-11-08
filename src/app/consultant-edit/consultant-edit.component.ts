@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Consultant, Competence, HistoryObject } from '../classes';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { ConsultantService} from '../services/consultant.service';
 import { HistoryEditComponent } from '../history-edit/history-edit.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-consultant-edit',
@@ -17,7 +18,9 @@ export class ConsultantEditComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private consultantService: ConsultantService
+    private router: Router,
+    private consultantService: ConsultantService,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -43,20 +46,26 @@ export class ConsultantEditComponent implements OnInit {
     if(this.consultant.id === undefined)
     {
       console.log("consultant-edit component adding consultant");
-     this.consultantService.create(this.consultant).subscribe(result=>this.consultant=result);
+      this.consultantService.create(this.consultant).subscribe(result=>{
+      this.consultant=result;
+      this.printConsultant();
+     });
     }
     else{
       console.log("saving consultant");
-       this.consultantService.update(this.consultant).subscribe(result=>this.consultant=result);
+       this.consultantService.update(this.consultant).subscribe(result=>{
+        this.consultant=result;
+        this.printConsultant();
+       });
     }
    }
 
-   setCompetence(competences: Array<Competence>){
-    this.consultant.competences = competences;
-  }
+   printConsultant() {
+      this.router.navigate([`detail/${this.consultant.id}`]);
+      //this.location.go(`detail/${this.consultant.id}`);
+   }
 
-  setArray(newArray: Array<HistoryObject>, key: string){
-    this.consultant[key]=newArray;
-    console.log(this.consultant[key]);
+   setCompetence(competences: Array<Competence>): void{
+    this.consultant.competences = competences;
   }
 }

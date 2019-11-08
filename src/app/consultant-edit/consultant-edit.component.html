@@ -52,7 +52,7 @@
          <fieldset class="cadre">
              <legend>FORMATIONS</legend>
              <div id="formations">
-                <app-history-edit [inputArray]="consultant.formations"  (childForm)="setArray($event, 'formations')"></app-history-edit >
+                <app-history-edit [(inputArray)]="consultant.formations"></app-history-edit >
             </div>
          </fieldset>
          <div class="column">
@@ -72,11 +72,11 @@
 
      <fieldset class="cadre" id="projets">
          <legend>PROJETS AUTICONSULT</legend>
-         <app-history-edit [inputArray]="consultant.projets"  (childForm)="setArray($event)"></app-history-edit >
+         <app-history-edit [(inputArray)]="consultant.projets" ></app-history-edit >
      </fieldset>
      <fieldset class="cadre" id="parcours">
          <legend>PARCOURS</legend>
-         <app-history-edit [inputArray]="consultant.parcours"  (childForm)="setArray($event)"></app-history-edit >
+         <app-history-edit [(inputArray)]="consultant.parcours"></app-history-edit >
      </fieldset>
      
      <fieldset class="cadre">
@@ -86,10 +86,10 @@
            </div>
      </fieldset>
     <!-- </div> -->
-     <a routerLink="/detail/{{consultant.id}}">
+     <!-- <a routerLink="/detail/{{consultant.id}}"> -->
         <button class="module" (click)="save()">save</button>   
-        </a>
-         consultantJSON: {{consultant | json}} 
+        <!-- </a> -->
+         <!-- consultantJSON: {{consultant | json}}  -->
      </div>
 
   

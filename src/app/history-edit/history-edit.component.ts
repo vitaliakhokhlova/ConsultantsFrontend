@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { HistoryObject } from '../classes';
+import { HistoryObject, ResourceWithDescription, HistoryObjectWithChildren } from '../classes';
 
 @Component({
   selector: 'app-history-edit',
@@ -10,7 +10,7 @@ import { HistoryObject } from '../classes';
 export class HistoryEditComponent implements OnInit {
 
   @Input() inputArray: Array<HistoryObject>;
-  @Output() childForm = new EventEmitter();
+  @Output() inputArrayChange:EventEmitter<Array<HistoryObject>> = new EventEmitter<Array<HistoryObject>>();
   myControl = new FormControl();
   headElements = ['Durée', 'Description', "Nom de l'organisation", 'Ville'];
 
@@ -20,20 +20,35 @@ export class HistoryEditComponent implements OnInit {
     this.myControl.setValue(this.inputArray);
   }
 
-  add(){
+  addHeader(){
     if(!this.inputArray){
       this.inputArray = new Array<HistoryObject>();
     }
     this.inputArray.push(new HistoryObject());
+    this.onChange();
+  }
+
+  
+  addDetail(item: HistoryObjectWithChildren){
+    if(!item.details){
+      item.details = new Array<ResourceWithDescription>();
+    }
+    item.details.push(new ResourceWithDescription());
+    this.onChange();
   }
   
-  delete(item: HistoryObject): void {
+  deleteHistory(item: HistoryObject): void {
     this.inputArray=this.inputArray.filter(h => h !== item);
     this.onChange();
   }
 
+  deleteDetail(detail: HistoryObjectWithChildren, item: HistoryObjectWithChildren): void {
+    item.details=item.details.filter(x => x !== detail);
+    this.onChange();
+  }
+
   onChange(){
-    this.childForm.emit(this.inputArray);
+    this.inputArrayChange.emit(this.inputArray);
   }
 
 }
