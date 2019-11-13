@@ -30,7 +30,7 @@
          <div class="column">
              <fieldset class="cadre" id="forces">
                  <legend>FORCES GOGNITIVES</legend>
-                 <app-force-choice [(initialOption)]="consultant.forces"></app-force-choice>
+                 <app-force-choice [(inputChild)]="consultant.forces"></app-force-choice>
              </fieldset>
              <div id="expression"> <input [(ngModel)]="consultant.expression" placeholder="expression"/></div>
              <div id="author"> <input [(ngModel)]="consultant.author" placeholder="author"/></div>

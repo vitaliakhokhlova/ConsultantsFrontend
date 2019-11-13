@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { HistoryObject, ResourceWithDescription, HistoryObjectWithChildren } from '../classes';
 
 @Component({
@@ -12,14 +11,12 @@ export class HistoryEditComponent implements OnInit {
   @Input() inputArray: Array<HistoryObject>;
   @Input() showDetails: boolean;
   @Output() inputArrayChange:EventEmitter<Array<HistoryObject>> = new EventEmitter<Array<HistoryObject>>();
-  myControl = new FormControl();
   headElements = ['Durée', 'Description', "Nom de l'organisation", 'Ville'];
 
   constructor() { }
 
   ngOnInit() {
-    this.myControl.setValue(this.inputArray);
-    this.myControl.setValue(this.showDetails);
+
   }
 
   addHeader(){

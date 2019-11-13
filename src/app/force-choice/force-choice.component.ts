@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ForceService } from '../services/force.service';
 import { Force, ForceItem } from '../classes';
-import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-force-choice',
@@ -10,10 +9,9 @@ import {FormControl} from '@angular/forms';
 })
 export class ForceChoiceComponent implements OnInit {
 
-  @Input() initialOption: Force[];
-  @Output() childForm = new EventEmitter();
-  options: ForceItem[];
-  formControl = new FormControl();
+  @Input() inputChild: Array<Force>;
+  @Output() childForm: EventEmitter<Array<Force>> = new EventEmitter<Array<Force>>();
+  options: Array<ForceItem>;
   swap: boolean;
 
   constructor(private forceService: ForceService) {
@@ -25,23 +23,36 @@ export class ForceChoiceComponent implements OnInit {
         this.getOptions();
       }
       this.swap = false;    
-    // this.formControl.setValue(this.initialOption);
   }
 
   getOptions(): void {
-    this.forceService.getAll().subscribe(options => this.options = options);
+    this.forceService.getAll().subscribe(options => 
+      {
+        // if(!this.input){
+        //   this.input = new Array<Force>();
+        //   let i = 1;
+        //   for(let option of options){
+        //     let force = new Force();
+        //     force.position = i;
+        //     force.parent2 = option;
+        //     this.input.push(force);
+        //     i=i+1;
+        //   }
+        //   this.childForm.emit(this.input);
+        // }
+        console.log(this.inputChild);
+        this.options = options;
+      }
+      );
   }
 
   selectedOption(key1: number, key2: number){  
-      this.swapArray(this.initialOption, key1, key2);
+      this.swapArray(this.inputChild, key1, key2);
     }
 
 
     swapArray(array:any, key1:number, key2:number) : any
     {
-        console.log(array);
-        console.log(key1);    
-        console.log(key2);   
         var temp = array[key1].parent2;
         array[key1].parent2 = array[key2].parent2;
         array[key2].parent2 = temp;

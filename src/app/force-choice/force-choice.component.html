@@ -1,9 +1,9 @@
-<div *ngIf="options"> 
+<div *ngIf="options && inputChild"> 
   <div *ngFor='let key of  [0, 1,2, 3, 4]'>
-      {{key+1}}
+    {{key+1}}
     <mat-form-field>
         <mat-select 
-        [value]="initialOption[key].parent2.id" 
+        [value]="inputChild[key].parent2.id" 
         (selectionChange)="selectedOption($event.value-1, key)">
           <mat-option 
             *ngFor="let option of options; let i = index" 
@@ -14,5 +14,5 @@
         </mat-select>
       </mat-form-field>
   </div>
+  {{inputChild | json}}
 </div>  
-{{initialOption[0] | json}}
