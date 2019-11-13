@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ConsultantService} from '../services/consultant.service';
+import { GroupService} from '../services/group.service';
 import { CompetenceGroup, Consultant, CompetenceItem, Competence } from '../classes';
 import { ActivatedRoute } from '@angular/router';
+import { DataStorageService } from "../services/data-storage.service";
 
 @Component({
   selector: 'app-competence-form',
@@ -11,73 +12,66 @@ import { ActivatedRoute } from '@angular/router';
 export class CompetenceFormComponent implements OnInit {
 
   headElements = ['Competence','Niveau', 'Expérience', 'Dernière utilisaton', 'Contexte','Intérêt'];
-  items: CompetenceGroup[];
+  groups: CompetenceGroup[];
   consultant: Consultant;
+  id: number;
+  show: boolean;
 
   constructor(
+    private groupService: GroupService,
     private route: ActivatedRoute,
-    private consultantService: ConsultantService
-  ) { }
+    private dataService: DataStorageService
+  ) {
+      this.show=false;
+   }
 
   ngOnInit() {
-    const id = +this.route.params.subscribe(
-      result=>{
-        this.getConsultant(result.id);
-        this.getGroupedEmptyCompetences(result.id);
-      }
-    );
+    const id = +this.route.snapshot.paramMap.get('id');
+    // this.consultant = this.dataService.getConsultant(id);
+    this.getAllGroups(); 
   };
 
-  getGroupedEmptyCompetences(id: number){
-    this.consultantService.getGroupedEmptyCompetences(id).subscribe(
+  getAllGroups(): void{
+    this.groupService.getAll().subscribe(
       results => {
-        this.items = results;
-        this.fillItems();
+        this.fillgroups(results);
       }
-      );
+     );
   }
 
-  fillItems(){
-    for (let group of this.items){
-      for(let competence_item of group.items){
-        console.log(competence_item);
-        console.log(competence_item.items);
-          if(!competence_item.items.length){
-            console.log("I am here");
-              competence_item.items.push(new Competence());
-              console.log(competence_item.items);
-          }
-          }
+  fillgroups(groups: CompetenceGroup[]){  
+    this.groups = groups;      
+    for(let gc of this.groups){
+      for(let i of gc.items){
+        i.items = new Array<Competence>();
+        i.items.push(new Competence()); 
+        if(this.consultant.competences){ 
+          for (let c of this.consultant.competences){
+            if(i.id==c.parent2.id){ 
+              i.items[0]=c;           
+            }
+          }  
+        }      
       }
-    }
-  
+    }        
+    this.show=true;    
+  }
 
-  getConsultant(id: number): void {    
-    if(id == 0){
-      this.consultant = new Consultant();
-      console.log(this.consultant.id);
-    }
-    else{
-      this.consultantService.read(id).subscribe(results => 
-        {
-            this.consultant = results; 
+  save(): void {      
+    console.log("saving competences");
+    for(let gc of this.groups){
+      for(let i of gc.items){
+        if(!i.items[0].id){
+          i.items[0].parent2 = new CompetenceItem();
+          i.items[0].parent2.id = i.id;
+          this.dataService.consultant.competences.push(i.items[0]);          
         }
-      );
-    }
+  }}}
+
+  
+  delete(competence: CompetenceItem): void {    
+    this.consultant.competences =  this.consultant.competences.filter(x => x !== competence.items[0]);
+    competence.items[0] = new Competence();
   }
-
-  // save(): void {      
-  //   console.log("saving competences");
-  //   this.consultant.competences = new CompetenceItem()[]();
-  //   for (let group of this.items){
-  //     for (let competence of group.items){
-  //       for (let competence of group.items){
-
-  //       this.consultant.competences.push(competence);
-  //   }
-  //   this.consultant.competences=this.items.items;
-  //   this.consultantService.update(this.consultant).subscribe(result=>this.consultant=result);
-  // }}}
-     
 
 }

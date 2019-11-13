@@ -1,4 +1,3 @@
-
 export interface Deserializable {
     deserialize(input: any): this;
   }
@@ -14,6 +13,7 @@ export class Resource implements Deserializable{
 
 export class ResourceWithDescription extends Resource{
     description: string;
+
     deserialize(input: any): this {
         Object.assign(this, input);
         return this;
@@ -55,12 +55,21 @@ export class Consultant extends Resource{
                 item => new HistoryObjectWithChildren().deserialize(item)
                 );
             }
+            if(input.forces){
+                this.forces = input.forces.map(
+                    item => new Force().deserialize(item)
+                    );
+                }
            return this;
           }
 }
 
+export class ForceItem extends ResourceWithDescription{
+}
+
 export class Force extends Resource{
-    name: string;
+    position: number;
+    parent2: ForceItem;
 }
 
 export class HistoryObject extends Resource{
@@ -96,7 +105,7 @@ export class CompetenceGroup extends ResourceWithDescription{
 }
 
 export class CompetenceItem extends ResourceWithDescription{
-    items: Competence[];
+    items?: Competence[];
 }
 
 export class Competence extends ResourceWithDescription{
@@ -106,4 +115,6 @@ export class Competence extends ResourceWithDescription{
     interet: string;
     niveau: number;
     experience: number;
+    parent_id?: number;
+    parent2_id?: number;
 }

@@ -18,7 +18,7 @@ export class ConsultantsComponent implements OnInit {
   }
 
   getAll(){
-    this.consultantService.readAll().subscribe(results => this.items = results);
+    this.consultantService.getAll().subscribe(results => this.items = results);
   }
 
   delete(consultant: Consultant): void {

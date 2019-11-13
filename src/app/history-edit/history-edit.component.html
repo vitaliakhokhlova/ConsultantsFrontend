@@ -1,17 +1,18 @@
 <div *ngIf="inputArray">
   <div mdbTableCol *ngFor="let item of inputArray">
-    <input  [(ngModel)]="item.dates" placeholder="Durée"/>
+    <input  [(ngModel)]="item.dates" placeholder="Date"/>
     <input  [(ngModel)]="item.description" placeholder="Description"/>
     <input [(ngModel)]="item.institution" placeholder="Organisation"/>
     <input [(ngModel)]="item.place" placeholder="Ville"/>
     <button class="delete" title="delete" (click)="deleteHistory(item)">Delete</button>
-    <div *ngIf="item.details">
+    <div *ngIf="showDetails">
       <li *ngFor="let detail of item.details">
         <input [(ngModel)]="detail.description" placeholder="Tâche accomplie..."/> 
         <button class="delete" title="delete" (click)="deleteDetail(detail, item)">Delete</button> 
       </li>  
+      <button (click)="addDetail(item)">Ajouter une tâche</button>
     </div>                    
-    <button (click)="addDetail(item)">Ajouter une tâche</button>
+
   </div>
 </div>
 <button (click)="addHeader()">Ajouter une ligne</button>

@@ -22,7 +22,6 @@ export class ConsultantdetailComponent implements OnInit {
 
   ngOnInit() {
     this.getConsultant();
-    this.makeGroups();
   }
 
   getConsultant(): void {

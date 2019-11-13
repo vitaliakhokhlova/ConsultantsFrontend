@@ -15,22 +15,22 @@
          </div>
         
      </div>
-     <!-- <div *ngIf="consultant.id"> -->
+     <div *ngIf="consultant.id">
      <div class="row">
          <div class="column">
                  <div id="photo">
                    <!-- <img src='assets/{{consultant.firstname|lowercase}}{{consultant.lastname|lowercase}}.jpg' height="160"> -->
                   </div>
-                 <input [(ngModel)]="consultant.birthday" placeholder="birthday"/>
+                  <mat-form-field>
+                        <input [(ngModel)]="consultant.birthday" matInput [matDatepicker]="picker" placeholder="Date de naissance">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
          </div>
          <div class="column">
              <fieldset class="cadre" id="forces">
                  <legend>FORCES GOGNITIVES</legend>
-                 <ul>
-                     <li *ngFor="let f of consultant.forces">
-                             {{f.name}}
-                     </li>     
-                 </ul>
+                 <app-force-choice [(initialOption)]="consultant.forces"></app-force-choice>
              </fieldset>
              <div id="expression"> <input [(ngModel)]="consultant.expression" placeholder="expression"/></div>
              <div id="author"> <input [(ngModel)]="consultant.author" placeholder="author"/></div>
@@ -52,14 +52,14 @@
          <fieldset class="cadre">
              <legend>FORMATIONS</legend>
              <div id="formations">
-                <app-history-edit [(inputArray)]="consultant.formations"></app-history-edit >
+                <app-history-edit [(inputArray)]="consultant.formations" [showDetails]="false"></app-history-edit >
             </div>
          </fieldset>
          <div class="column">
              <fieldset class="cadre" id="disponibilite">
                  <legend>DISPONIBILITE</legend>
                  <div id="temps"> <input [(ngModel)]="consultant.occupancy" placeholder="occupancy"/></div>
-                 <div id="mobilite"><input [(ngModel)]="consultant.mobility" placeholder="mobility"/></div>
+                Mobilité: <div id="mobilite"><input [(ngModel)]="consultant.mobility" placeholder="mobility"/></div>
              </fieldset>
              <fieldset class="cadre">
                  <legend>LANGUES</legend>
@@ -72,11 +72,11 @@
 
      <fieldset class="cadre" id="projets">
          <legend>PROJETS AUTICONSULT</legend>
-         <app-history-edit [(inputArray)]="consultant.projets" ></app-history-edit >
+         <app-history-edit [(inputArray)]="consultant.projets"  [showDetails]="true"></app-history-edit >
      </fieldset>
      <fieldset class="cadre" id="parcours">
          <legend>PARCOURS</legend>
-         <app-history-edit [(inputArray)]="consultant.parcours"></app-history-edit >
+         <app-history-edit [(inputArray)]="consultant.parcours"  [showDetails]="true"></app-history-edit >
      </fieldset>
      
      <fieldset class="cadre">
@@ -85,11 +85,11 @@
                 <input [(ngModel)]="consultant.interests" placeholder="Interests"/>
            </div>
      </fieldset>
-    <!-- </div> -->
+    </div>
      <!-- <a routerLink="/detail/{{consultant.id}}"> -->
         <button class="module" (click)="save()">save</button>   
         <!-- </a> -->
-         <!-- consultantJSON: {{consultant | json}}  -->
+         consultantJSON: {{consultant | json}} 
      </div>
 
   

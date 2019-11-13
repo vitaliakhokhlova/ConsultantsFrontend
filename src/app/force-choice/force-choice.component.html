@@ -1,0 +1,18 @@
+<div *ngIf="options"> 
+  <div *ngFor='let key of  [0, 1,2, 3, 4]'>
+      {{key+1}}
+    <mat-form-field>
+        <mat-select 
+        [value]="initialOption[key].parent2.id" 
+        (selectionChange)="selectedOption($event.value-1, key)">
+          <mat-option 
+            *ngFor="let option of options; let i = index" 
+            [value]="option.id"
+            >
+            {{option.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+  </div>
+</div>  
+{{initialOption[0] | json}}

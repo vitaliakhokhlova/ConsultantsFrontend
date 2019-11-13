@@ -10,6 +10,7 @@ import { HistoryObject, ResourceWithDescription, HistoryObjectWithChildren } fro
 export class HistoryEditComponent implements OnInit {
 
   @Input() inputArray: Array<HistoryObject>;
+  @Input() showDetails: boolean;
   @Output() inputArrayChange:EventEmitter<Array<HistoryObject>> = new EventEmitter<Array<HistoryObject>>();
   myControl = new FormControl();
   headElements = ['Durée', 'Description', "Nom de l'organisation", 'Ville'];
@@ -18,6 +19,7 @@ export class HistoryEditComponent implements OnInit {
 
   ngOnInit() {
     this.myControl.setValue(this.inputArray);
+    this.myControl.setValue(this.showDetails);
   }
 
   addHeader(){
