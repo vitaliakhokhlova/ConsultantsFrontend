@@ -14,6 +14,8 @@ import { CompetenceFormComponent } from './competence-form/competence-form.compo
 import { HistoryEditComponent } from './history-edit/history-edit.component';
 import { ForceChoiceComponent } from './force-choice/force-choice.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { DateComponent } from './date/date.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ConsultantSearchComponent,
     CompetenceFormComponent,
     HistoryEditComponent,
-    ForceChoiceComponent
+    ForceChoiceComponent,
+    DateComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +39,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatInputModule,
     BrowserAnimationsModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    DragDropModule
   ],
   providers: [MatDatepickerModule],
   bootstrap: [AppComponent]

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ForceService } from '../services/force.service';
-import { Force, ForceItem } from '../classes';
+import { Force } from '../classes';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-force-choice',
@@ -9,55 +10,45 @@ import { Force, ForceItem } from '../classes';
 })
 export class ForceChoiceComponent implements OnInit {
 
-  @Input() inputChild: Array<Force>;
-  @Output() childForm: EventEmitter<Array<Force>> = new EventEmitter<Array<Force>>();
-  options: Array<ForceItem>;
-  swap: boolean;
+  @Input() options: Array<Force>;
+  @Output() childForm = new EventEmitter();
 
-  constructor(private forceService: ForceService) {
-    this.options = new Array<ForceItem>();
-   }
+  constructor(private forceService: ForceService) {}
 
   ngOnInit() {
-    if(!this.swap){
-        this.getOptions();
-      }
-      this.swap = false;    
+    this.getOptions();
   }
 
   getOptions(): void {
-    this.forceService.getAll().subscribe(options => 
-      {
-        // if(!this.input){
-        //   this.input = new Array<Force>();
-        //   let i = 1;
-        //   for(let option of options){
-        //     let force = new Force();
-        //     force.position = i;
-        //     force.parent2 = option;
-        //     this.input.push(force);
-        //     i=i+1;
-        //   }
-        //   this.childForm.emit(this.input);
-        // }
-        console.log(this.inputChild);
-        this.options = options;
-      }
-      );
+    if(!this.options){
+      this.forceService.getAll().subscribe(options => 
+        {
+            this.options = new Array<Force>();
+            let i = 1;
+            for(let option of options){
+              let force = new Force();
+              force.position = i;
+              force.parent2 = option;
+              this.options.push(force);
+              i=i+1;
+            this.childForm.emit(this.options);
+          }
+        }
+        );
+    }
   }
 
-  selectedOption(key1: number, key2: number){  
-      this.swapArray(this.inputChild, key1, key2);
-    }
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.options, event.previousIndex, event.currentIndex);
+    this.correctPosition();
+  }
 
-
-    swapArray(array:any, key1:number, key2:number) : any
+  correctPosition(){
+    let i=1;
+    for(let option of this.options)
     {
-        var temp = array[key1].parent2;
-        array[key1].parent2 = array[key2].parent2;
-        array[key2].parent2 = temp;
-        this.swap = true;
-        this.ngOnInit();
+      option.position=i;
+      i=i+1;
     }
-
+  }
 }

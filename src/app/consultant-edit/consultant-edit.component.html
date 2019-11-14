@@ -21,16 +21,12 @@
                  <div id="photo">
                    <!-- <img src='assets/{{consultant.firstname|lowercase}}{{consultant.lastname|lowercase}}.jpg' height="160"> -->
                   </div>
-                  <mat-form-field>
-                        <input [(ngModel)]="consultant.birthday" matInput [matDatepicker]="picker" placeholder="Date de naissance">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                      </mat-form-field>
+                  <app-date [(birthday)]="consultant.birthday"></app-date>
          </div>
          <div class="column">
              <fieldset class="cadre" id="forces">
                  <legend>FORCES GOGNITIVES</legend>
-                 <app-force-choice [(inputChild)]="consultant.forces"></app-force-choice>
+                 <app-force-choice [(options)]="consultant.forces"></app-force-choice>
              </fieldset>
              <div id="expression"> <input [(ngModel)]="consultant.expression" placeholder="expression"/></div>
              <div id="author"> <input [(ngModel)]="consultant.author" placeholder="author"/></div>
