@@ -16,6 +16,7 @@ import { ForceChoiceComponent } from './force-choice/force-choice.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DateComponent } from './date/date.component';
+import { LangueChoiceComponent } from './langue-choice/langue-choice.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { DateComponent } from './date/date.component';
     CompetenceFormComponent,
     HistoryEditComponent,
     ForceChoiceComponent,
-    DateComponent
+    DateComponent,
+    LangueChoiceComponent
   ],
   imports: [
     BrowserModule,

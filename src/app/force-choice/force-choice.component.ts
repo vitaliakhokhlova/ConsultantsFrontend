@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ForceService } from '../services/force.service';
-import { Force } from '../classes';
+import { Force, ForceItem } from '../classes';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
@@ -11,7 +11,7 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 export class ForceChoiceComponent implements OnInit {
 
   @Input() options: Array<Force>;
-  @Output() childForm = new EventEmitter();
+  @Output() optionsChange = new EventEmitter();
 
   constructor(private forceService: ForceService) {}
 
@@ -23,16 +23,19 @@ export class ForceChoiceComponent implements OnInit {
     if(!this.options){
       this.forceService.getAll().subscribe(options => 
         {
-            this.options = new Array<Force>();
-            let i = 1;
-            for(let option of options){
-              let force = new Force();
-              force.position = i;
-              force.parent2 = option;
-              this.options.push(force);
-              i=i+1;
-            this.childForm.emit(this.options);
+          console.log(options);  
+          this.options = new Array<Force>();
+          let i = 1;
+          for(let option of options){
+            let force = new Force();
+            force.position = i;
+            force.parent2 = new ForceItem();
+            force.parent2.id = option.id;
+            force.parent2.description = option.description;
+            this.options.push(force);
+            i=i+1;
           }
+          this.optionsChange.emit(this.options);
         }
         );
     }

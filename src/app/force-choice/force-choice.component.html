@@ -1,21 +1,6 @@
 <div *ngIf="options"> 
-  <!-- <div *ngFor='let key of  [0, 1, 2, 3, 4]'>
-    {{key+1}}
-    <mat-form-field>
-        <mat-select 
-        [value]="inputChild[key]" 
-        (selectionChange)="selectedOption($event, key)">
-          <mat-option 
-            *ngFor="let option of inputChild; let i = index" 
-            (value)="option"
-            >
-            {{option.parent2.description}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-  </div> -->
-
   <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
     <div class="example-box" *ngFor="let option of options" cdkDrag>{{option.parent2.description}}</div>
   </div>
+  {{options  | json}}
 </div>  
