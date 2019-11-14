@@ -1,8 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { HttpClientModule }    from '@angular/common/http';
-import {MatSelectModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule} from '@angular/material';
+import {
+  MatSelectModule, 
+  MatFormFieldModule, 
+  MatInputModule, 
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatIconModule
+} from '@angular/material';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +25,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DateComponent } from './date/date.component';
 import { LangueChoiceComponent } from './langue-choice/langue-choice.component';
+
 
 @NgModule({
   declarations: [
@@ -42,7 +51,10 @@ import { LangueChoiceComponent } from './langue-choice/langue-choice.component';
     BrowserAnimationsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    DragDropModule
+    DragDropModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatIconModule
   ],
   providers: [MatDatepickerModule],
   bootstrap: [AppComponent]

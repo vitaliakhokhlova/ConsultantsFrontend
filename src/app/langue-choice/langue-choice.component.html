@@ -1,15 +1,69 @@
-  <!-- <div *ngFor='let key of  [0, 1, 2, 3, 4]'>
-    {{key+1}}
-    <mat-form-field>
-        <mat-select 
-        [value]="inputChild[key]" 
-        (selectionChange)="selectedOption($event, key)">
-          <mat-option 
-            *ngFor="let option of inputChild; let i = index" 
-            (value)="option"
-            >
-            {{option.parent2.description}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-  </div> -->
+<!-- <div *ngFor="let dummy of ' '.repeat(langues.length).split(''), let key = index">
+<form class="example-form"> 
+    <mat-form-field class="example-full-width">
+      <input  
+        type="text"      
+        aria-label="Number"   
+        matInput [formControl]="myControl"       
+        [matAutocomplete]="auto"
+        placeholder="Langue">
+  
+  
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">   
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option" 
+        (onSelectionChange)="selectedOption(option)">
+          {{option.description}} 
+      </mat-option>
+    </mat-autocomplete>
+    </mat-form-field> 
+  </form>
+  <div *ngIf="langues[key]"> 
+    <input matInput placeholder="Niveau" [(ngModel)]="langues[key].niveau">
+  </div>
+</div> -->
+{{languesArray | json}}
+
+
+<form [formGroup]="langueForm">
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="3.5%" fxLayoutAlign="left" >
+    <div formArrayName="langues">
+      <div *ngFor="let item of langueForm.controls.langues.controls; let i=index"> 
+        <div [formGroupName]="i">
+          <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="3.5%" fxLayoutAlign="center">
+            <mat-form-field  fxFlex="15%"> 
+              <input 
+                matInput placeholder="Langue" 
+                formControlName="description"     
+               [matAutocomplete]="auto"
+              >       
+        
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">   
+                <mat-option 
+                  *ngFor="let option of options" [value]="option" >
+                  {{option.description}} 
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field  fxFlex="5%" fxFlex.xs="20"> 
+             <input matInput placeholder="Niveau" formControlName="niveau">
+            </mat-form-field>
+
+            <button type="button" mat-mini-fab color="warn" fxFlex="nogrow"
+              *ngIf="langueForm.controls.langues.controls.length > 1" (click)="removeLangue(i)">
+              <mat-icon>delete forever</mat-icon>
+            </button>
+
+          </div>
+        </div>
+      </div>
+      
+      <button type="button" mat-raised-button (click)="addLangue()">
+          <mat-icon>add box</mat-icon>
+          Ajouter
+      </button>
+
+    </div> 
+  </div> 
+</form>
+

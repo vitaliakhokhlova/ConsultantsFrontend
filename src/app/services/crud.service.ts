@@ -5,11 +5,7 @@ import { Observable, of} from "rxjs";
 import { environment } from "../../environments/environment";
 import { tap, catchError, map } from "rxjs/operators";
 import { MessageService } from "../services/message.service";
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
-
+import { Injectable } from '@angular/core';
 
 export class CrudService <T extends Resource> {
 
@@ -18,8 +14,8 @@ export class CrudService <T extends Resource> {
 
   constructor(    
       protected httpClient: HttpClient,
-      private endpoint: string,
-      private tType:   new () => T
+      private endpoint: string
+      // ,private tType:   new () => T
       ) {
         this.urlcomplete = `${this.startpoint}/${endpoint}`; 
       }
@@ -36,7 +32,7 @@ export class CrudService <T extends Resource> {
 
     public read(id: number): Observable<T> {
       return this.httpClient.get<T>(`${this.urlcomplete}/${id}`).pipe(
-        map(result => (new this.tType).deserialize(result)),
+        // map(result => (new this.tType).deserialize(result)),
         tap(_ => this.log(`fetched ${this.endpoint} id=${id}`)),
         catchError(this.handleError<any>('read id=${id}'))
       );
@@ -61,6 +57,14 @@ export class CrudService <T extends Resource> {
 
     public getAll(): Observable<T[]>{     
       return this.httpClient.get<T[]>(`${this.urlcomplete}/all`)
+      .pipe(
+        tap(_ => this.log(`fetched all ${this.endpoint}s from server`)),
+        catchError(this.handleError('getAll', []))
+      );
+    }
+
+    public getAllOrdered(column: string): Observable<T[]>{     
+      return this.httpClient.get<T[]>(`${this.urlcomplete}/all_ordered_by_${column}`)
       .pipe(
         tap(_ => this.log(`fetched all ${this.endpoint}s from server`)),
         catchError(this.handleError('getAll', []))

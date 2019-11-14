@@ -1,6 +1,5 @@
 <div *ngIf="options"> 
-  <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+  <div class="example-list" cdkDropList  (cdkDropListDropped)="drop($event)">
     <div class="example-box" *ngFor="let option of options" cdkDrag>{{option.parent2.description}}</div>
   </div>
-  {{options  | json}}
 </div>  

@@ -3,7 +3,6 @@ import { Consultant, Competence, HistoryObject } from '../classes';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ConsultantService} from '../services/consultant.service';
 import { DataStorageService } from "../services/data-storage.service";
-import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-consultant-edit',

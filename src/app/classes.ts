@@ -2,22 +2,12 @@ export interface Deserializable {
     deserialize(input: any): this;
   }
 
-export class Resource implements Deserializable{
+export class Resource {
     id?: number;
-
-    deserialize(input: any): this {
-        Object.assign(this, input);
-        return this;
-      }
   }
 
 export class ResourceWithDescription extends Resource{
     description: string;
-
-    deserialize(input: any): this {
-        Object.assign(this, input);
-        return this;
-       }
 }
 
 export class Consultant extends Resource{     
@@ -38,30 +28,30 @@ export class Consultant extends Resource{
         parcours?: Array<HistoryObjectWithChildren>;
         projets?: Array<HistoryObjectWithChildren>; 
 
-        deserialize(input: any): this {
-           Object.assign(this, input);
-           if(input.formations){
-           this.formations = input.formations.map(
-                item => new HistoryObject().deserialize(item)
-               );
-           }
-           if(input.parcours){
-            this.parcours = input.parcours.map(
-                item => new HistoryObjectWithChildren().deserialize(item)
-            );
-           }
-           if(input.projets){
-            this.projets = input.projets.map(
-                item => new HistoryObjectWithChildren().deserialize(item)
-                );
-            }
-            if(input.forces){
-                this.forces = input.forces.map(
-                    item => new Force().deserialize(item)
-                    );
-                }
-           return this;
-          }
+        // deserialize(input: any): this {
+        //    Object.assign(this, input);
+        //    if(input.formations){
+        //    this.formations = input.formations.map(
+        //         item => new HistoryObject().deserialize(item)
+        //        );
+        //    }
+        //    if(input.parcours){
+        //     this.parcours = input.parcours.map(
+        //         item => new HistoryObjectWithChildren().deserialize(item)
+        //     );
+        //    }
+        //    if(input.projets){
+        //     this.projets = input.projets.map(
+        //         item => new HistoryObjectWithChildren().deserialize(item)
+        //         );
+        //     }
+        //     if(input.forces){
+        //         this.forces = input.forces.map(
+        //             item => new Force().deserialize(item)
+        //             );
+        //         }
+        //    return this;
+        //   }
 }
 
 export class ForceItem extends ResourceWithDescription{
@@ -88,15 +78,15 @@ export class HistoryObjectWithChildren extends HistoryObject{
         this.details = new Array<ResourceWithDescription>();
     }
 
-    deserialize(input: any): this {
-        Object.assign(this, input);
-        if(input.details){
-        this.details = input.details.map(
-            item => new ResourceWithDescription().deserialize(item)
-            );
-        }
-        return this;
-       }
+    // deserialize(input: any): this {
+    //     Object.assign(this, input);
+    //     if(input.details){
+    //     this.details = input.details.map(
+    //         item => new ResourceWithDescription().deserialize(item)
+    //         );
+    //     }
+    //     return this;
+    //    }
 }
 
 
@@ -108,13 +98,14 @@ export class CompetenceItem extends ResourceWithDescription{
     items?: Competence[];
 }
 
-export class Competence extends ResourceWithDescription{
+export class Competence extends Resource{
     parent2: CompetenceItem;
-    annee: number;
-    contexte: string;
-    interet: string;
-    niveau: number;
-    experience: number;
+    annee?: number;
+    contexte?: string;
+    interet?: string;
+    niveau: number | string;
+    experience?: number;
     parent_id?: number;
     parent2_id?: number;
+    description?: string;
 }

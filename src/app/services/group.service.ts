@@ -12,6 +12,6 @@ export class GroupService extends CrudService<CompetenceGroup> {
 
   constructor(httpClient: HttpClient) 
 		{ 
-		  super(httpClient, `group`, CompetenceGroup);
+		  super(httpClient, `group`);
 		}
 }
