@@ -10,6 +10,6 @@ export class CompetenceService extends CrudService<Competence> {
 
   constructor(httpClient: HttpClient) 
   { 
-    super(httpClient, `competence`);
+    super(httpClient, `competence`, Competence);
   }
 }

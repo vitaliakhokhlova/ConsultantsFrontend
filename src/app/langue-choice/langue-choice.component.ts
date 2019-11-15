@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Competence, CompetenceItem } from '../classes';
 import { LangueService } from '../services/langue.service';
-import {FormControl, FormBuilder, FormArray, FormGroup} from '@angular/forms';
+import { FormBuilder, FormArray, FormGroup} from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
@@ -12,14 +12,13 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class LangueChoiceComponent implements OnInit {
 
-  @Input() languesArray: Array<Competence>;
+  @Input() languesArray;
   @Output() languesChange = new EventEmitter();
   langueForm: FormGroup;
-  myFormValueChanges$;
+  myFormValueChanges$;  
   
   options: Array<CompetenceItem>;
-  // myControl = new FormControl();
-  filteredOptions: Observable<CompetenceItem[]>;
+  filteredOptions: Observable<CompetenceItem[]>[]=[];
 
   constructor(
     private langueService: LangueService,
@@ -28,107 +27,94 @@ export class LangueChoiceComponent implements OnInit {
 
   ngOnInit() {
     this.getOptions();    
-    // this.setLangues();
-    this.langueForm = this.fb.group({
-      langues: this.fb.array([
-        this.fb.group({description:'', niveau: ''})
-        // this.languesArray
-      ])
-    });
+    this.createForm();   
+  }
+
+  createForm(){
+    this.langueForm = this.fb.group(
+      {
+        langues: this.fb.array(
+          this.languesArray.map(langue => this.createLangue(langue))
+        )
+      }
+    );
+    const control = <FormArray>this.langueForm.controls['langues'];
+    for (var i of [...Array(control.length).keys()]){
+      this.getFilteredOptions(i);
+    }
+    this.onChange();
+  }
+
+  onChange(){
     this.myFormValueChanges$ = this.langueForm.controls['langues'].valueChanges;
-    this.langueForm.patchValue({langues: this.languesArray});
-    this.myFormValueChanges$.subscribe(langues => this.languesArray=langues);
+    this.myFormValueChanges$.subscribe(value =>{ 
+      Object.assign(this.languesArray, value);
+      this.languesChange.emit(this.languesArray);
+    });
   }
 
   private getLangue(){
-    return this.fb.group({description: '', niveau: ''});
+    return this.fb.group(new Competence());
+  }
+
+  createLangue(langue: Competence): FormGroup {
+    return this.fb.group({
+      parent2: [langue.parent2],
+      niveau: [langue.niveau],
+      id: [langue.id],
+      annee: [langue.annee],
+      experience: [langue.experience]
+    });
   }
 
   addLangue() {
     const control = <FormArray>this.langueForm.controls['langues'];
     control.push(this.getLangue());
+    this.getFilteredOptions(control.length - 1);
   }
 
   removeLangue(i: number) {
+    this.languesArray.splice(i, 1);
+    console.log(this.languesArray);
+    this.languesChange.emit();
     const control = <FormArray>this.langueForm.controls['langues'];
     control.removeAt(i);
+    this.filteredOptions.splice(i, 1);
   }
-
-
-  // get langueItems() {
-  //   return this.langueForm.get('langues') as FormArray;
-  // }
-
-  // setLangues(){
-  //   if(this.langues){
-  //     if(this.langues[0]){
-  //       let consultantLangues = new Array<CompetenceItem>();
-  //       for(let langue of this.langues){
-  //         consultantLangues.push
-  //       }
-  //       this.myControl.setValue(this.langues[0].parent2); 
-  //     }
-  //     else{
-  //       this.myControl.setValue(new CompetenceItem); 
-  //     }         
-  //   }
-  //   else{
-  //     this.langues = new Array<Competence>();
-  //   }
-  // }
 
   getOptions(){
     this.langueService.getAllOrdered("description").subscribe(result => 
       {
        this.options=result;
-      //  this.getFilteredOptions();
       }
     );
   }
 
-  // getFilteredOptions(){
-  //   this.filteredOptions = this.myControl.valueChanges
-  //     .pipe(
-  //       startWith<string | any>(''),
-  //       map(value => typeof value === 'string' ? value : value.description),
-  //       map(description => description ? this._filter(description) : this.options)
-  //     );
-  // }
+  getFilteredOptions(index: number){
+    const arrayControl = this.langueForm.get('langues') as FormArray;
+    this.filteredOptions[index] = arrayControl.at(index).get('parent2').valueChanges
+      .pipe(
+        startWith<string | any>(''),
+        map(value => typeof value === 'string' ? value : value.description),
+        map(description => description ? this._filter(description) : this.options)
+      );
+  }
 
-  // addElement(){
-  //   if(!this.langues){
-  //     this.langues = new Array<Competence>();
-  //   }
-  //   this.langues.push(new Competence());
-  //   this.onChange();
-  // }
 
-  // onChange(){
-  //   this.languesChange.emit(this.langues);
-  // }
+  selectedOption(option: any){
+    if(option.id === 0){	  
+      this.langueService.create(option).subscribe(result => option.id = result.id);	  
+    }
+  }
 
-  // selectedOption(event: any){
-  //   console.log(event);
-  //   if(event.id === 0){	  
-  //     this.langueService.create(event).subscribe(result => 
-  //       this.languesChange.emit(result));	  
-  //   }
-  //     else{
-  //       let langue = new Competence();
-  //       langue.parent2 = event;
-  //       this.langues.push(langue);
-  //       this.languesChange.emit(this.langues);
-  //     }
-  // }
-
-  // private _filter(description: string): CompetenceItem[]{
-  //   let results = this.options.filter(option => 
-  //     option.description.toLowerCase().indexOf(description.toLowerCase()) === 0);
-  //   if (results.length < 1) {
-  //     results= [{"description": description, "id": 0}];
-  //       }
-  //     return results;
-  //   }
+  private _filter(description: string): CompetenceItem[]{
+    let results = this.options.filter(option => 
+      option.description.toLowerCase().indexOf(description.toLowerCase()) === 0);
+    if (results.length < 1) {
+      results= [{"description": description, "id": 0}];
+        }
+      return results;
+    }
   
     displayFn(item: CompetenceItem): string | undefined {
       return item ? item.description : undefined;

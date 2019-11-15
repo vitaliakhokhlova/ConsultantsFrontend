@@ -20,18 +20,18 @@ export class ForceChoiceComponent implements OnInit {
   }
 
   getOptions(): void {
-    if(!this.options){
-      this.forceService.getAll().subscribe(options => 
+    if(!this.options || !this.options[0]){
+      this.forceService.getAll().subscribe(forceItems => 
         {
-          console.log(options);  
+          console.log(forceItems);  
           this.options = new Array<Force>();
           let i = 1;
-          for(let option of options){
+          for(let item of forceItems){
             let force = new Force();
             force.position = i;
             force.parent2 = new ForceItem();
-            force.parent2.id = option.id;
-            force.parent2.description = option.description;
+            force.parent2.id = item.id;
+            force.parent2.description = item.description;
             this.options.push(force);
             i=i+1;
           }

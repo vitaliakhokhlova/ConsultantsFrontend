@@ -15,7 +15,7 @@ export class CrudService <T extends Resource> {
   constructor(    
       protected httpClient: HttpClient,
       private endpoint: string
-      // ,private tType:   new () => T
+      ,private tType:   (new () => T)
       ) {
         this.urlcomplete = `${this.startpoint}/${endpoint}`; 
       }
@@ -66,6 +66,10 @@ export class CrudService <T extends Resource> {
     public getAllOrdered(column: string): Observable<T[]>{     
       return this.httpClient.get<T[]>(`${this.urlcomplete}/all_ordered_by_${column}`)
       .pipe(
+        // map(result => {
+        //   return result.map(
+        //     item=> {return (new this.tType).deserialize(item);}
+        //   );}),
         tap(_ => this.log(`fetched all ${this.endpoint}s from server`)),
         catchError(this.handleError('getAll', []))
       );

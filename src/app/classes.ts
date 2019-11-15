@@ -4,10 +4,25 @@ export interface Deserializable {
 
 export class Resource {
     id?: number;
+
+    // deserialize(input: any): this {
+    //     Object.assign(this, input);
+    //     return this;
+    // }
   }
 
 export class ResourceWithDescription extends Resource{
     description: string;
+
+    constructor(){
+        super();
+        this.description="";
+    }
+
+    // deserialize(input: any): this {
+    //     Object.assign(this, input);
+    //     return this;
+    // }
 }
 
 export class Consultant extends Resource{     
@@ -50,11 +65,20 @@ export class Consultant extends Resource{
         //             item => new Force().deserialize(item)
         //             );
         //         }
+        //     if(input.langues){
+        //         this.langues = input.langues.map(
+        //             item => new Competence().deserialize(item)
+        //             );
+        //         }
         //    return this;
         //   }
 }
 
 export class ForceItem extends ResourceWithDescription{
+    deserialize(input: any): this {
+        Object.assign(this, input);
+        return this;
+    }
 }
 
 export class Force extends Resource{
@@ -108,4 +132,12 @@ export class Competence extends Resource{
     parent_id?: number;
     parent2_id?: number;
     description?: string;
+
+    constructor(){
+        super();
+        this.parent2 = new CompetenceItem();
+        this.niveau = "";
+        this.annee = 0;
+        this.experience = 0;
+    }
 }

@@ -13,7 +13,7 @@ export class ConsultantService extends CrudService<Consultant> {
 
   constructor(httpClient: HttpClient) 
 		{ 
-		  super(httpClient, `consultant`);
+		  super(httpClient, `consultant`, Consultant);
 		}
 
 public getGroupedCompetences(id: number): Observable<CompetenceGroup[]> {

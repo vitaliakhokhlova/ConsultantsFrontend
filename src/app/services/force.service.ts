@@ -9,6 +9,6 @@ import { CrudService } from './crud.service';
 export class ForceService  extends CrudService<ForceItem>  {
 
   constructor(httpClient: HttpClient) { 
-    super(httpClient, `force`);
+    super(httpClient, `force`, ForceItem);
   }
 }

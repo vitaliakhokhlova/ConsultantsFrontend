@@ -1,29 +1,3 @@
-<!-- <div *ngFor="let dummy of ' '.repeat(langues.length).split(''), let key = index">
-<form class="example-form"> 
-    <mat-form-field class="example-full-width">
-      <input  
-        type="text"      
-        aria-label="Number"   
-        matInput [formControl]="myControl"       
-        [matAutocomplete]="auto"
-        placeholder="Langue">
-  
-  
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">   
-      <mat-option *ngFor="let option of filteredOptions | async" [value]="option" 
-        (onSelectionChange)="selectedOption(option)">
-          {{option.description}} 
-      </mat-option>
-    </mat-autocomplete>
-    </mat-form-field> 
-  </form>
-  <div *ngIf="langues[key]"> 
-    <input matInput placeholder="Niveau" [(ngModel)]="langues[key].niveau">
-  </div>
-</div> -->
-{{languesArray | json}}
-
-
 <form [formGroup]="langueForm">
   <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="3.5%" fxLayoutAlign="left" >
     <div formArrayName="langues">
@@ -33,13 +7,15 @@
             <mat-form-field  fxFlex="15%"> 
               <input 
                 matInput placeholder="Langue" 
-                formControlName="description"     
+                formControlName="parent2"     
                [matAutocomplete]="auto"
               >       
         
               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">   
                 <mat-option 
-                  *ngFor="let option of options" [value]="option" >
+                  *ngFor="let option of filteredOptions[i] | async" 
+                  (onSelectionChange)="selectedOption(option)"
+                  [value]="option" >
                   {{option.description}} 
                 </mat-option>
               </mat-autocomplete>
@@ -50,7 +26,7 @@
             </mat-form-field>
 
             <button type="button" mat-mini-fab color="warn" fxFlex="nogrow"
-              *ngIf="langueForm.controls.langues.controls.length > 1" (click)="removeLangue(i)">
+              (click)="removeLangue(i)">
               <mat-icon>delete forever</mat-icon>
             </button>
 
@@ -66,4 +42,5 @@
     </div> 
   </div> 
 </form>
+{{languesArray | json}}
 
