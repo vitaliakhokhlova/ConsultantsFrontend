@@ -10,7 +10,7 @@ export class HistoryEditComponent implements OnInit {
 
   @Input() inputArray: Array<HistoryObject>;
   @Input() showDetails: boolean;
-  @Output() inputArrayChange:EventEmitter<Array<HistoryObject>> = new EventEmitter<Array<HistoryObject>>();
+  @Output() inputArrayChange = new EventEmitter();
   headElements = ['Durée', 'Description', "Nom de l'organisation", 'Ville'];
 
   constructor() { }

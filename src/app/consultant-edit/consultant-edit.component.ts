@@ -51,21 +51,20 @@ export class ConsultantEditComponent implements OnInit {
       console.log("consultant-edit component adding consultant");
       this.consultantService.create(this.consultant).subscribe(result=>{
       this.consultant=result;
-      this.printConsultant();
+      this.router.navigate([`edit/${result.id}`]);
      });
     }
     else{
       console.log("saving consultant");
        this.consultantService.update(this.consultant).subscribe(result=>{
         this.consultant=result;
-        this.printConsultant();
+        this.router.navigate([`detail/${this.consultant.id}`]);
        });
     }
    }
 
    printConsultant() {
       this.router.navigate([`detail/${this.consultant.id}`]);
-      //this.location.go(`detail/${this.consultant.id}`);
    }
 
    setCompetence(competences: Array<Competence>): void{

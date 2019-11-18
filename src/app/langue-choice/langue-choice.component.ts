@@ -12,8 +12,8 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class LangueChoiceComponent implements OnInit {
 
-  @Input() languesArray;
-  @Output() languesChange = new EventEmitter();
+  @Input() languesArray: Array<Competence>;
+  @Output() languesArrayChange = new EventEmitter();
   langueForm: FormGroup;
   myFormValueChanges$;  
   
@@ -25,19 +25,14 @@ export class LangueChoiceComponent implements OnInit {
     private fb: FormBuilder
     ) { }
 
-  ngOnInit() {
-    this.getOptions();    
-    this.createForm();   
+  ngOnInit() {   
+    this.getOptions();   
   }
 
   createForm(){
-    this.langueForm = this.fb.group(
-      {
-        langues: this.fb.array(
-          this.languesArray.map(langue => this.createLangue(langue))
-        )
-      }
-    );
+    this.langueForm = this.fb.group({
+        langues: this.fb.array(this.fillFormArray())
+    });
     const control = <FormArray>this.langueForm.controls['langues'];
     for (var i of [...Array(control.length).keys()]){
       this.getFilteredOptions(i);
@@ -45,19 +40,29 @@ export class LangueChoiceComponent implements OnInit {
     this.onChange();
   }
 
+  fillFormArray(){
+    if(!this.languesArray){
+      this.languesArray = new Array<Competence>();
+      this.languesArrayChange.emit(this.languesArray);
+      this.languesArray.push(new Competence());
+    }
+    return this.languesArray.map(langue => this.copyLangue(langue));
+  }
+
   onChange(){
     this.myFormValueChanges$ = this.langueForm.controls['langues'].valueChanges;
     this.myFormValueChanges$.subscribe(value =>{ 
       Object.assign(this.languesArray, value);
-      this.languesChange.emit(this.languesArray);
+      this.languesArrayChange.emit(this.languesArray);
     });
+    
   }
 
-  private getLangue(){
+  private newLangue(){
     return this.fb.group(new Competence());
   }
 
-  createLangue(langue: Competence): FormGroup {
+  copyLangue(langue: Competence): FormGroup {
     return this.fb.group({
       parent2: [langue.parent2],
       niveau: [langue.niveau],
@@ -69,14 +74,13 @@ export class LangueChoiceComponent implements OnInit {
 
   addLangue() {
     const control = <FormArray>this.langueForm.controls['langues'];
-    control.push(this.getLangue());
+    control.push(this.newLangue());
     this.getFilteredOptions(control.length - 1);
   }
 
   removeLangue(i: number) {
     this.languesArray.splice(i, 1);
-    console.log(this.languesArray);
-    this.languesChange.emit();
+    this.languesArrayChange.emit();
     const control = <FormArray>this.langueForm.controls['langues'];
     control.removeAt(i);
     this.filteredOptions.splice(i, 1);
@@ -86,6 +90,7 @@ export class LangueChoiceComponent implements OnInit {
     this.langueService.getAllOrdered("description").subscribe(result => 
       {
        this.options=result;
+       this.createForm(); 
       }
     );
   }
@@ -102,8 +107,12 @@ export class LangueChoiceComponent implements OnInit {
 
 
   selectedOption(option: any){
-    if(option.id === 0){	  
-      this.langueService.create(option).subscribe(result => option.id = result.id);	  
+    if(option.id === 0){	 
+      let langue = new CompetenceItem();
+      langue.description = option.description;
+      this.langueService.create(langue).subscribe(result => {
+        option.id = result.id;
+      });	  
     }
   }
 
@@ -120,4 +129,8 @@ export class LangueChoiceComponent implements OnInit {
       return item ? item.description : undefined;
     }
   
+    focusOutFunction(event)
+    {
+      console.log(event.target.value);
+    }
 }
