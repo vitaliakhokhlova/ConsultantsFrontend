@@ -29,27 +29,31 @@ export class CompetenceFormComponent implements OnInit {
 
   ngOnInit() {
     const id = +this.route.snapshot.paramMap.get('id');
-    this.dataStorageService.getConsultant(id).subscribe(result=>this.consultant = result);
-    this.getAllGroups(); 
+    this.dataStorageService.getConsultant(id).subscribe(result=>
+      {
+        this.consultant = result;
+        this.getAllGroups(result); 
+      });
+
   };
 
-  getAllGroups(): void{
+  getAllGroups(consultant: Consultant): void{
     this.groupService.getAll().subscribe(
       results => {
-        this.fillgroups(results);
+        this.fillgroups(results, consultant);
       }
      );
   }
 
-  fillgroups(groups: CompetenceGroup[]){  
+  fillgroups(groups: CompetenceGroup[], consultant: Consultant){  
     this.groups = groups; 
     for(let gc of this.groups){
       for(let i of gc.items){
         i.items = new Array<Competence>();
         let competence = new Competence();
         i.items.push(competence);        
-        if(this.consultant.competences){ 
-          for (let c of this.consultant.competences){
+        if(consultant.competences){ 
+          for (let c of consultant.competences){
             if(i.id==c.parent2.id){ 
               i.items[0]=c;           
             }
@@ -65,16 +69,14 @@ export class CompetenceFormComponent implements OnInit {
     for(let gc of this.groups){
       for(let i of gc.items){   
         if(Object.keys(i.items[0]).length){
-          let c = new Competence();
-          c=i.items[0];
-          console.log(c);
-          c.parent = new Consultant();
-          c.parent.id = this.consultant.id;
-          c.parent2 = new CompetenceItem();
-          c.parent2.id = i.id;
-          console.log(c);
-          this.competenceService.create(c).subscribe(result=>console.log(result));
-        }   
+          if(i.items[0].id === undefined)
+          {
+            i.items[0].parent2 = new CompetenceItem();
+            i.items[0].parent2.id = i.id;
+            this.consultant.competences.push(i.items[0]);
+            this.dataStorageService.consultant = this.consultant;
+          }   
+        }
       }
     }
   }

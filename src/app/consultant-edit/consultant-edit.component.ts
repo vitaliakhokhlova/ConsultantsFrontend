@@ -51,7 +51,7 @@ export class ConsultantEditComponent implements OnInit {
     else{
       console.log("saving consultant");
        this.consultantService.update(this.consultant).subscribe(result=>{
-        this.consultant=result;
+        this.dataStorageService.consultant = result;
         this.router.navigate([`detail/${this.consultant.id}`]);
        });
     }

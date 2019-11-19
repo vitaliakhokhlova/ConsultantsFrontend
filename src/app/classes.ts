@@ -137,8 +137,6 @@ export class Competence extends Resource{
     interet?: string;
     niveau: number | string;
     experience?: number;
-    parent_id?: number;
-    parent2_id?: number;
     description?: string;
 }
 
