@@ -19,7 +19,7 @@ export class ConsultantEditComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private consultantService: ConsultantService,
-    private dataService: DataStorageService
+    private dataStorageService: DataStorageService
   ) { }
 
   ngOnInit() {
@@ -35,13 +35,7 @@ export class ConsultantEditComponent implements OnInit {
     }
     else
     {
-        this.consultantService.read(id).subscribe(results => 
-          {
-            this.consultant = results; 
-            console.log("retrieving consultant from database");
-            console.log(this.consultant);
-          }
-        );
+        this.dataStorageService.getConsultant(id).subscribe(result=>this.consultant=result);
     }
   }
 

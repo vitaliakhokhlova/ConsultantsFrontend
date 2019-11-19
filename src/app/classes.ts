@@ -1,3 +1,5 @@
+import { ConsultantdetailComponent } from "./consultantdetail/consultantdetail.component";
+
 export interface Deserializable {
     deserialize(input: any): this;
   }
@@ -38,7 +40,7 @@ export class Consultant extends Resource{
         mobility?: string;
         forces?: Array<Force>;   
         competences?: Array<Competence>;
-        langues?: Array<Competence>;
+        langues?: Array<Langue>;
         formations?: Array<HistoryObject>;
         parcours?: Array<HistoryObjectWithChildren>;
         projets?: Array<HistoryObjectWithChildren>; 
@@ -67,7 +69,7 @@ export class Consultant extends Resource{
         //         }
         //     if(input.langues){
         //         this.langues = input.langues.map(
-        //             item => new Competence().deserialize(item)
+        //             item => new Langue().deserialize(item)
         //             );
         //         }
         //    return this;
@@ -122,8 +124,14 @@ export class CompetenceItem extends ResourceWithDescription{
     items?: Competence[];
 }
 
+export class LangueItem extends ResourceWithDescription{
+    items?: Langue[];
+    addNew?: string;
+}
+
 export class Competence extends Resource{
-    parent2: CompetenceItem;
+    parent2?: CompetenceItem;
+    parent: Consultant;
     annee?: number;
     contexte?: string;
     interet?: string;
@@ -132,10 +140,12 @@ export class Competence extends Resource{
     parent_id?: number;
     parent2_id?: number;
     description?: string;
+}
 
+export class Langue extends Competence{
     constructor(){
         super();
-        this.parent2 = new CompetenceItem();
+        this.parent2 = new LangueItem();
         this.niveau = "";
         this.annee = 0;
         this.experience = 0;

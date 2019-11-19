@@ -15,7 +15,7 @@ export class DataStorageService {
     ) { }
 
   getConsultant(id: number): Observable<Consultant>{
-    if(this.consultant.id == id){
+    if(this.consultant && this.consultant.id == id){
       return of(this.consultant);
     }
     else{

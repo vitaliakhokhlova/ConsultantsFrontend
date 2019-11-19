@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Competence, CompetenceItem } from '../classes';
+import { Langue, LangueItem } from '../classes';
 import { LangueService } from '../services/langue.service';
 import { FormBuilder, FormArray, FormGroup} from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -12,13 +12,13 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class LangueChoiceComponent implements OnInit {
 
-  @Input() languesArray: Array<Competence>;
+  @Input() languesArray: Array<Langue>;
   @Output() languesArrayChange = new EventEmitter();
   langueForm: FormGroup;
   myFormValueChanges$;  
   
-  options: Array<CompetenceItem>;
-  filteredOptions: Observable<CompetenceItem[]>[]=[];
+  options: Array<LangueItem>;
+  filteredOptions: Observable<LangueItem[]>[]=[];
 
   constructor(
     private langueService: LangueService,
@@ -42,9 +42,9 @@ export class LangueChoiceComponent implements OnInit {
 
   fillFormArray(){
     if(!this.languesArray){
-      this.languesArray = new Array<Competence>();
+      this.languesArray = new Array<Langue>();
       this.languesArrayChange.emit(this.languesArray);
-      this.languesArray.push(new Competence());
+      this.languesArray.push(new Langue());
     }
     return this.languesArray.map(langue => this.copyLangue(langue));
   }
@@ -59,10 +59,10 @@ export class LangueChoiceComponent implements OnInit {
   }
 
   private newLangue(){
-    return this.fb.group(new Competence());
+    return this.fb.group(new Langue());
   }
 
-  copyLangue(langue: Competence): FormGroup {
+  copyLangue(langue: Langue): FormGroup {
     return this.fb.group({
       parent2: [langue.parent2],
       niveau: [langue.niveau],
@@ -108,7 +108,7 @@ export class LangueChoiceComponent implements OnInit {
 
   selectedOption(option: any){
     if(option.id === 0){	 
-      let langue = new CompetenceItem();
+      let langue = new LangueItem();
       langue.description = option.description;
       this.langueService.create(langue).subscribe(result => {
         option.id = result.id;
@@ -116,16 +116,16 @@ export class LangueChoiceComponent implements OnInit {
     }
   }
 
-  private _filter(description: string): CompetenceItem[]{
+  private _filter(description: string): LangueItem[]{
     let results = this.options.filter(option => 
       option.description.toLowerCase().indexOf(description.toLowerCase()) === 0);
     if (results.length < 1) {
-      results= [{"description": description, "id": 0}];
+      results= [{"description": description, "id": 0, "addNew": " (click to add)"}];
         }
       return results;
     }
   
-    displayFn(item: CompetenceItem): string | undefined {
+    displayFn(item: LangueItem): string | undefined {
       return item ? item.description : undefined;
     }
   

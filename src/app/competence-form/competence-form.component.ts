@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GroupService} from '../services/group.service';
+import { CompetenceService} from '../services/competence.service';
 import { CompetenceGroup, Consultant, CompetenceItem, Competence } from '../classes';
 import { ActivatedRoute } from '@angular/router';
 import { DataStorageService } from "../services/data-storage.service";
@@ -19,15 +20,16 @@ export class CompetenceFormComponent implements OnInit {
 
   constructor(
     private groupService: GroupService,
+    private competenceService: CompetenceService,
     private route: ActivatedRoute,
-    private dataService: DataStorageService
+    private dataStorageService: DataStorageService
   ) {
       this.show=false;
    }
 
   ngOnInit() {
     const id = +this.route.snapshot.paramMap.get('id');
-    // this.consultant = this.dataService.getConsultant(id);
+    this.dataStorageService.getConsultant(id).subscribe(result=>this.consultant = result);
     this.getAllGroups(); 
   };
 
@@ -40,18 +42,19 @@ export class CompetenceFormComponent implements OnInit {
   }
 
   fillgroups(groups: CompetenceGroup[]){  
-    this.groups = groups;      
+    this.groups = groups; 
     for(let gc of this.groups){
       for(let i of gc.items){
         i.items = new Array<Competence>();
-        i.items.push(new Competence()); 
+        let competence = new Competence();
+        i.items.push(competence);        
         if(this.consultant.competences){ 
           for (let c of this.consultant.competences){
             if(i.id==c.parent2.id){ 
               i.items[0]=c;           
             }
           }  
-        }      
+        }   
       }
     }        
     this.show=true;    
@@ -60,13 +63,21 @@ export class CompetenceFormComponent implements OnInit {
   save(): void {      
     console.log("saving competences");
     for(let gc of this.groups){
-      for(let i of gc.items){
-        if(!i.items[0].id){
-          i.items[0].parent2 = new CompetenceItem();
-          i.items[0].parent2.id = i.id;
-          this.dataService.consultant.competences.push(i.items[0]);          
-        }
-  }}}
+      for(let i of gc.items){   
+        if(Object.keys(i.items[0]).length){
+          let c = new Competence();
+          c=i.items[0];
+          console.log(c);
+          c.parent = new Consultant();
+          c.parent.id = this.consultant.id;
+          c.parent2 = new CompetenceItem();
+          c.parent2.id = i.id;
+          console.log(c);
+          this.competenceService.create(c).subscribe(result=>console.log(result));
+        }   
+      }
+    }
+  }
 
   
   delete(competence: CompetenceItem): void {    

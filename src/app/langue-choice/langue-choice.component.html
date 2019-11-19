@@ -17,7 +17,7 @@
                   *ngFor="let option of filteredOptions[i] | async" 
                   (onSelectionChange)="selectedOption(option)"
                   [value]="option" >
-                  {{option.description}} 
+                  {{option.description}}{{option.addNew}} 
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
