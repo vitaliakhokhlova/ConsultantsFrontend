@@ -46,13 +46,23 @@ export class ConsultantdetailComponent implements OnInit {
 
   makeGroups(){
     const id = +this.route.snapshot.paramMap.get('id');
-    if(id === 0){
-      this.groups = new Array<CompetenceGroup>();
-    }
-    else{
+    this.groups = new Array<CompetenceGroup>();
+    if(id != 0){      
       this.consultantService.getGroupedCompetences(id).subscribe(results => 
         {
-          this.groups = results; 
+          for(let c of results){
+            let g = c.parent2;
+            let exists = this.groups.filter(x => x.id == g.id)[0];
+            if(exists){
+              exists.items.push(c);
+            }
+            else{
+              g.items = new Array<CompetenceItem>();
+              g.items.push(c);
+              this.groups.push(g);
+            }            
+            
+          } 
         }
       );
     }

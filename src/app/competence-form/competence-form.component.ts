@@ -74,11 +74,11 @@ export class CompetenceFormComponent implements OnInit {
             i.items[0].parent2 = new CompetenceItem();
             i.items[0].parent2.id = i.id;
             this.consultant.competences.push(i.items[0]);
-            this.dataStorageService.consultant = this.consultant;
           }   
         }
       }
     }
+    this.dataStorageService.consultant = this.consultant;
   }
 
   

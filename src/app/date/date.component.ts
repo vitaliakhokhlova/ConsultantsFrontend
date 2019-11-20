@@ -1,10 +1,24 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {DateAdapter} from '@angular/material/core';
+
+import {
+  MAT_MOMENT_DATE_FORMATS,
+  MomentDateAdapter,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 @Component({
   selector: 'app-date',
   templateUrl: './date.component.html',
-  styleUrls: ['./date.component.css']
+  styleUrls: ['./date.component.css'],
+  providers: [{provide: MAT_DATE_LOCALE, useValue: 'ja-JP'},
+  {
+    provide: DateAdapter,
+    useClass: MomentDateAdapter,
+    deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+  },
+  {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+],
 })
 export class DateComponent implements OnInit {
 
@@ -16,6 +30,10 @@ export class DateComponent implements OnInit {
 
   ngOnInit() {
     this._adapter.setLocale('fr');
+    if (this.birthday) {
+      let dateOld: Date = new Date(this.birthday);
+      this.birthday = dateOld;
+        }
   }
 
   onChange(){

@@ -11,6 +11,7 @@ import {
   MatIconModule
 } from '@angular/material';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -54,7 +55,8 @@ import { LangueChoiceComponent } from './langue-choice/langue-choice.component';
     DragDropModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
-    MatIconModule
+    MatIconModule,
+    MatMomentDateModule
   ],
   providers: [MatDatepickerModule],
   bootstrap: [AppComponent]

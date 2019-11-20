@@ -122,6 +122,7 @@ export class CompetenceGroup extends ResourceWithDescription{
 
 export class CompetenceItem extends ResourceWithDescription{
     items?: Competence[];
+    parent2?: CompetenceGroup;
 }
 
 export class LangueItem extends ResourceWithDescription{
