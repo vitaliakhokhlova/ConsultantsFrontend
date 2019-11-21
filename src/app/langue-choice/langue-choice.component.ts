@@ -105,7 +105,6 @@ export class LangueChoiceComponent implements OnInit {
       );
   }
 
-
   selectedOption(option: any){
     if(option.id === 0){	 
       let langue = new LangueItem();
@@ -117,12 +116,12 @@ export class LangueChoiceComponent implements OnInit {
   }
 
   private _filter(description: string): LangueItem[]{
-    let results = this.options.filter(option => 
+    let filteredResults = this.options.filter(option => 
       option.description.toLowerCase().indexOf(description.toLowerCase()) === 0);
-    if (results.length < 1) {
-      results= [{"description": description, "id": 0, "addNew": " (click to add)"}];
+    if (filteredResults.length < 1) {
+      filteredResults= [{"description": description, "id": 0}];
         }
-      return results;
+      return filteredResults;
     }
   
     displayFn(item: LangueItem): string | undefined {

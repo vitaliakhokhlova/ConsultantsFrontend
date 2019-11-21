@@ -15,12 +15,19 @@ export class DataStorageService {
     ) { }
 
   getConsultant(id: number): Observable<Consultant>{
-    if(this.consultant && this.consultant.id == id){
+    if(id == 0){
+      console.log("creating new consultant");
+      this.consultant = new Consultant();
       return of(this.consultant);
     }
-    else{
-      return this.consultantService.read(id);
+    else
+    {
+      if(this.consultant && this.consultant.id == id){
+        return of(this.consultant);
+      }
+      else{
+        return this.consultantService.read(id);
+      }
     }
-
   }
 }

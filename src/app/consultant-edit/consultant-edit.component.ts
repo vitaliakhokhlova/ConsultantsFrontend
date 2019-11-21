@@ -24,19 +24,9 @@ export class ConsultantEditComponent implements OnInit {
 
   ngOnInit() {
     const id = +this.route.snapshot.paramMap.get('id');
-    this.getConsultant(id); 
+    this.dataStorageService.getConsultant(id)
+    .subscribe(result=>this.consultant=result);    
     console.log(this.consultant);
-  }
-
-  getConsultant(id: number): void {  
-    if(id == 0){
-      console.log("creating new consultant");
-      this.consultant = new Consultant();
-    }
-    else
-    {
-        this.dataStorageService.getConsultant(id).subscribe(result=>this.consultant=result);
-    }
   }
 
   save(): void {
@@ -51,6 +41,7 @@ export class ConsultantEditComponent implements OnInit {
     else{
       console.log("saving consultant");
        this.consultantService.update(this.consultant).subscribe(result=>{
+        console.log("New consultant: "+result);
         this.dataStorageService.consultant = result;
         this.router.navigate([`detail/${this.consultant.id}`]);
        });
