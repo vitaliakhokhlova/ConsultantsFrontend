@@ -13,6 +13,7 @@ import { DataStorageService } from "../services/data-storage.service";
 export class CompetenceFormComponent implements OnInit {
 
   headElements = ['Competence','Niveau', 'Expérience', 'Dernière utilisaton', 'Contexte','Intérêt'];
+  keysToShow = ["niveau", "experience", "annee", "contexte","interet"];
   groups: CompetenceGroup[];
   consultant: Consultant;
   id: number;

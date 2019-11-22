@@ -15,6 +15,9 @@ export class ConsultantEditComponent implements OnInit {
   consultant: Consultant;
   input : Array<string>;
 
+  formationsHeadElements = ['Durée', 'Description', "Nom de l'organisation", 'Ville'];
+  formationsKeysToShow = ["dates", "description", "institution", "place"];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,

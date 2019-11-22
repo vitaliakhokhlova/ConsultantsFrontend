@@ -12,6 +12,7 @@ export class HistoryEditComponent implements OnInit {
   @Input() showDetails: boolean;
   @Output() inputArrayChange = new EventEmitter();
   headElements = ['Durée', 'Description', "Nom de l'organisation", 'Ville'];
+  keysToShow = ["dates", "description", "institution", "place"];
 
   constructor() { }
 
@@ -49,5 +50,9 @@ export class HistoryEditComponent implements OnInit {
   onChange(){
     this.inputArrayChange.emit(this.inputArray);
   }
+
+  objectKeys() {
+    console.log(Object.keys(this.inputArray[0]));
+}
 
 }

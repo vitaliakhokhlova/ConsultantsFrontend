@@ -1,5 +1,5 @@
-  <div *ngIf="consultant">
-        <div class="row">
+<div *ngIf="consultant">
+    <div class="row">
          <div class="column" id="name_block">
              <div class="cadre" id="name">
                  <span id="prenom">  
@@ -14,8 +14,8 @@
              </div>
          </div>
         
-     </div>
-     <div *ngIf="consultant.id">
+    </div>
+    <div *ngIf="consultant.id">
      <div class="row">
          <div class="column">
                  <div id="photo">
@@ -45,12 +45,16 @@
          </div>
      </fieldset>
      <div class="row">
-         <fieldset class="cadre">
-             <legend>FORMATIONS</legend>
-             <div id="formations">
-                <app-history-edit [(inputArray)]="consultant.formations" [showDetails]="false"></app-history-edit >
-            </div>
-         </fieldset>
+    <fieldset class="cadre">
+        <app-table 
+            [(inputArray)]="consultant.formations"
+            [keysToShow]="formationsKeysToShow"
+            [headElements]="formationsHeadElements"
+            textToShow="Ajouter une formation"
+            name="FORMATIONS"
+            >
+        </app-table>
+    </fieldset>
          <div class="column">
              <fieldset class="cadre" id="disponibilite">
                  <legend>DISPONIBILITE</legend>
@@ -67,16 +71,28 @@
      </div>
      <p style="page-break-before: always">
      
-
-     <fieldset class="cadre" id="projets">
-         <legend>PROJETS AUTICONSULT</legend>
-         <app-history-edit [(inputArray)]="consultant.projets"  [showDetails]="true"></app-history-edit >
-     </fieldset>
-     <fieldset class="cadre" id="parcours">
-         <legend>PARCOURS</legend>
-         <app-history-edit [(inputArray)]="consultant.parcours"  [showDetails]="true"></app-history-edit >
-     </fieldset>
-     
+            <fieldset class="cadre">
+        <app-table 
+            [(inputArray)]="consultant.projets"
+            [keysToShow]=formationsKeysToShow
+            [headElements]=formationsHeadElements
+            [showDetails]="true"
+            textToShow="Ajouter un projet"
+            name="PROJETS AUTICONSULT"
+            >
+        </app-table>
+            </fieldset>
+            <fieldset class="cadre">
+    <app-table 
+        [(inputArray)]="consultant.parcours"
+        [keysToShow]=formationsKeysToShow
+        [headElements]=formationsHeadElements
+        [showDetails]="true"
+        textToShow="Ajouter un parcours"
+        name="PARCOURS"
+        >
+    </app-table>
+</fieldset>
      <fieldset class="cadre">
          <legend>INTERETS</legend>
          <div id="interets">
@@ -87,7 +103,6 @@
      <!-- <a routerLink="/detail/{{consultant.id}}"> -->
         <button class="module" (click)="save()">save</button>   
         <!-- </a> -->
-         consultantJSON: {{consultant | json}} 
-     </div>
+</div> 
 
   

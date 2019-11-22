@@ -1,10 +1,16 @@
 <div *ngIf="inputArray">
   <div mdbTableCol *ngFor="let item of inputArray">
-    <input  [(ngModel)]="item.dates" placeholder="Date"/>
-    <input  [(ngModel)]="item.description" placeholder="Description"/>
-    <input [(ngModel)]="item.institution" placeholder="Organisation"/>
-    <input [(ngModel)]="item.place" placeholder="Ville"/>
+    <!-- <div *ngFor="let property of item | keyvalue"> -->
+      <!-- <input  [(ngModel)]="property.value" placeholder="{{property.key}}"/> -->
+    <div *ngFor="let k of keysToShow; let i=index">
+          <input [(ngModel)]="item[k]" placeholder="{{headElements[i]}}"/>
+      <!-- <input  [(ngModel)]="item.dates" placeholder="Date"/>
+      <input  [(ngModel)]="item.description" placeholder="Description"/>
+      <input [(ngModel)]="item.institution" placeholder="Organisation"/>
+      <input [(ngModel)]="item.place" placeholder="Ville"/> -->
+    </div>
     <button class="delete" title="delete" (click)="deleteHistory(item)">Delete</button>
+    
     <div *ngIf="showDetails">
       <li *ngFor="let detail of item.details">
         <input [(ngModel)]="detail.description" placeholder="Tâche accomplie..."/> 
