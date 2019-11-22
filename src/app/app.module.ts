@@ -24,8 +24,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DateComponent } from './date/date.component';
 import { LangueChoiceComponent } from './langue-choice/langue-choice.component';
-import { TableComponent } from './table/table.component';
 import { ListShowComponent } from './list-show/list-show.component';
+import { CompetenceSearchComponent } from './competence-search/competence-search.component';
+import { ListEditComponent } from './list-edit/list-edit.component';
 
 
 @NgModule({
@@ -38,8 +39,9 @@ import { ListShowComponent } from './list-show/list-show.component';
     ForceChoiceComponent,
     DateComponent,
     LangueChoiceComponent,
-    TableComponent,
-    ListShowComponent
+    ListShowComponent,
+    CompetenceSearchComponent,
+    ListEditComponent
   ],
   imports: [
     BrowserModule,

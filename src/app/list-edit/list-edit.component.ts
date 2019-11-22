@@ -1,12 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { HistoryObject } from '../classes';
 
 @Component({
-  selector: 'app-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  selector: 'app-list-edit',
+  templateUrl: './list-edit.component.html',
+  styleUrls: ['./list-edit.component.css']
 })
-export class TableComponent implements OnInit {
+export class ListEditComponent implements OnInit {
 
   @Input() inputArray: any[];
   @Input() headElements?: string[];

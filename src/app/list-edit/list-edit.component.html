@@ -7,14 +7,14 @@
             placeholder="{{headElements[i]}}"/>
         </span>
         <button (click)="deleteItem(item)">Supprimer</button> 
-        <app-table 
+        <app-list-edit 
         *ngIf="showDetails"
         [(inputArray)]="item.details"
         [keysToShow]="subKeysToShow"
         [headElements]="subHeadElements"
         textToShow="Ajouter une tache accomplie"
         >
-        </app-table>
+        </app-list-edit>
     </div>
 </div>
 <button (click)="addItem()">{{textToShow}}</button>

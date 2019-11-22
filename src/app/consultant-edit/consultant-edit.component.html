@@ -46,14 +46,14 @@
      </fieldset>
      <div class="row">
     <fieldset class="cadre">
-        <app-table 
+        <app-list-edit 
             [(inputArray)]="consultant.formations"
             [keysToShow]="formationsKeysToShow"
             [headElements]="formationsHeadElements"
             textToShow="Ajouter une formation"
             name="FORMATIONS"
             >
-        </app-table>
+        </app-list-edit>
     </fieldset>
          <div class="column">
              <fieldset class="cadre" id="disponibilite">
@@ -72,7 +72,7 @@
      <p style="page-break-before: always">
      
             <fieldset class="cadre">
-        <app-table 
+        <app-list-edit
             [(inputArray)]="consultant.projets"
             [keysToShow]=formationsKeysToShow
             [headElements]=formationsHeadElements
@@ -80,10 +80,10 @@
             textToShow="Ajouter un projet"
             name="PROJETS AUTICONSULT"
             >
-        </app-table>
+        </app-list-edit>
             </fieldset>
             <fieldset class="cadre">
-    <app-table 
+    <app-list-edit 
         [(inputArray)]="consultant.parcours"
         [keysToShow]=formationsKeysToShow
         [headElements]=formationsHeadElements
@@ -91,7 +91,7 @@
         textToShow="Ajouter un parcours"
         name="PARCOURS"
         >
-    </app-table>
+    </app-list-edit>
 </fieldset>
      <fieldset class="cadre">
          <legend>INTERETS</legend>
@@ -104,5 +104,4 @@
         <button class="module" (click)="save()">save</button>   
         <!-- </a> -->
 </div> 
-{{consultant | json}}
   

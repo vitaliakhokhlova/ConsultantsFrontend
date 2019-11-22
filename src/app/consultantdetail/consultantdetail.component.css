@@ -1,26 +1,36 @@
-html,body{
-    height:275.17mm !important;
-    width:190.5mm !important;
-    padding: 1cm !important;
-}
 
 div{
     font-family: "Calibri";
     font-size: 12pt;
 }
 
+.subheader{
+    font-weight: bold;
+}
+
+.header{
+    font-size: 14pt;
+    color: green;    
+    font-weight: bold;
+    background: #FFF;
+}
+
 #logo{
     margin-bottom: 25px;
+    width: 100%;
     margin-right: 25px;
+    text-align: center;
+    background: linear-gradient(to right, #006699 0%, #99ffcc 100%);
 }
 
-.cadre{
-    border: 1pt solid rgb(212, 0, 50);
+.block{
+    /* border: 1pt solid rgb(212, 0, 50); */
+    border-top: 4px green solid;
     margin-bottom: 25px;
-    margin-right: 25px;
+    /* margin-right: 25px;  */
 }
 
-.row{
+/* .row{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -30,38 +40,33 @@ div{
 .column{
     display: flex;
     flex-direction: column;
-}
+} */
 
-legend{
-    font-size: 14pt;
-    color: rgb(118, 113, 133);
-    font-weight: bold;
-    background: #FFF;
-}
+
 #name_block{
     text-align: center;
     vertical-align: center;
 }
 
 div#name{
-    height: 2.21cm;
-    line-height: 2.21cm;
-    color: rgb(212, 0, 50);
+    /* height: 2.21cm; */
+    /* line-height: 2.21cm; */
+    /* color: rgb(212, 0, 50); */
     font-family: Source Sans Pro Bold !important;
     font-size: 24pt;
-    width: 10.58cm;
+    /* width: 10.58cm; */
 }
 
 div#metier{
-    font-family: Source Sans Pro Semi Bold !important;
-    color: rgb(118, 113, 133);
-    font-size: 14pt;
+    font-size: 30pt;
+    /* font-family: Source Sans Pro Semi Bold !important;
+    color: rgb(118, 113, 133);    
     font-weight: bold;
     margin-top: -37px;
     background: #FFF;
     margin-left: auto;
-    margin-right: auto;
-    width: 8cm;
+    margin-right: auto; 
+    width: 8cm; */
 }
 
 #photo{
@@ -77,26 +82,21 @@ div#metier{
     text-align: center;
 }
 
-.comp_group{
-    font-weight: bold;
-    color: rgb(212, 0, 50);
-}
-
 #expression{
+    margin-top: 25px;
+    margin-bottom: 25px;
     font-weight: bold;
     font-style: italic;
-    color: rgb(212, 0, 50);
-    margin-right: 15px;
-    margin-left : 15px;
+    color: rgb(9, 75, 105);
 }
 
-#author{
+/* #author{
     font-style: italic;
     color: rgb(212, 0, 50);
     margin-right: 15px;
     margin-left : 15px;
     font-size: 10pt;
-}
+} */
 #temps{
     width: 6.35cm
 }
@@ -106,7 +106,7 @@ ul {
 }
 
 .header{
-    color: rgb(212, 0, 50);
+    color: green;
     font-weight: bold;
 }
 
