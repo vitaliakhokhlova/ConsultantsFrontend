@@ -15,33 +15,31 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ConsultantsComponent } from './consultants/consultants.component';
 import { ConsultantdetailComponent } from './consultantdetail/consultantdetail.component';
 import { ConsultantEditComponent } from './consultant-edit/consultant-edit.component';
 import { ConsultantSearchComponent } from './consultant-search/consultant-search.component';
 import { CompetenceFormComponent } from './competence-form/competence-form.component';
-import { HistoryEditComponent } from './history-edit/history-edit.component';
 import { ForceChoiceComponent } from './force-choice/force-choice.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DateComponent } from './date/date.component';
 import { LangueChoiceComponent } from './langue-choice/langue-choice.component';
 import { TableComponent } from './table/table.component';
+import { ListShowComponent } from './list-show/list-show.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ConsultantsComponent,
     ConsultantdetailComponent,
     ConsultantEditComponent,
     ConsultantSearchComponent,
     CompetenceFormComponent,
-    HistoryEditComponent,
     ForceChoiceComponent,
     DateComponent,
     LangueChoiceComponent,
-    TableComponent
+    TableComponent,
+    ListShowComponent
   ],
   imports: [
     BrowserModule,

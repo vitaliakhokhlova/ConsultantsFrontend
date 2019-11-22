@@ -1,0 +1,26 @@
+<table mdbTable striped="true" bordered="true">
+    <thead>
+        <tr>
+            <th *ngFor="let head of headElements" scope="col">{{head}} </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr mdbTableCol *ngFor="let item of inputArray">
+            <th scope="row">{{item.id}}</th>
+            <td *ngFor="let k of keysToShow; let i=index">{{item[k]}}</td>          
+
+            <td>
+                <button  (click)="show(item)" class="btn btn-primary">Voir</button>
+            </td>      
+
+
+            <td>
+                <button  (click)="edit(item)" class="btn btn-primary">Corriger</button>
+            </td>
+
+            <td>
+                <button class="delete" title="delete" (click)="delete(item)">Supprimer</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

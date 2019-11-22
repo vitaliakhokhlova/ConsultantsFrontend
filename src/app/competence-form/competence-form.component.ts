@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { GroupService} from '../services/group.service';
-import { CompetenceService} from '../services/competence.service';
 import { CompetenceGroup, Consultant, CompetenceItem, Competence } from '../classes';
 import { ActivatedRoute } from '@angular/router';
 import { DataStorageService } from "../services/data-storage.service";
@@ -21,7 +20,6 @@ export class CompetenceFormComponent implements OnInit {
 
   constructor(
     private groupService: GroupService,
-    private competenceService: CompetenceService,
     private route: ActivatedRoute,
     private dataStorageService: DataStorageService
   ) {
@@ -33,6 +31,9 @@ export class CompetenceFormComponent implements OnInit {
     this.dataStorageService.getConsultant(id).subscribe(result=>
       {
         this.consultant = result;
+        if(!this.consultant.competences){
+          this.consultant.competences=new Array<Competence>();
+        }
         this.getAllGroups(result); 
       });
 
@@ -87,5 +88,4 @@ export class CompetenceFormComponent implements OnInit {
     this.consultant.competences =  this.consultant.competences.filter(x => x !== competence.items[0]);
     competence.items[0] = new Competence();
   }
-
 }

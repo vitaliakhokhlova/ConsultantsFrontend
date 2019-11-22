@@ -1,20 +1,20 @@
-
-    <legend>{{name}}</legend>
-    <div *ngIf="inputArray">
-        <div *ngFor="let item of inputArray">
-            <span *ngFor="let k of keysToShow; let i=index">
-                <input [(ngModel)]="item[k]" placeholder="{{headElements[i]}}"/>
-            </span>
-            <button (click)="deleteItem(item)">Supprimer</button> 
-            <app-table 
-            *ngIf="showDetails"
-            [(inputArray)]="item.details"
-            [keysToShow]="subKeysToShow"
-            [headElements]="subHeadElements"
-            textToShow="Ajouter une tache accomplie"
-            hideFrame="true"
-            >
-            </app-table>
-        </div>
+<legend>{{name}}</legend>
+<div *ngIf="inputArray">
+    <div *ngFor="let item of inputArray">
+        <span *ngFor="let k of keysToShow; let i=index">
+            <input         
+            [(ngModel)]="item[k]" 
+            placeholder="{{headElements[i]}}"/>
+        </span>
+        <button (click)="deleteItem(item)">Supprimer</button> 
+        <app-table 
+        *ngIf="showDetails"
+        [(inputArray)]="item.details"
+        [keysToShow]="subKeysToShow"
+        [headElements]="subHeadElements"
+        textToShow="Ajouter une tache accomplie"
+        >
+        </app-table>
     </div>
-    <button (click)="addItem()">{{textToShow}}</button>
+</div>
+<button (click)="addItem()">{{textToShow}}</button>

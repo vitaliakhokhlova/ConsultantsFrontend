@@ -14,7 +14,6 @@ export class TableComponent implements OnInit {
   @Input() textToShow: string;
   @Input() showDetails?: boolean;
   @Input() name: string;
-  @Input() hideFrame?: boolean;
   
   @Output() inputArrayChange = new EventEmitter();
   subKeysToShow = ["description"];
@@ -23,12 +22,13 @@ export class TableComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    if(!this.inputArray){
+      this.inputArray = new Array<any>();
+      this.inputArrayChange.emit(this.inputArray);
+    }
   }
 
   addItem(){
-    if(!this.inputArray){
-      this.inputArray = new Array<any>();
-    }
     this.inputArray.push({});
     this.onChange();
   }

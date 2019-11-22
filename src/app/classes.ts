@@ -92,8 +92,7 @@ export class HistoryObject extends Resource{
     description: string;
     institution: string;
     place: string;
-    dates: string;
-    
+    dates: string;    
 }   
 
 export class HistoryObjectWithChildren extends HistoryObject{

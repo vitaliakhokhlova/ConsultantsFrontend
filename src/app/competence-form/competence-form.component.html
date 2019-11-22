@@ -22,12 +22,11 @@
                   </tbody>
           </table>
   </div>
-  <button (click)="addItem()">Ajouter un groupe de compétences</button>
   <a routerLink="/edit/{{consultant.id}}">
           <button (click)="save()">Save and go back to edit consultant</button>   
   </a>
   <br>
       groups: {{groups | json}}
       <br><br>
-      {{consultant.competences| json}}
+      {{consultant| json}}
 </div>

@@ -76,7 +76,7 @@ export class CrudService <T extends Resource> {
     }
 
     public searchBySubstring(propertyName:string, propertyValue: string): Observable<T[]>{
-      return this.httpClient.get<T[]>(`${this.urlcomplete}/${propertyName}/${propertyValue}`);
+      return this.httpClient.get<T[]>(`${this.urlcomplete}/search_by_${propertyName}/${propertyValue}`);
     } 
 
     private handleError<T> (operation = 'operation', result?: T) {
