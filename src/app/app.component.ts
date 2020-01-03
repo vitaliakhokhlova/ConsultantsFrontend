@@ -8,8 +8,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AppComponent {
   title = 'consultants';
+  view=true;
 
   constructor(
     private route: ActivatedRoute
   ) { }
+
+  reload(){
+    this.view=false;
+    setTimeout(()=>this.view=true);
+  }
 }
