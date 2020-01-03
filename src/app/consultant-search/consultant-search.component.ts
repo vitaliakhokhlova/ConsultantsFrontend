@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConsultantdetailComponent } from '../consultantdetail/consultantdetail.component';
 import { Consultant } from '../classes';
 import { ConsultantService } from '../services/consultant.service';
+import {  ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-consultant-search',
@@ -39,7 +40,12 @@ export class ConsultantSearchComponent implements OnInit {
                   "property":"interests",
                   "description" : "Intérêts"},
   ]
-  constructor(private consultantService: ConsultantService) { }
+
+  constructor(private consultantService: ConsultantService, route:ActivatedRoute) {
+    route.params.subscribe(val => {
+      this.ngOnInit();
+    });
+  }
 
   ngOnInit() {
     this.getAll();
@@ -63,5 +69,6 @@ export class ConsultantSearchComponent implements OnInit {
     this.items = this.items.filter(h => h !== consultant);
     this.consultantService.delete(consultant.id).subscribe();
   }
+
 
 }

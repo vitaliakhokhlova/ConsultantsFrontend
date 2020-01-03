@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  appUrl: 'https://consultantprofiles.azurewebsites.net/'
+  appUrl: 'http://localhost:4200/api/Consultants_Maven/'
 };
