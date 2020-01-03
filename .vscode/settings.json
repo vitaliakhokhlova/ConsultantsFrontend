@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/b6060340-62cc-4fc6-9d88-8a5d130e0f71/resourceGroups/myresourcegroup/providers/Microsoft.Web/sites/consultants-angular",
+    "appService.deploySubpath": "dist\\consultants"
+}

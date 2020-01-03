@@ -1,7 +1,6 @@
-
 div{
     font-family: "Calibri";
-    font-size: 12pt;
+    font-size: 10pt;
 }
 
 .subheader{
@@ -9,23 +8,25 @@ div{
 }
 
 .header{
+    font-family: "Calibri", sans-serif;
+    font-weight: lighter;
     font-size: 14pt;
-    color: green;    
+    color: rgb(50, 179, 145);    
     font-weight: bold;
     background: #FFF;
 }
 
 #logo{
-    margin-bottom: 25px;
+    margin-bottom: 0px;
     width: 100%;
-    margin-right: 25px;
+    margin-right: 0px;
     text-align: center;
     background: linear-gradient(to right, #006699 0%, #99ffcc 100%);
 }
 
 .block{
     /* border: 1pt solid rgb(212, 0, 50); */
-    border-top: 4px green solid;
+    border-top: 4px solid rgb(0, 160, 118);
     margin-bottom: 25px;
     /* margin-right: 25px;  */
 }
@@ -52,15 +53,17 @@ div#name{
     /* height: 2.21cm; */
     /* line-height: 2.21cm; */
     /* color: rgb(212, 0, 50); */
-    font-family: Source Sans Pro Bold !important;
-    font-size: 24pt;
+    font-family: "Calibri", sans-serif;
+    font-weight: bold;
+    font-size: 16pt;
     /* width: 10.58cm; */
 }
 
 div#metier{
-    font-size: 30pt;
-    /* font-family: Source Sans Pro Semi Bold !important;
-    color: rgb(118, 113, 133);    
+    font-size: 16pt;
+    font-family: "Calibri", sans-serif;
+    font-weight: lighter;
+    /*color: rgb(118, 113, 133);    
     font-weight: bold;
     margin-top: -37px;
     background: #FFF;
@@ -72,7 +75,6 @@ div#metier{
 #photo{
     margin-right: 50px;
     margin-left : 50px;
-    width: 50%
 }
 
 #age{
@@ -87,7 +89,8 @@ div#metier{
     margin-bottom: 25px;
     font-weight: bold;
     font-style: italic;
-    color: rgb(9, 75, 105);
+    font-size: 11pt;
+    color: rgb(0, 112, 150);
 }
 
 /* #author{
@@ -105,10 +108,6 @@ ul {
     list-style-image: url('/assets/eclair.jpg');
 }
 
-.header{
-    color: green;
-    font-weight: bold;
-}
 
 .year{
     color: rgb(212, 0, 50);

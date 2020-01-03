@@ -78,6 +78,7 @@ export class LangueChoiceComponent implements OnInit {
     this.getFilteredOptions(control.length - 1);
   }
 
+
   removeLangue(i: number) {
     this.languesArray.splice(i, 1);
     this.languesArrayChange.emit();

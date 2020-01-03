@@ -1,5 +1,5 @@
 <div *ngIf="consultant">
-    <div id="logo"><img src='assets/logo.jpg'></div>
+    <div id="logo"><img src='assets/logo.svg'></div>
 
     <div id="name">
         <span id="prenom">  
@@ -80,7 +80,10 @@
     <div *ngIf="consultant.projets.length" class="block" id="projets">
         <legend class="header">Projets Auticonsult</legend>
         <div class="row" *ngFor="let p of consultant.projets">            
-            <div class="col-md-3 subheader">{{p.dates}} :</div>
+            <div class="col-md-3">
+                <div class="subheader">{{p.dates}} :</div>
+                <img src='assets/cnes.jpg' height="100">
+            </div>
             <div class="col-md-9">
                 <div class="subheader" id="parcours_header">
                      {{p.description}} - {{p.institution}}, {{p.place}}

@@ -1,7 +1,7 @@
 <form *ngIf="options" [formGroup]="langueForm">
   <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="3.5%" fxLayoutAlign="left" >
     <div formArrayName="langues">
-      <div *ngFor="let item of langueForm.controls.langues.controls; let i=index"> 
+      <div *ngFor="let item of langueForm['controls'].langues['controls']; let i=index"> 
         <div [formGroupName]="i">
           <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="3.5%" fxLayoutAlign="center">
             <mat-form-field  fxFlex="15%"> 

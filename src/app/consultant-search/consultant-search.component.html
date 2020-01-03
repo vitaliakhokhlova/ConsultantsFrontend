@@ -6,6 +6,7 @@
         <mat-option 
           *ngFor="let option of options" 
           (onSelectionChange)="selectedOption(option)"
+          [value]="option.property"
         >
           {{option.description}}
         </mat-option>

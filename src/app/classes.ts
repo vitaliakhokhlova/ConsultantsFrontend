@@ -32,7 +32,7 @@ export class Consultant extends Resource{
         firstname: string;
         title?: string;
         birthday?: Date;
-        expession?: string;
+        expression?: string;
         author?: string;
         profile?: string;
         interests?: string;

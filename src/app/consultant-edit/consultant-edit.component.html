@@ -1,4 +1,4 @@
-<div *ngIf="consultant">
+<div *ngIf="consultant" class="container">
     <div class="row">
          <div class="column" id="name_block">
              <div class="cadre" id="name">
@@ -9,9 +9,10 @@
                         <input [(ngModel)]="consultant.lastname" placeholder="nom"/>
                  </span>
              </div>
+             <div class="form-group">
              <div id="metier">
-                    <input [(ngModel)]="consultant.title" placeholder="title"/>
-             </div>
+                    <input class="form-control" [(ngModel)]="consultant.title" placeholder="title"/>
+             </div></div>
          </div>
         
     </div>
@@ -34,8 +35,13 @@
      </div>
      <fieldset class="cadre">
          <legend>PROFIL</legend>
-         <div id="profil">  <input [(ngModel)]="consultant.profile" placeholder="profil"/></div>
-     </fieldset>
+         <div class="form-group">
+         <div id="profil"> 
+              <textarea class="form-control"  [(ngModel)]="consultant.profile" placeholder="profil" rows="5" >
+            </textarea>
+              </div>
+        </div>
+        </fieldset>
      <fieldset class="cadre">
          <legend>COMPETENCES TECHNIQUES</legend>
          <div id="competences">  
@@ -101,7 +107,7 @@
      </fieldset>
     </div>
      <!-- <a routerLink="/detail/{{consultant.id}}"> -->
-        <button class="module" (click)="save()">save</button>   
+        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="save()"><div class="module">Save</div></button>   
         <!-- </a> -->
 </div> 
   
