@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConsultantdetailComponent } from '../consultantdetail/consultantdetail.component';
 import { Consultant } from '../classes';
 import { ConsultantService } from '../services/consultant.service';
-import {  ActivatedRoute } from '@angular/router';
+import {  Router } from '@angular/router';
 
 @Component({
   selector: 'app-consultant-search',
@@ -41,10 +41,10 @@ export class ConsultantSearchComponent implements OnInit {
                   "description" : "Intérêts"},
   ]
 
-  constructor(private consultantService: ConsultantService, route:ActivatedRoute) {
-    route.params.subscribe(val => {
-      this.ngOnInit();
-    });
+  constructor(private consultantService: ConsultantService, private router: Router) {
+    this.router.routeReuseStrategy.shouldReuseRoute = function() {
+      return false;
+  };
   }
 
   ngOnInit() {
