@@ -6,7 +6,7 @@
             [(ngModel)]="item[k]" 
             placeholder="{{headElements[i]}}"/>
         </span>
-        <button (click)="deleteItem(item)">Supprimer</button> 
+        <button mat-fab (click)="deleteItem(item)"><i class="fas fa-trash-alt"></i></button> 
         <app-list-edit 
         *ngIf="showDetails"
         [(inputArray)]="item.details"

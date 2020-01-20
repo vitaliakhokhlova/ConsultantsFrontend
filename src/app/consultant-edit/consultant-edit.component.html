@@ -3,15 +3,15 @@
          <div class="column" id="name_block">
              <div class="cadre" id="name">
                  <span id="prenom">  
-                        <input [(ngModel)]="consultant.firstname" placeholder="prenom"/>
+                        <input [(ngModel)]="consultant.firstname" placeholder="Prénom"/>
                  </span> 
                  <span id="nom">
-                        <input [(ngModel)]="consultant.lastname" placeholder="nom"/>
+                        <input [(ngModel)]="consultant.lastname" placeholder="Nom"/>
                  </span>
              </div>
              <div class="form-group">
              <div id="metier">
-                    <input class="form-control" [(ngModel)]="consultant.title" placeholder="title"/>
+                    <input class="form-control" [(ngModel)]="consultant.title" placeholder="Title"/>
              </div></div>
          </div>
         
@@ -20,7 +20,7 @@
      <div class="row">
          <div class="column">
                  <div id="photo">
-                   <!-- <img src='assets/{{consultant.firstname|lowercase}}{{consultant.lastname|lowercase}}.jpg' height="160"> -->
+                    <input [(ngModel)]="consultant.photoname" placeholder="Fichier du photo du profil"/>
                   </div>
                   <app-date [(birthday)]="consultant.birthday"></app-date>
          </div>
@@ -109,5 +109,6 @@
      <!-- <a routerLink="/detail/{{consultant.id}}"> -->
         <button type="button" class="btn btn-primary btn-lg btn-block" (click)="save()"><div class="module">Save</div></button>   
         <!-- </a> -->
+        {{consultant | json}}
 </div> 
   

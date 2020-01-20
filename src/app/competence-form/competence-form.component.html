@@ -23,10 +23,8 @@
           </table>
   </div>
   <a routerLink="/edit/{{consultant.id}}">
-          <button (click)="save()">Save and go back to edit consultant</button>   
+          <button type="button" class="btn btn-primary btn-lg btn-block"  (click)="save()">Save and go back to edit consultant</button>   
   </a>
   <br>
-      groups: {{groups | json}}
       <br><br>
-      {{consultant| json}}
 </div>

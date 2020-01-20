@@ -1,0 +1,111 @@
+<form 
+*ngIf="consultant | async; else loading" 
+[formGroup]="consultantForm" 
+(ngSubmit)="onSubmit()">
+
+  <mat-form-field>
+    <input matInput type="text" placeholder="Prénom" id="firstname" formControlName="firstname">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Nom" type="text" id="lastname" formControlName="lastname">  
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Métier" type="text" id="title" formControlName="title">  
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput 
+        formControlName="birthday"
+        [matDatepicker]="picker" 
+        placeholder="Date de naissance"
+    >
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+  </mat-form-field>
+
+
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Fichier de photo" type="text" id="photoname" formControlName="photoname">  
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Citation" type="text" id="expression" formControlName="expression">  
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Auteur" type="text" id="author" formControlName="author">  
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Mobilité" type="text" id="mobility" formControlName="mobility">  
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <textarea matInput cols="12" rows="5" placeholder="Profile" formControlName="profile"></textarea>
+  </mat-form-field>
+
+
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Intérêts" type="text" id="interests" formControlName="interests">  
+  </mat-form-field>
+
+  <div formArrayName="formations">
+    <h3>Formations</h3>
+    <div *ngFor="let element of formations.controls; let i=index" 
+          [formGroupName]="i">
+
+        <input formControlName="dates" placeholder="Date" >
+        <input formControlName="description" placeholder="Description">
+        <input formControlName="institution" placeholder="Organisation">
+        <input formControlName="place" placeholder="Ville">
+
+        <button mat-fab  type="button" (click)="delete(formations, i)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+    </div>
+    <button mat-fab type="button" (click)="addFormation()">
+      <i class="fas fa-plus-circle"></i>   
+    </button>     
+  </div>
+
+<div formArrayName="projets">
+  <h3>Projets</h3>
+  <div *ngFor="let project of projets.controls; let i=index" 
+        [formGroupName]="i">
+
+      <input formControlName="dates" placeholder="Date" >
+      <input formControlName="description" placeholder="Description">
+      <input formControlName="institution" placeholder="Organisation">
+      <input formControlName="place" placeholder="Ville">
+      <input formControlName="pictogram" placeholder="Pictogram">
+
+      <button  mat-fab type="button" (click)="delete(projets, i)">
+        <i class="fas fa-trash-alt"></i>
+       </button>
+       <br>
+       <div formArrayName="details">
+        <div *ngFor="let detail of project.controls.details.controls; let j=index" 
+          [formGroupName]="j">
+          <input formControlName="description" placeholder="Tâche">
+          <button  mat-fab type="button" (click)="delete(project.controls.details, j)">
+            <i class="fas fa-trash-alt"></i>
+           </button>
+        </div>
+       </div>
+       <button type="button" (click)="addDetail(project)">Ajouter une tâche</button>
+  </div>
+  <button mat-fab type="button" (click)="addProject()">
+    <i class="fas fa-plus-circle"></i></button>    
+</div>
+ 
+<br>
+  <button mdbBtn color="primary" type="submit" [disabled]="!consultantForm.valid">Sauvegarder</button>
+</form>  
+
+
+  <ng-template #loading>
+    Loading Consultant (check console for errors)...
+  </ng-template>

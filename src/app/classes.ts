@@ -1,11 +1,15 @@
 import { ConsultantdetailComponent } from "./consultantdetail/consultantdetail.component";
 
+import {  propArray, prop, required } from '@rxweb/reactive-form-validators';  
+
+
 export interface Deserializable {
     deserialize(input: any): this;
   }
 
 export class Resource {
-    id?: number;
+    @prop()
+    id?: number = 0;
 
     // deserialize(input: any): this {
     //     Object.assign(this, input);
@@ -14,12 +18,8 @@ export class Resource {
   }
 
 export class ResourceWithDescription extends Resource{
-    description: string;
-
-    constructor(){
-        super();
-        this.description="";
-    }
+    @prop()
+    description: string = "";
 
     // deserialize(input: any): this {
     //     Object.assign(this, input);
@@ -27,23 +27,71 @@ export class ResourceWithDescription extends Resource{
     // }
 }
 
-export class Consultant extends Resource{     
-        lastname: string;
-        firstname: string;
-        title?: string;
-        birthday?: Date;
-        expression?: string;
-        author?: string;
-        profile?: string;
-        interests?: string;
-        occupancy?: string;
-        mobility?: string;
-        forces?: Array<Force>;   
-        competences?: Array<Competence>;
-        langues?: Array<Langue>;
-        formations?: Array<HistoryObject>;
-        parcours?: Array<HistoryObjectWithChildren>;
-        projets?: Array<HistoryObjectWithChildren>; 
+
+export class HistoryObject extends Resource{
+    @prop()
+    description: string = "";
+    @prop()
+    institution: string = "";
+    @prop()
+    place: string = "";
+    @prop()
+    dates: string = ""; 
+    @prop()
+    pictogram: string = ""; 
+}   
+
+export class HistoryObjectWithChildren extends HistoryObject{
+    @propArray()
+    details:  Array<ResourceWithDescription> = new Array<ResourceWithDescription>();
+
+    // deserialize(input: any): this {
+    //     Object.assign(this, input);
+    //     if(input.details){
+    //     this.details = input.details.map(
+    //         item => new ResourceWithDescription().deserialize(item)
+    //         );
+    //     }
+    //     return this;
+    //    }
+}
+
+export class Consultant extends Resource{ 
+        @prop() 
+        photoname: string = ""; 
+        @required()
+        lastname: string = "";
+        @required()
+        firstname: string = "";
+        @prop()
+        title?: string = "";
+        @prop()
+        birthday?: Date = new Date(1990, 0, 1);
+        @prop()
+        expression?: string = "";
+        @prop()
+        author?: string = "";
+        @prop()
+        profile?: string = "";
+        @prop()
+        interests?: string = "";
+        @prop()
+        occupancy?: string = "";
+        @prop()
+        mobility?: string = "";
+
+        @propArray()
+        formations?: Array<HistoryObject> = new Array<HistoryObject>();
+        @propArray()
+        parcours?: Array<HistoryObjectWithChildren> = new Array<HistoryObjectWithChildren>();
+        @propArray()
+        projets?: Array<HistoryObjectWithChildren> = new Array<HistoryObjectWithChildren>(); 
+
+        // forces?: Array<Force> = new Array<Force> ();   
+        // competences?: Array<Competence> = Array<Competence>();
+        // langues?: Array<Langue> = Array<Langue>();
+        
+     
 
         // deserialize(input: any): this {
         //    Object.assign(this, input);
@@ -88,50 +136,22 @@ export class Force extends Resource{
     parent2: ForceItem;
 }
 
-export class HistoryObject extends Resource{
-    description: string;
-    institution: string;
-    place: string;
-    dates: string;    
-}   
-
-export class HistoryObjectWithChildren extends HistoryObject{
-    details:  Array<ResourceWithDescription>;
-
-    constructor(){
-        super();
-        this.details = new Array<ResourceWithDescription>();
-    }
-
-    // deserialize(input: any): this {
-    //     Object.assign(this, input);
-    //     if(input.details){
-    //     this.details = input.details.map(
-    //         item => new ResourceWithDescription().deserialize(item)
-    //         );
-    //     }
-    //     return this;
-    //    }
-}
-
-
 export class CompetenceGroup extends ResourceWithDescription{
-    items: CompetenceItem[];
+    items?: CompetenceItem[];
 }
 
 export class CompetenceItem extends ResourceWithDescription{
-    items?: Competence[];
-    parent2?: CompetenceGroup;
+    parent2_id: number;
 }
 
 export class LangueItem extends ResourceWithDescription{
-    items?: Langue[];
+    //items?: Langue[];
     addNew?: string;
 }
 
 export class Competence extends Resource{
-    parent2?: CompetenceItem;
-    parent: Consultant;
+    parent2_id: number;
+    parent_id: number;
     annee?: number;
     contexte?: string;
     interet?: string;
@@ -141,11 +161,18 @@ export class Competence extends Resource{
 }
 
 export class Langue extends Competence{
+    parent2: LangueItem;
     constructor(){
         super();
         this.parent2 = new LangueItem();
         this.niveau = "";
         this.annee = 0;
         this.experience = 0;
+    }
+}
+
+export class Factory {
+    create<T>(type: (new () => T)): T {
+        return new type();
     }
 }

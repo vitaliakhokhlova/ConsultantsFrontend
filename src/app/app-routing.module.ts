@@ -4,11 +4,12 @@ import { ConsultantdetailComponent } from './consultantdetail/consultantdetail.c
 import {ConsultantEditComponent} from './consultant-edit/consultant-edit.component';
 import { ConsultantSearchComponent } from './consultant-search/consultant-search.component';
 import { CompetenceFormComponent} from './competence-form/competence-form.component';
+import { InputFormEditorComponent } from './input-form-editor/input-form-editor.component';
 
 const routes: Routes = [
   { path: 'search', component: ConsultantSearchComponent },
   { path: 'detail/:id', component: ConsultantdetailComponent },
-  { path: 'edit/:id', component: ConsultantEditComponent },
+  { path: 'edit/:id', component: InputFormEditorComponent },
   { path: 'competences/:id', component: CompetenceFormComponent}
 ];
 

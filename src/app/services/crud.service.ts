@@ -40,6 +40,7 @@ export class CrudService <T extends Resource> {
 
     public update(item: T): Observable<T> {
       console.log("updating on "+this.urlcomplete);
+      console.log(item);
       return this.httpClient.put<T>(this.urlcomplete, item)
       .pipe(
         tap(_ => this.log(`updated ${this.endpoint} id=${item.id}`)),

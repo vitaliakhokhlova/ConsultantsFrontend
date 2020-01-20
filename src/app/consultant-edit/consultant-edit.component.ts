@@ -15,8 +15,8 @@ export class ConsultantEditComponent implements OnInit {
   consultant: Consultant;
   input : Array<string>;
 
-  formationsHeadElements = ['Durée', 'Description', "Nom de l'organisation", 'Ville'];
-  formationsKeysToShow = ["dates", "description", "institution", "place"];
+  formationsHeadElements = ['Pictogramme','Durée', 'Description', "Nom de l'organisation", 'Ville'];
+  formationsKeysToShow = ["pictogram","dates", "description", "institution", "place"];
 
   constructor(
     private route: ActivatedRoute,
@@ -56,6 +56,6 @@ export class ConsultantEditComponent implements OnInit {
    }
 
    setCompetence(competences: Array<Competence>): void{
-    this.consultant.competences = competences;
+    //this.consultant.competences = competences;
   }
 }

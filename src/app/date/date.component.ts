@@ -6,6 +6,7 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-date',
@@ -25,6 +26,8 @@ export class DateComponent implements OnInit {
   @Input() birthday: Date;
   @Output() birthdayChange = new EventEmitter<Date>();
   startDate = new Date(1990, 0, 1);
+
+  
 
   constructor(private _adapter: DateAdapter<any>) { }
 

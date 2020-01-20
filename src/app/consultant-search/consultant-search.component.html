@@ -17,11 +17,12 @@
 </form>
 <br>
 
-<app-list-show *ngIf=items
+<div *ngIf=items>
+<app-list-show 
 [(inputArray)]="items"
 [keysToShow]="keysToShow"
 [headElements]="headElements"
 (itemToDelete)="delete($event)"
 >
-{{items | json}}
 </app-list-show>
+</div>

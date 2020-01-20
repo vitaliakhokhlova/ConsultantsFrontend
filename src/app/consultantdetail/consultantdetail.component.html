@@ -16,10 +16,10 @@
     <div class="row">
         <div class="col-sm-4">
              <div id="photo">
-                <img src='assets/vitaliakhokhlova.jpg' height="160">
+                <img src='assets/{{consultant.photoname}}' height="160">
                 <!-- <img src='assets/{{consultant.firstname|lowercase}}{{consultant.lastname|lowercase}}.jpg' height="160"> -->
             </div>
-                <!-- <div id="age">{{age}}  ans</div> -->
+                 <div id="age">{{age}}  ans</div>
         </div>
         <div class="col-sm-8">
             <div id="forces">
@@ -45,9 +45,10 @@
             <div  class="row" *ngFor="let g of groups">       
                     <div class="col-md-3 subheader">{{g.description}} :</div> 
                     <div class="col-md-9">
-                        <span *ngFor="let c of g.items ; last as isLast">
-                            {{c.description}}
-                            <span *ngIf="!isLast">,</span>
+                        <span *ngFor="let c of consultant.competences; last as isLast">
+                            <div *ngIf="c.parent2.parent2==g">{{c.parent2.description}}
+                            <span *ngIf="!isLast"> </span>
+                        </div>
                         </span>        
                 </div>   
             </div>
@@ -82,7 +83,7 @@
         <div class="row" *ngFor="let p of consultant.projets">            
             <div class="col-md-3">
                 <div class="subheader">{{p.dates}} :</div>
-                <img src='assets/cnes.jpg' height="100">
+                <img src='assets/{{p.pictogram}}' height="100">
             </div>
             <div class="col-md-9">
                 <div class="subheader" id="parcours_header">
@@ -118,4 +119,5 @@
     <a routerLink="/edit/{{consultant.id}}">
         <div class="module">Corriger</div>   
         </a>
+        {{consultant | json}}
 </div>

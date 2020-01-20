@@ -2,6 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { HttpClientModule }    from '@angular/common/http';
+import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
+
 import {
   MatSelectModule, 
   MatFormFieldModule, 
@@ -27,6 +30,7 @@ import { LangueChoiceComponent } from './langue-choice/langue-choice.component';
 import { ListShowComponent } from './list-show/list-show.component';
 import { CompetenceSearchComponent } from './competence-search/competence-search.component';
 import { ListEditComponent } from './list-edit/list-edit.component';
+import { InputFormEditorComponent } from './input-form-editor/input-form-editor.component';
 
 
 @NgModule({
@@ -41,7 +45,8 @@ import { ListEditComponent } from './list-edit/list-edit.component';
     LangueChoiceComponent,
     ListShowComponent,
     CompetenceSearchComponent,
-    ListEditComponent
+    ListEditComponent,
+    InputFormEditorComponent
   ],
   imports: [
     BrowserModule,
@@ -51,6 +56,7 @@ import { ListEditComponent } from './list-edit/list-edit.component';
     MatSelectModule,
     MatFormFieldModule,
     MatInputModule,
+    MDBBootstrapModule.forRoot(),
     BrowserAnimationsModule,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -58,7 +64,8 @@ import { ListEditComponent } from './list-edit/list-edit.component';
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatIconModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    RxReactiveFormsModule
   ],
   providers: [MatDatepickerModule],
   bootstrap: [AppComponent]

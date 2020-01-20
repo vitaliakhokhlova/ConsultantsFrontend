@@ -14,6 +14,8 @@ export class ConsultantdetailComponent implements OnInit {
   consultant: Consultant;
   age: number;
   groups: Array<CompetenceGroup>;
+  photoname: any;
+  pictrogram: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,29 +29,30 @@ export class ConsultantdetailComponent implements OnInit {
       {
         this.consultant=result;
         this.calculateAge(result);
-        this.makeGroups(result);
+        this.makeGroups(result);    
       });  
   }
 
   calculateAge(consultant: Consultant){
-    this.age = new Date().getFullYear() - new Date(consultant.birthday).getFullYear();	  
+    let ms = new Date().valueOf() - new Date(consultant.birthday).valueOf();
+    this.age =Math.floor((ms / (1000 * 3600 * 24))/365.25);;	  
   }
 
   makeGroups(consultant: Consultant){    
-    this.groups = new Array<CompetenceGroup>(); 
-    if(consultant.competences){
-      for(let c of consultant.competences){
-        let newGroup = c.parent2.parent2;
-        let existingGroup = this.groups.filter(x => x.id == newGroup.id)[0];
-        if(existingGroup){
-          existingGroup.items.push(c.parent2);
-        }
-        else{
-          newGroup.items = new Array<CompetenceItem>();
-          newGroup.items.push(c.parent2);
-          this.groups.push(newGroup);
-        }      
-      } 
-    }      
+    // this.groups = new Array<CompetenceGroup>(); 
+    // if(consultant.competences){
+    //   for(let c of consultant.competences){
+    //     let newGroup = c.parent2.parent2;
+    //     let existingGroup = this.groups.filter(x => x.id == newGroup.id)[0];
+    //     if(existingGroup){
+    //       //existingGroup.items.push(c.parent2);
+    //     }
+    //     else{
+    //       //newGroup.items = new Array<CompetenceItem>();
+    //       //newGroup.items.push(c.parent2);
+    //       this.groups.push(newGroup);
+    //     }      
+    //   } 
+    // }      
   }
 }

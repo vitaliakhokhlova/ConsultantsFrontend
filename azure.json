@@ -1,0 +1,17 @@
+{
+  "hosting": [
+    {
+      "app": {
+        "project": "consultants",
+        "target": "build",
+        "configuration": "production",
+        "path": "dist/consultants"
+      },
+      "azureHosting": {
+        "subscription": "b6060340-62cc-4fc6-9d88-8a5d130e0f71",
+        "resourceGroupName": "consultants-static-deploy",
+        "account": "consultantsstatic"
+      }
+    }
+  ]
+}
