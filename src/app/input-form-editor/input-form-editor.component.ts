@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { ConsultantService} from '../services/consultant.service';
 import { DataStorageService } from "../services/data-storage.service";
-import { Consultant, HistoryObject, HistoryObjectWithChildren, Factory, ResourceWithDescription } from '../classes';
+import { Consultant, HistoryObject, HistoryObjectWithChildren, Factory, ResourceWithDescription, Force, ForceItem } from '../classes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -14,6 +14,8 @@ import {
 } from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { RxFormBuilder, RxFormGroup, RxFormArray } from '@rxweb/reactive-form-validators';
+import { ForceService } from '../services/force.service';
+import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-input-form-editor',
@@ -33,14 +35,16 @@ export class InputFormEditorComponent implements OnInit {
   consultantForm: RxFormGroup;
   consultant: Observable<Consultant>;
   startDate = new Date(1990, 0, 1);
+  forces_loaded = false;
 
   constructor(
     private _adapter: DateAdapter<any>,
     private route: ActivatedRoute,
     private router: Router,
     private fb: RxFormBuilder,
+    private dataStorageService: DataStorageService,
     private consultantService: ConsultantService,
-    private dataStorageService: DataStorageService) { }
+    private forceService: ForceService) { }
 
   ngOnInit() {
     this._adapter.setLocale('fr');
@@ -56,6 +60,7 @@ export class InputFormEditorComponent implements OnInit {
   createForm(){
     let consultant = new Consultant();
     this.consultantForm = this.fb.formGroup(consultant) as RxFormGroup;
+    this.addForcesToForm();
     console.log("Form created");
     console.log(this.consultantForm);
    
@@ -89,11 +94,16 @@ export class InputFormEditorComponent implements OnInit {
     this.consultantForm.patchValue({birthday: new Date(data.birthday)});
 
     data.formations.forEach(x => this.formations.push(this.fb.group(x)));
-    data.parcours.forEach(x => this.parcours.push(this.fb.group(x)));
+    this.forces.clear();
+    data.forces.forEach(x => this.forces.push(this.fb.group(x)));
     data.projets.forEach(x => {
-     //--3 x.details.push(new ResourceWithDescription());
+      //x.details.push(new ResourceWithDescription());     
       this.projets.push(this.fb.group(x));
-    });23
+    });
+    data.parcours.forEach(x => {
+      //x.details.push(new ResourceWithDescription());
+      this.parcours.push(this.fb.group(x));
+     });
             
     console.log("Patching arrays");
     console.log(this.consultantForm);
@@ -108,6 +118,25 @@ export class InputFormEditorComponent implements OnInit {
     console.log(this.consultantForm);
   }
 
+  addForcesToForm() {
+      this.forceService.getAll().subscribe(response => 
+        {
+          console.log(response);  
+          let i = 1;
+          for(let item of response){
+            let force = new Force();
+            force.position = i;
+            force.parent2 = new ForceItem();
+            force.parent2.id = item.id;
+            force.parent2.description = item.description;
+            this.forces.push(this.fb.group(force));
+            i=i+1;
+          }
+          this.forces_loaded = true;
+        }
+        );
+    }
+
   get forces() {
     return this.consultantForm.get('forces') as FormArray;
   }
@@ -117,10 +146,7 @@ export class InputFormEditorComponent implements OnInit {
   }
 
   addParcours(){
-    let parcour = new HistoryObjectWithChildren();
-    parcour.details = new Array<HistoryObjectWithChildren>();
-    parcour.details.push(new ResourceWithDescription());
-    this.parcours.push(this.fb.group(parcour));
+    this.parcours.push(this.fb.formGroup(new HistoryObjectWithChildren()) as RxFormGroup);
   }
 
   get projets() {
@@ -129,7 +155,6 @@ export class InputFormEditorComponent implements OnInit {
 
   addProject(){
     this.projets.push(this.fb.formGroup(new HistoryObjectWithChildren()) as RxFormGroup);
-    console.log(this.consultantForm);
   }
 
   addDetail(item){
@@ -144,6 +169,21 @@ export class InputFormEditorComponent implements OnInit {
 
   delete(array, i) {
     array.removeAt(i);
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.forces.controls, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.forces.value, event.previousIndex, event.currentIndex);
+    this.correctForcePositions();
+  }
+
+  correctForcePositions()
+  {
+    let forces = this.forces.controls;
+    forces.forEach((force, idx) => {
+      force.get('position').setValue(idx+1);
+    })
+    
   }
 
   onSubmit() {

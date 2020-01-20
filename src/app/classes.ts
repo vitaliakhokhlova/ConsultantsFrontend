@@ -19,14 +19,13 @@ export class Resource {
 
 export class ResourceWithDescription extends Resource{
     @prop()
-    description: string = "";
+    description: string ="";
 
     // deserialize(input: any): this {
     //     Object.assign(this, input);
     //     return this;
     // }
 }
-
 
 export class HistoryObject extends Resource{
     @prop()
@@ -55,6 +54,22 @@ export class HistoryObjectWithChildren extends HistoryObject{
     //     return this;
     //    }
 }
+
+
+export class ForceItem extends ResourceWithDescription{
+    // deserialize(input: any): this {
+    //     Object.assign(this, input);
+    //     return this;
+    // }
+}
+
+export class Force extends Resource{
+    @prop()
+    position: number = 0;
+    @prop()
+    parent2: ForceItem = new ForceItem();
+}
+
 
 export class Consultant extends Resource{ 
         @prop() 
@@ -86,12 +101,13 @@ export class Consultant extends Resource{
         parcours?: Array<HistoryObjectWithChildren> = new Array<HistoryObjectWithChildren>();
         @propArray()
         projets?: Array<HistoryObjectWithChildren> = new Array<HistoryObjectWithChildren>(); 
-
-        // forces?: Array<Force> = new Array<Force> ();   
-        // competences?: Array<Competence> = Array<Competence>();
-        // langues?: Array<Langue> = Array<Langue>();
-        
-     
+        @propArray()
+        forces?: Array<Force> = new Array<Force> ();   
+        @propArray()
+        competences?: Array<Competence> = Array<Competence>();
+        @propArray()
+        langues?: Array<Langue> = Array<Langue>();
+            
 
         // deserialize(input: any): this {
         //    Object.assign(this, input);
@@ -122,18 +138,6 @@ export class Consultant extends Resource{
         //         }
         //    return this;
         //   }
-}
-
-export class ForceItem extends ResourceWithDescription{
-    deserialize(input: any): this {
-        Object.assign(this, input);
-        return this;
-    }
-}
-
-export class Force extends Resource{
-    position: number;
-    parent2: ForceItem;
 }
 
 export class CompetenceGroup extends ResourceWithDescription{

@@ -52,6 +52,16 @@
     <input matInput placeholder="Intérêts" type="text" id="interests" formControlName="interests">  
   </mat-form-field>
 
+  <h3>Forces cognitives (drag and drop)</h3>
+  <div *ngIf="forces_loaded; else loading" 
+  cdkDropList class="example-list" 
+  (cdkDropListDropped)="drop($event)">
+    <div class="example-box" *ngFor="let item of forces.controls" cdkDrag>
+      <span cdkDragHandle>{{item.controls.position.value}} 
+        {{item.controls.parent2.controls.description.value}}</span>
+    </div>
+  </div>
+
   <div formArrayName="formations">
     <h3>Formations</h3>
     <div *ngFor="let element of formations.controls; let i=index" 
@@ -73,7 +83,7 @@
 
 <div formArrayName="projets">
   <h3>Projets</h3>
-  <div *ngFor="let project of projets.controls; let i=index" 
+  <div *ngFor="let item of projets.controls; let i=index" 
         [formGroupName]="i">
 
       <input formControlName="dates" placeholder="Date" >
@@ -87,25 +97,56 @@
        </button>
        <br>
        <div formArrayName="details">
-        <div *ngFor="let detail of project.controls.details.controls; let j=index" 
+        <div *ngFor="let detail of item.controls.details.controls; let j=index" 
           [formGroupName]="j">
           <input formControlName="description" placeholder="Tâche">
-          <button  mat-fab type="button" (click)="delete(project.controls.details, j)">
+          <button  mat-fab type="button" (click)="delete(item.controls.details, j)">
             <i class="fas fa-trash-alt"></i>
            </button>
         </div>
        </div>
-       <button type="button" (click)="addDetail(project)">Ajouter une tâche</button>
+       <button type="button" (click)="addDetail(item)">Ajouter une tâche</button>
   </div>
   <button mat-fab type="button" (click)="addProject()">
+    <i class="fas fa-plus-circle"></i></button>    
+</div>
+
+<div formArrayName="parcours">
+  <h3>Parcours</h3>
+  <div *ngFor="let item of parcours.controls; let i=index" 
+        [formGroupName]="i">
+
+      <input formControlName="dates" placeholder="Date" >
+      <input formControlName="description" placeholder="Description">
+      <input formControlName="institution" placeholder="Organisation">
+      <input formControlName="place" placeholder="Ville">
+      <input formControlName="pictogram" placeholder="Pictogram">
+
+      <button  mat-fab type="button" (click)="delete(parcours, i)">
+        <i class="fas fa-trash-alt"></i>
+       </button>
+       <br>
+       <div formArrayName="details">
+        <div *ngFor="let detail of item.controls.details.controls; let j=index" 
+          [formGroupName]="j">
+          <input formControlName="description" placeholder="Tâche">
+          <button  mat-fab type="button" (click)="delete(item.controls.details, j)">
+            <i class="fas fa-trash-alt"></i>
+           </button>
+        </div>
+       </div>
+       <button type="button" (click)="addDetail(item)">Ajouter une tâche</button>
+  </div>
+  <button mat-fab type="button" (click)="addParcours()">
     <i class="fas fa-plus-circle"></i></button>    
 </div>
  
 <br>
   <button mdbBtn color="primary" type="submit" [disabled]="!consultantForm.valid">Sauvegarder</button>
+  {{ consultantForm.value | json}}
 </form>  
 
 
   <ng-template #loading>
-    Loading Consultant (check console for errors)...
+    Loading (check console for errors)...
   </ng-template>
