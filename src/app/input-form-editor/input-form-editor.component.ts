@@ -47,22 +47,24 @@ export class InputFormEditorComponent implements OnInit {
     private forceService: ForceService) { }
 
   ngOnInit() {
-    this._adapter.setLocale('fr');
-
-    this.createForm();
-
+    this._adapter.setLocale('fr');    
     const id = +this.route.snapshot.paramMap.get('id');
-    this.consultant = this.dataStorageService.getConsultant(id).pipe(
-      tap(response => this.patchForm(response)));    
-    console.log(this.consultant);
+    this.forceService.getAll().subscribe(
+      forces => 
+      { 
+        this.createForm(forces);
+      },
+      err => {
+          console.log(err);
+      },
+      () => {
+        this.patchForm(id); 
+      });
   }
 
-  createForm(){
-    let consultant = new Consultant();
-    this.consultantForm = this.fb.formGroup(consultant) as RxFormGroup;
-    this.addForcesToForm();
-    console.log("Form created");
-    console.log(this.consultantForm);
+  createForm(forces){
+    this.consultantForm = this.fb.formGroup(new Consultant()) as RxFormGroup;
+    this.addForcesToForm(forces);
    
     // this.consultantForm = this.fb.group({
     //   id: [0],
@@ -86,27 +88,33 @@ export class InputFormEditorComponent implements OnInit {
     // });
   }
 
-  patchForm(data){
-    this.consultantForm.patchValue(data);
-    console.log("Form patched from data");
-    console.log(this.consultantForm);
-
-    this.consultantForm.patchValue({birthday: new Date(data.birthday)});
-
-    data.formations.forEach(x => this.formations.push(this.fb.group(x)));
-    this.forces.clear();
-    data.forces.forEach(x => this.forces.push(this.fb.group(x)));
-    data.projets.forEach(x => {
-      //x.details.push(new ResourceWithDescription());     
-      this.projets.push(this.fb.group(x));
-    });
-    data.parcours.forEach(x => {
-      //x.details.push(new ResourceWithDescription());
-      this.parcours.push(this.fb.group(x));
-     });
-            
-    console.log("Patching arrays");
-    console.log(this.consultantForm);
+  patchForm(id){
+    this.consultant = this.dataStorageService.getConsultant(id).pipe(
+      tap(data => 
+        {
+        if(data.forces.length > 0){
+          console.log("Test");
+          console.log(this.forces.length);
+          for(let i = this.forces.length-1; i >= 0; i--) {
+            console.log("Deleting force");
+            this.forces.removeAt(i);
+          }            
+        }
+        this.consultantForm.patchValue(data);
+        this.consultantForm.patchValue({birthday: new Date(data.birthday)});
+        data.formations.forEach(x => this.formations.push(this.fb.group(x)));    
+        data.forces.forEach(x => this.forces.push(this.fb.group(x)));
+        data.projets.forEach(x => {
+          //x.details.push(new ResourceWithDescription());     
+          this.projets.push(this.fb.group(x));
+        });
+        data.parcours.forEach(x => {
+          //x.details.push(new ResourceWithDescription());
+          this.parcours.push(this.fb.group(x));
+        });             
+      }
+      )
+    ); 
   }
 
   get formations(): FormArray {
@@ -118,24 +126,29 @@ export class InputFormEditorComponent implements OnInit {
     console.log(this.consultantForm);
   }
 
-  addForcesToForm() {
-      this.forceService.getAll().subscribe(response => 
-        {
-          console.log(response);  
-          let i = 1;
-          for(let item of response){
-            let force = new Force();
-            force.position = i;
-            force.parent2 = new ForceItem();
-            force.parent2.id = item.id;
-            force.parent2.description = item.description;
-            this.forces.push(this.fb.group(force));
-            i=i+1;
-          }
-          this.forces_loaded = true;
-        }
-        );
+  addForcesToForm(forces) {
+    if(this.forces.length==0){
+      console.log("Force length before inserting");
+      console.log(this.forces.length);
+            
+      let i = 1;
+      console.log("Force length before inserting");
+      console.log(this.forces.length);
+      this.forces_loaded = true;
+      for(let item of forces){
+        let force = new Force();
+        force.position = i;
+        force.parent2 = new ForceItem();
+        force.parent2.id = item.id;
+        force.parent2.description = item.description;
+        this.forces.push(this.fb.group(force));
+        i=i+1;
+      }
+      console.log("Force length after inserting");
+      console.log(this.forces.length);
+      this.forces_loaded = true;
     }
+  }
 
   get forces() {
     return this.consultantForm.get('forces') as FormArray;
@@ -192,8 +205,10 @@ export class InputFormEditorComponent implements OnInit {
       this.consultantService.update(this.consultantForm.value).subscribe(result=>{
         console.log("Consultant: "+result);
         this.dataStorageService.consultant = result;
+        this.consultantForm.reset();
         this.router.navigate([`detail/${result.id}`]);
        });
+       
     }
   }
 
