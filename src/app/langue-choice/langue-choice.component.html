@@ -1,17 +1,13 @@
-<form *ngIf="options" [formGroup]="langueForm">
-  <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="3.5%" fxLayoutAlign="left" >
-    <div formArrayName="langues">
-      <div *ngFor="let item of langueForm['controls'].langues['controls']; let i=index"> 
-        <div [formGroupName]="i">
-          <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="3.5%" fxLayoutAlign="center">
-            <mat-form-field  fxFlex="15%"> 
-              <input 
-                (focusout)="focusOutFunction($event)"
-                matInput placeholder="Choisir langue dans la liste" 
-                formControlName="parent2"     
-               [matAutocomplete]="auto"
-              >       
-        
+<div *ngIf="options" [formGroup]="parentForm">
+  <div formArrayName="langues">
+    <div *ngFor="let item of langues.controls; let i=index"  [formGroupName]="i"> 
+     
+          <mat-form-field  fxFlex="15%"> 
+            <input matInput
+              placeholder="Choisir langue dans la liste" 
+              formControlName="parent2"     
+              [matAutocomplete]="auto"
+            >             
               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">   
                 <mat-option 
                   *ngFor="let option of filteredOptions[i] | async" 
@@ -20,28 +16,22 @@
                   {{option.description}}
                 </mat-option>
               </mat-autocomplete>
-            </mat-form-field>
+          </mat-form-field>
 
-            <mat-form-field  fxFlex="5%" fxFlex.xs="20"> 
-             <input matInput placeholder="Niveau" formControlName="niveau">
-            </mat-form-field>
+          <mat-form-field  fxFlex="5%" fxFlex.xs="20"> 
+            <input matInput placeholder="Niveau" formControlName="niveau">
+          </mat-form-field>
 
-            <button type="button" mat-mini-fab color="warn" fxFlex="nogrow"
-              (click)="removeLangue(i)">
-              <mat-icon>delete forever</mat-icon>
-            </button>
-
-          </div>
-        </div>
-      </div>
-      
-      <button type="button" mat-raised-button (click)="addLangue()">
-          <mat-icon>add box</mat-icon>
-          Ajouter
-      </button>
-
-    </div> 
+          <button type="button" mat-fab (click)="removeLangue(i)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+    </div>
+    
+    <button mat-fab type="button" (click)="addLangue()">
+      <i class="fas fa-plus-circle"></i>
+    </button>  
   </div> 
-</form>
+</div>
+
 
 

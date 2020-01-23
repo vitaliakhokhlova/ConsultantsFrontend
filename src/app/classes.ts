@@ -70,6 +70,28 @@ export class Force extends Resource{
     parent2: ForceItem = new ForceItem();
 }
 
+export class LangueItem extends ResourceWithDescription{
+    //items?: Langue[];
+    addNew?: string;
+}
+
+export class Competence extends Resource{
+    @prop()
+    annee?: number = 0;
+    contexte?: string;
+    interet?: string;
+    niveau?: number | string;
+    @prop()
+    experience?: number = 0;
+}
+
+export class Langue extends Competence{
+    @prop()
+    parent2: LangueItem = new LangueItem();
+    @prop()
+    niveau: string = "";
+}
+
 
 export class Consultant extends Resource{ 
         @prop() 
@@ -107,8 +129,6 @@ export class Consultant extends Resource{
         competences?: Array<Competence> = Array<Competence>();
         @propArray()
         langues?: Array<Langue> = Array<Langue>();
-            
-
         // deserialize(input: any): this {
         //    Object.assign(this, input);
         //    if(input.formations){
@@ -146,33 +166,6 @@ export class CompetenceGroup extends ResourceWithDescription{
 
 export class CompetenceItem extends ResourceWithDescription{
     parent2_id: number;
-}
-
-export class LangueItem extends ResourceWithDescription{
-    //items?: Langue[];
-    addNew?: string;
-}
-
-export class Competence extends Resource{
-    parent2_id: number;
-    parent_id: number;
-    annee?: number;
-    contexte?: string;
-    interet?: string;
-    niveau: number | string;
-    experience?: number;
-    description?: string;
-}
-
-export class Langue extends Competence{
-    parent2: LangueItem;
-    constructor(){
-        super();
-        this.parent2 = new LangueItem();
-        this.niveau = "";
-        this.annee = 0;
-        this.experience = 0;
-    }
 }
 
 export class Factory {

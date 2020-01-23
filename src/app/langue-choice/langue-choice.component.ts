@@ -12,10 +12,10 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class LangueChoiceComponent implements OnInit {
 
-  @Input() languesArray: Array<Langue>;
-  @Output() languesArrayChange = new EventEmitter();
-  langueForm: FormGroup;
-  myFormValueChanges$;  
+  //@Input() languesArray: Array<Langue>;
+  //@Output() languesArrayChange = new EventEmitter();
+  //@Output() onComponentReady: EventEmitter<FormArray> = new EventEmitter<FormArray>();
+  @Input() parentForm: FormGroup;
   
   options: Array<LangueItem>;
   filteredOptions: Observable<LangueItem[]>[]=[];
@@ -26,79 +26,73 @@ export class LangueChoiceComponent implements OnInit {
     ) { }
 
   ngOnInit() {   
-    this.getOptions();   
+    this.langueService.getAllOrdered("description").subscribe(
+      result => 
+      {
+       this.options=result;       
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.createFilteredOptions(); 
+        //this.onChange();
+      });     
   }
 
-  createForm(){
-    this.langueForm = this.fb.group({
-        langues: this.fb.array(this.fillFormArray())
-    });
-    const control = <FormArray>this.langueForm.controls['langues'];
-    for (var i of [...Array(control.length).keys()]){
+  createFilteredOptions(){
+    // this.componentFormGroup = this.fb.group({
+    //     langues: this.fb.array(this.fillFormArray())
+    // });
+    for (var i of [...Array(this.langues.length).keys()]){
       this.getFilteredOptions(i);
-    }
-    this.onChange();
+    }    
   }
 
-  fillFormArray(){
-    if(!this.languesArray){
-      this.languesArray = new Array<Langue>();
-      this.languesArrayChange.emit(this.languesArray);
-      this.languesArray.push(new Langue());
-    }
-    return this.languesArray.map(langue => this.copyLangue(langue));
-  }
+  // fillFormArray(){
+  //   if(!this.languesArray){
+  //     this.languesArrayChange.emit(new Array<Langue>());
+  //     this.languesArray.push(new Langue());
+  //   }
+  //   return this.languesArray.map(langue => this.copyLangue(langue));
+  // }
 
   onChange(){
-    this.myFormValueChanges$ = this.langueForm.controls['langues'].valueChanges;
-    this.myFormValueChanges$.subscribe(value =>{ 
-      Object.assign(this.languesArray, value);
-      this.languesArrayChange.emit(this.languesArray);
-    });
-    
-  }
-
-  private newLangue(){
-    return this.fb.group(new Langue());
+    //this.langues.valueChanges.subscribe(
+      //value =>{ 
+      //Object.assign(this.languesArray, value);
+      //this.languesArrayChange.emit(this.languesArray);
+      //this.languesArrayChange.emit(value);
+      //this.onComponentReady.emit(this.langues);
+    //});   
   }
 
   copyLangue(langue: Langue): FormGroup {
     return this.fb.group({
       parent2: [langue.parent2],
       niveau: [langue.niveau],
-      id: [langue.id],
-      annee: [langue.annee],
-      experience: [langue.experience]
+      id: [langue.id]
     });
   }
 
   addLangue() {
-    const control = <FormArray>this.langueForm.controls['langues'];
-    control.push(this.newLangue());
-    this.getFilteredOptions(control.length - 1);
+    this.langues.push(this.fb.group(new Langue()));
+    this.getFilteredOptions(this.langues.length - 1);
   }
 
+  get langues(){
+    return <FormArray>this.parentForm.controls['langues'];
+  }
 
   removeLangue(i: number) {
-    this.languesArray.splice(i, 1);
-    this.languesArrayChange.emit();
-    const control = <FormArray>this.langueForm.controls['langues'];
-    control.removeAt(i);
+    //this.languesArray.splice(i, 1);
+    //this.languesArrayChange.emit();
+    this.langues.removeAt(i);
     this.filteredOptions.splice(i, 1);
   }
 
-  getOptions(){
-    this.langueService.getAllOrdered("description").subscribe(result => 
-      {
-       this.options=result;
-       this.createForm(); 
-      }
-    );
-  }
-
   getFilteredOptions(index: number){
-    const arrayControl = this.langueForm.get('langues') as FormArray;
-    this.filteredOptions[index] = arrayControl.at(index).get('parent2').valueChanges
+    this.filteredOptions[index] = this.langues.at(index).get('parent2').valueChanges
       .pipe(
         startWith<string | any>(''),
         map(value => typeof value === 'string' ? value : value.description),
@@ -123,14 +117,9 @@ export class LangueChoiceComponent implements OnInit {
       filteredResults= [{"description": description, "id": 0}];
         }
       return filteredResults;
-    }
+  }
   
-    displayFn(item: LangueItem): string | undefined {
-      return item ? item.description : undefined;
-    }
-  
-    focusOutFunction(event)
-    {
-      console.log(event.target.value);
-    }
+  displayFn(item: LangueItem): string | undefined {
+    return item ? item.description : undefined;
+  }
 }

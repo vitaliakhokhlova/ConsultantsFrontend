@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormArray } from '@angular/forms';
+import { FormGroup, FormArray, FormControl } from '@angular/forms';
 import { ConsultantService} from '../services/consultant.service';
 import { DataStorageService } from "../services/data-storage.service";
-import { Consultant, HistoryObject, HistoryObjectWithChildren, Factory, ResourceWithDescription, Force, ForceItem } from '../classes';
+import { Consultant, HistoryObject, HistoryObjectWithChildren, Factory, ResourceWithDescription, Force, ForceItem, Langue, LangueItem } from '../classes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, startWith, map } from 'rxjs/operators';
 
 import {
   MAT_MOMENT_DATE_FORMATS,
@@ -16,6 +16,8 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/
 import { RxFormBuilder, RxFormGroup, RxFormArray } from '@rxweb/reactive-form-validators';
 import { ForceService } from '../services/force.service';
 import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { LangueService } from '../services/langue.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material';
 
 @Component({
   selector: 'app-input-form-editor',
@@ -34,8 +36,13 @@ export class InputFormEditorComponent implements OnInit {
 
   consultantForm: RxFormGroup;
   consultant: Observable<Consultant>;
+  consultantLangues: Array<Langue>;
   startDate = new Date(1990, 0, 1);
   forces_loaded = false;
+  langueFormControl: FormControl = new FormControl();
+  
+  options: Array<LangueItem>;
+  filteredOptions: Observable<LangueItem[]>[]=[];
 
   constructor(
     private _adapter: DateAdapter<any>,
@@ -44,11 +51,12 @@ export class InputFormEditorComponent implements OnInit {
     private fb: RxFormBuilder,
     private dataStorageService: DataStorageService,
     private consultantService: ConsultantService,
+    private langueService: LangueService,
     private forceService: ForceService) { }
 
   ngOnInit() {
     this._adapter.setLocale('fr');    
-    const id = +this.route.snapshot.paramMap.get('id');
+    const id = +this.route.snapshot.paramMap.get('id');    
     this.forceService.getAll().subscribe(
       forces => 
       { 
@@ -59,7 +67,20 @@ export class InputFormEditorComponent implements OnInit {
       },
       () => {
         this.patchForm(id); 
+        this.langueService.getAllOrdered("description").subscribe(
+          result => 
+          {
+           this.options=result;       
+          },
+          err => {
+            console.log(err);
+          },
+          () => {
+            this.createFilteredOptions(); 
+            //this.onChange();
+          });  
       });
+       
   }
 
   createForm(forces){
@@ -91,28 +112,28 @@ export class InputFormEditorComponent implements OnInit {
   patchForm(id){
     this.consultant = this.dataStorageService.getConsultant(id).pipe(
       tap(data => 
-        {
-        if(data.forces.length > 0){
-          console.log("Test");
-          console.log(this.forces.length);
-          for(let i = this.forces.length-1; i >= 0; i--) {
-            console.log("Deleting force");
-            this.forces.removeAt(i);
-          }            
+        {      
+          this.consultantLangues = data.langues;
+          if(data.forces.length > 0)
+          {         
+            for(let i = this.forces.length-1; i >= 0; i--) {
+              this.forces.removeAt(i);
+            }            
+          }
+          this.consultantForm.patchValue(data);
+          this.consultantForm.patchValue({birthday: new Date(data.birthday)});
+          data.formations.forEach(x => this.formations.push(this.fb.group(x)));    
+          data.forces.forEach(x => this.forces.push(this.fb.group(x)));
+          data.langues.forEach(x => this.langues.push(this.fb.group(x)));
+          data.projets.forEach(x => {
+            //x.details.push(new ResourceWithDescription());     
+            this.projets.push(this.fb.group(x));
+          });
+          data.parcours.forEach(x => {
+            //x.details.push(new ResourceWithDescription());
+            this.parcours.push(this.fb.group(x));
+          });             
         }
-        this.consultantForm.patchValue(data);
-        this.consultantForm.patchValue({birthday: new Date(data.birthday)});
-        data.formations.forEach(x => this.formations.push(this.fb.group(x)));    
-        data.forces.forEach(x => this.forces.push(this.fb.group(x)));
-        data.projets.forEach(x => {
-          //x.details.push(new ResourceWithDescription());     
-          this.projets.push(this.fb.group(x));
-        });
-        data.parcours.forEach(x => {
-          //x.details.push(new ResourceWithDescription());
-          this.parcours.push(this.fb.group(x));
-        });             
-      }
       )
     ); 
   }
@@ -128,12 +149,7 @@ export class InputFormEditorComponent implements OnInit {
 
   addForcesToForm(forces) {
     if(this.forces.length==0){
-      console.log("Force length before inserting");
-      console.log(this.forces.length);
-            
       let i = 1;
-      console.log("Force length before inserting");
-      console.log(this.forces.length);
       this.forces_loaded = true;
       for(let item of forces){
         let force = new Force();
@@ -144,8 +160,6 @@ export class InputFormEditorComponent implements OnInit {
         this.forces.push(this.fb.group(force));
         i=i+1;
       }
-      console.log("Force length after inserting");
-      console.log(this.forces.length);
       this.forces_loaded = true;
     }
   }
@@ -180,6 +194,20 @@ export class InputFormEditorComponent implements OnInit {
     return this.consultantForm.get('competences') as FormArray;
   }
 
+  get langues() {
+    return this.consultantForm.get('langues') as FormArray;
+  }
+
+  
+  createFilteredOptions(){
+    // this.componentFormGroup = this.fb.group({
+    //     langues: this.fb.array(this.fillFormArray())
+    // });
+    for (var i of [...Array(this.langues.length).keys()]){
+      this.getFilteredOptions(i);
+    }    
+  }
+
   delete(array, i) {
     array.removeAt(i);
   }
@@ -192,12 +220,19 @@ export class InputFormEditorComponent implements OnInit {
 
   correctForcePositions()
   {
-    let forces = this.forces.controls;
-    forces.forEach((force, idx) => {
+    this.forces.controls.forEach((force, idx) => {
       force.get('position').setValue(idx+1);
     })
     
   }
+
+  // public fillLangues(childControlName: string, childGroup: FormArray) {
+  //   this.consultantForm.setControl(childControlName, childGroup);
+  // }
+
+  // public showOption(value: any) {
+  //   this.selectedOption = value;
+  // }
 
   onSubmit() {
     if (this.consultantForm.valid) {
@@ -210,6 +245,66 @@ export class InputFormEditorComponent implements OnInit {
        });
        
     }
+  }
+
+  
+  copyLangue(langue: Langue): FormGroup {
+    return this.fb.group({
+      parent2: [langue.parent2],
+      niveau: [langue.niveau],
+      id: [langue.id]
+    });
+  }
+
+  addLangue() {
+    this.langues.push(this.fb.group(new Langue()));
+    this.getFilteredOptions(this.langues.length - 1);
+  }
+
+  removeLangue(i: number) {
+    //this.languesArray.splice(i, 1);
+    //this.languesArrayChange.emit();
+    this.langues.removeAt(i);
+    this.filteredOptions.splice(i, 1);
+  }
+
+  getFilteredOptions(index: number){
+    this.filteredOptions[index] = this.langues.at(index).get('parent2').valueChanges
+      .pipe(
+        startWith<string | any>(''),
+        map(value => typeof value === 'string' ? value : value.description),
+        map(description => description ? this._filter(description) : this.options)
+      );
+  }
+
+  selectedOption(indx: number, option: LangueItem){
+    if(option.id === 0){	 
+      let langue = new LangueItem();
+      langue.description = option.description;
+      this.langueService.create(langue).subscribe(result => {
+        option.id = result.id;
+      });	  
+    }
+    else{
+      this.langues.at(indx).patchValue({
+        parent2: {
+          id: option.id
+        }
+      });
+    }
+  }
+
+  private _filter(description: string): LangueItem[]{
+    let filteredResults = this.options.filter(option => 
+      option.description.toLowerCase().indexOf(description.toLowerCase()) === 0);
+    if (filteredResults.length < 1) {
+      filteredResults= [{"description": description, "id": 0}];
+        }
+      return filteredResults;
+  }
+  
+  displayFn(item: LangueItem): string | undefined {
+    return item ? item.description : undefined;
   }
 
 }

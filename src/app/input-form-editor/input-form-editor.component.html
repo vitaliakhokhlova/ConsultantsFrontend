@@ -1,7 +1,8 @@
 <form 
 *ngIf="consultant | async; else loading" 
 [formGroup]="consultantForm" 
-(ngSubmit)="onSubmit()">
+(ngSubmit)="onSubmit()"
+novalidate>
 
   <mat-form-field>
     <input matInput type="text" placeholder="Prénom" id="firstname" formControlName="firstname">
@@ -80,6 +81,48 @@
       <i class="fas fa-plus-circle"></i>   
     </button>     
   </div>
+
+  <h3>Langues</h3>
+  <div formArrayName="langues">
+    <div *ngFor="let item of langues.controls; let i=index"  [formGroupName]="i"> 
+          <mat-form-field  fxFlex="15%">
+          <div formGroupName="parent2">
+           <input 
+              matInput
+              placeholder="Choisir langue dans la liste" 
+              formControlName="description"    
+              [matAutocomplete]="auto"
+            >        
+              <mat-autocomplete 
+              #auto="matAutocomplete" 
+              >   
+                <mat-option 
+                  *ngFor="let option of filteredOptions[i] | async" 
+                  (onSelectionChange)="selectedOption(i, option)"
+                  [value]="option.description" >
+                  {{option.description}}
+                </mat-option>
+              </mat-autocomplete>
+            </div>
+          </mat-form-field>
+      
+
+          <mat-form-field  fxFlex="5%" fxFlex.xs="20"> 
+            <input matInput placeholder="Niveau" formControlName="niveau">
+          </mat-form-field>
+
+          <button type="button" mat-fab (click)="removeLangue(i)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+    </div>    
+    <button mat-fab type="button" (click)="addLangue()">
+      <i class="fas fa-plus-circle"></i>
+    </button>  
+  </div> 
+  <!-- <app-langue-choice 
+  [parentForm] = "consultantForm" 
+  >
+  </app-langue-choice> -->
 
 <div formArrayName="projets">
   <h3>Projets</h3>
