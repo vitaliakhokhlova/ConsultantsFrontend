@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { Langue, LangueItem } from '../classes';
 import { LangueService } from '../services/langue.service';
 import { FormBuilder, FormArray, FormGroup} from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { RxFormGroup, RxFormBuilder } from '@rxweb/reactive-form-validators';
 
 @Component({
   selector: 'app-langue-choice',
@@ -17,28 +18,22 @@ export class LangueChoiceComponent implements OnInit {
   //@Output() onComponentReady: EventEmitter<FormArray> = new EventEmitter<FormArray>();
   @Input() parentForm: FormGroup;
   
-  options: Array<LangueItem>;
+  @Input() options: Array<LangueItem>;
   filteredOptions: Observable<LangueItem[]>[]=[];
 
   constructor(
     private langueService: LangueService,
-    private fb: FormBuilder
+    private fb: RxFormBuilder,
+    //private ref: ChangeDetectorRef
     ) { }
 
-  ngOnInit() {   
-    this.langueService.getAllOrdered("description").subscribe(
-      result => 
-      {
-       this.options=result;       
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.createFilteredOptions(); 
-        //this.onChange();
-      });     
+  ngOnInit() {     
+      this.createFilteredOptions(); 
   }
+
+  // ngOnChanges() {
+  //   this.ref.detectChanges()
+  // }
 
   createFilteredOptions(){
     // this.componentFormGroup = this.fb.group({
@@ -47,24 +42,6 @@ export class LangueChoiceComponent implements OnInit {
     for (var i of [...Array(this.langues.length).keys()]){
       this.getFilteredOptions(i);
     }    
-  }
-
-  // fillFormArray(){
-  //   if(!this.languesArray){
-  //     this.languesArrayChange.emit(new Array<Langue>());
-  //     this.languesArray.push(new Langue());
-  //   }
-  //   return this.languesArray.map(langue => this.copyLangue(langue));
-  // }
-
-  onChange(){
-    //this.langues.valueChanges.subscribe(
-      //value =>{ 
-      //Object.assign(this.languesArray, value);
-      //this.languesArrayChange.emit(this.languesArray);
-      //this.languesArrayChange.emit(value);
-      //this.onComponentReady.emit(this.langues);
-    //});   
   }
 
   copyLangue(langue: Langue): FormGroup {
@@ -100,13 +77,20 @@ export class LangueChoiceComponent implements OnInit {
       );
   }
 
-  selectedOption(option: any){
+  selectedOption(indx: number, option: LangueItem){
     if(option.id === 0){	 
       let langue = new LangueItem();
       langue.description = option.description;
       this.langueService.create(langue).subscribe(result => {
         option.id = result.id;
       });	  
+    }
+    else{
+      this.langues.at(indx).patchValue({
+        parent2: {
+          id: option.id
+        }
+      });
     }
   }
 
