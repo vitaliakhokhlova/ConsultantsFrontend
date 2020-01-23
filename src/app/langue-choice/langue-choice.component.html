@@ -1,6 +1,6 @@
 <div [formGroup]="parentForm">
   <div formArrayName="langues">
-    <div *ngFor="let item of langues.controls; let i=index"  [formGroupName]="i"> 
+    <div *ngFor="let item of items.controls; let i=index"  [formGroupName]="i"> 
           <mat-form-field  fxFlex="15%">
           <div formGroupName="parent2">
            <input 
@@ -27,11 +27,11 @@
             <input matInput placeholder="Niveau" formControlName="niveau">
           </mat-form-field>
 
-          <button type="button" mat-fab (click)="removeLangue(i)">
+          <button type="button" mat-fab (click)="removeItem(i)">
             <i class="fas fa-trash-alt"></i>
           </button>
     </div>    
-    <button mat-fab type="button" (click)="addLangue()">
+    <button mat-fab type="button" (click)="addItem()">
       <i class="fas fa-plus-circle"></i>
     </button> 
   </div> 

@@ -1,5 +1,5 @@
 <form 
-*ngIf="consultant | async; else loading" 
+*ngIf="isPatched" 
 [formGroup]="consultantForm" 
 (ngSubmit)="onSubmit()"
 novalidate>
@@ -16,17 +16,7 @@ novalidate>
     <input matInput placeholder="Métier" type="text" id="title" formControlName="title">  
   </mat-form-field>
 
-  <mat-form-field>
-    <input matInput 
-        formControlName="birthday"
-        [matDatepicker]="picker" 
-        placeholder="Date de naissance"
-    >
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-    <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
-  </mat-form-field>
-
+  <app-date [parentForm] = "consultantForm" ></app-date>
 
   <mat-form-field class="example-full-width">
     <input matInput placeholder="Fichier de photo" type="text" id="photoname" formControlName="photoname">  
@@ -152,7 +142,7 @@ novalidate>
  
 <br>
   <button mdbBtn color="primary" type="submit" [disabled]="!consultantForm.valid">Sauvegarder</button>
-  {{ consultantForm.value | json}}
+ 
 </form>  
 
 

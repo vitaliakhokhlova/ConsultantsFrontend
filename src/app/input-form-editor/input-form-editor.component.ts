@@ -4,48 +4,24 @@ import { ConsultantService} from '../services/consultant.service';
 import { DataStorageService } from "../services/data-storage.service";
 import { Consultant, HistoryObject, HistoryObjectWithChildren, Factory, ResourceWithDescription, Force, ForceItem, Langue, LangueItem } from '../classes';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { tap, startWith, map } from 'rxjs/operators';
-
-import {
-  MAT_MOMENT_DATE_FORMATS,
-  MomentDateAdapter,
-  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { RxFormBuilder, RxFormGroup, RxFormArray } from '@rxweb/reactive-form-validators';
 import { ForceService } from '../services/force.service';
 import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { LangueService } from '../services/langue.service';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
 
 @Component({
   selector: 'app-input-form-editor',
   templateUrl: './input-form-editor.component.html',
-  styleUrls: ['./input-form-editor.component.css'],
-  providers: [{provide: MAT_DATE_LOCALE, useValue: 'ja-JP'},
-  {
-    provide: DateAdapter,
-    useClass: MomentDateAdapter,
-    deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-  },
-  {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
-],
+  styleUrls: ['./input-form-editor.component.css']
 })
 export class InputFormEditorComponent implements OnInit {
 
   consultantForm: RxFormGroup;
-  consultant: Observable<Consultant>;
-  consultantLangues: Array<Langue>;
-  startDate = new Date(1990, 0, 1);
   forces_loaded = false;
-  langueFormControl: FormControl = new FormControl();
-  
+  isPatched: boolean = false;  
   options: Array<LangueItem>;
-  filteredOptions: Observable<LangueItem[]>[]=[];
 
   constructor(
-    private _adapter: DateAdapter<any>,
     private route: ActivatedRoute,
     private router: Router,
     private fb: RxFormBuilder,
@@ -54,8 +30,7 @@ export class InputFormEditorComponent implements OnInit {
     private langueService: LangueService,
     private forceService: ForceService) { }
 
-  ngOnInit() {
-    this._adapter.setLocale('fr');    
+  ngOnInit() {   
     const id = +this.route.snapshot.paramMap.get('id');    
     this.forceService.getAll().subscribe(
       forces => 
@@ -74,10 +49,6 @@ export class InputFormEditorComponent implements OnInit {
           },
           err => {
             console.log(err);
-          },
-          () => {
-            this.createFilteredOptions(); 
-            //this.onChange();
           });  
       });
        
@@ -110,10 +81,9 @@ export class InputFormEditorComponent implements OnInit {
   }
 
   patchForm(id){
-    this.consultant = this.dataStorageService.getConsultant(id).pipe(
-      tap(data => 
+    this.dataStorageService.getConsultant(id).subscribe(
+      data => 
         {      
-          this.consultantLangues = data.langues;
           if(data.forces.length > 0)
           {         
             for(let i = this.forces.length-1; i >= 0; i--) {
@@ -132,9 +102,9 @@ export class InputFormEditorComponent implements OnInit {
           data.parcours.forEach(x => {
             //x.details.push(new ResourceWithDescription());
             this.parcours.push(this.fb.group(x));
-          });             
-        }
-      )
+          }); 
+          this.isPatched = true;            
+        }     
     ); 
   }
 
@@ -198,16 +168,6 @@ export class InputFormEditorComponent implements OnInit {
     return this.consultantForm.get('langues') as FormArray;
   }
 
-  
-  createFilteredOptions(){
-    // this.componentFormGroup = this.fb.group({
-    //     langues: this.fb.array(this.fillFormArray())
-    // });
-    for (var i of [...Array(this.langues.length).keys()]){
-      this.getFilteredOptions(i);
-    }    
-  }
-
   delete(array, i) {
     array.removeAt(i);
   }
@@ -242,69 +202,8 @@ export class InputFormEditorComponent implements OnInit {
         this.dataStorageService.consultant = result;
         this.consultantForm.reset();
         this.router.navigate([`detail/${result.id}`]);
-       });
-       
+       });       
     }
-  }
-
-  
-  copyLangue(langue: Langue): FormGroup {
-    return this.fb.group({
-      parent2: [langue.parent2],
-      niveau: [langue.niveau],
-      id: [langue.id]
-    });
-  }
-
-  addLangue() {
-    this.langues.push(this.fb.group(new Langue()));
-    this.getFilteredOptions(this.langues.length - 1);
-  }
-
-  removeLangue(i: number) {
-    //this.languesArray.splice(i, 1);
-    //this.languesArrayChange.emit();
-    this.langues.removeAt(i);
-    this.filteredOptions.splice(i, 1);
-  }
-
-  getFilteredOptions(index: number){
-    this.filteredOptions[index] = this.langues.at(index).get('parent2').valueChanges
-      .pipe(
-        startWith<string | any>(''),
-        map(value => typeof value === 'string' ? value : value.description),
-        map(description => description ? this._filter(description) : this.options)
-      );
-  }
-
-  selectedOption(indx: number, option: LangueItem){
-    if(option.id === 0){	 
-      let langue = new LangueItem();
-      langue.description = option.description;
-      this.langueService.create(langue).subscribe(result => {
-        option.id = result.id;
-      });	  
-    }
-    else{
-      this.langues.at(indx).patchValue({
-        parent2: {
-          id: option.id
-        }
-      });
-    }
-  }
-
-  private _filter(description: string): LangueItem[]{
-    let filteredResults = this.options.filter(option => 
-      option.description.toLowerCase().indexOf(description.toLowerCase()) === 0);
-    if (filteredResults.length < 1) {
-      filteredResults= [{"description": description, "id": 0}];
-        }
-      return filteredResults;
-  }
-  
-  displayFn(item: LangueItem): string | undefined {
-    return item ? item.description : undefined;
   }
 
 }
