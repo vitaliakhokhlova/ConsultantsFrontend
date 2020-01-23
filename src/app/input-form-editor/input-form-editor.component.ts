@@ -117,6 +117,10 @@ export class InputFormEditorComponent implements OnInit {
     console.log(this.consultantForm);
   }
 
+  get forces() {
+    return this.consultantForm.get('forces') as FormArray;
+  }
+
   addForcesToForm(forces) {
     if(this.forces.length==0){
       let i = 1;
@@ -132,10 +136,6 @@ export class InputFormEditorComponent implements OnInit {
       }
       this.forces_loaded = true;
     }
-  }
-
-  get forces() {
-    return this.consultantForm.get('forces') as FormArray;
   }
   
   get parcours() {
@@ -171,28 +171,6 @@ export class InputFormEditorComponent implements OnInit {
   delete(array, i) {
     array.removeAt(i);
   }
-
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.forces.controls, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.forces.value, event.previousIndex, event.currentIndex);
-    this.correctForcePositions();
-  }
-
-  correctForcePositions()
-  {
-    this.forces.controls.forEach((force, idx) => {
-      force.get('position').setValue(idx+1);
-    })
-    
-  }
-
-  // public fillLangues(childControlName: string, childGroup: FormArray) {
-  //   this.consultantForm.setControl(childControlName, childGroup);
-  // }
-
-  // public showOption(value: any) {
-  //   this.selectedOption = value;
-  // }
 
   onSubmit() {
     if (this.consultantForm.valid) {

@@ -44,14 +44,8 @@ novalidate>
   </mat-form-field>
 
   <h3>Forces cognitives (drag and drop)</h3>
-  <div *ngIf="forces_loaded; else loading" 
-  cdkDropList class="example-list" 
-  (cdkDropListDropped)="drop($event)">
-    <div class="example-box" *ngFor="let item of forces.controls" cdkDrag>
-      <span cdkDragHandle>{{item.controls.position.value}} 
-        {{item.controls.parent2.controls.description.value}}</span>
-    </div>
-  </div>
+  <app-force-choice [parentForm] = "consultantForm" ></app-force-choice>
+
 
   <div formArrayName="formations">
     <h3>Formations</h3>

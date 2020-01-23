@@ -23,22 +23,14 @@ export class LangueChoiceComponent implements OnInit {
 
   constructor(
     private langueService: LangueService,
-    private fb: RxFormBuilder,
-    //private ref: ChangeDetectorRef
+    private fb: RxFormBuilder
     ) { }
 
   ngOnInit() {     
       this.createFilteredOptions(); 
   }
 
-  // ngOnChanges() {
-  //   this.ref.detectChanges()
-  // }
-
   createFilteredOptions(){
-    // this.componentFormGroup = this.fb.group({
-    //     langues: this.fb.array(this.fillFormArray())
-    // });
     for (var i of [...Array(this.items.length).keys()]){
       this.getFilteredOptions(i);
     }    
@@ -54,8 +46,6 @@ export class LangueChoiceComponent implements OnInit {
   }
 
   removeItem(i: number) {
-    //this.languesArray.splice(i, 1);
-    //this.languesArrayChange.emit();
     this.items.removeAt(i);
     this.filteredOptions.splice(i, 1);
   }

@@ -1,5 +1,10 @@
-<div *ngIf="options"> 
-  <div class="example-list" cdkDropList  (cdkDropListDropped)="drop($event)">
-    <div class="example-box" *ngFor="let option of options" cdkDrag>{{option.parent2.description}}</div>
+<div [formGroup]="parentForm">
+  <div
+  cdkDropList class="example-list" 
+  (cdkDropListDropped)="drop($event)">
+    <div class="example-box" *ngFor="let item of forces.controls" cdkDrag>
+      <span cdkDragHandle>{{item.controls.position.value}} 
+        {{item.controls.parent2.controls.description.value}}</span>
+    </div>
   </div>
-</div>  
+</div>

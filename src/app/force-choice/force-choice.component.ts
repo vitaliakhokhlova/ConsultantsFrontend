@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ForceService } from '../services/force.service';
-import { Force, ForceItem } from '../classes';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { RxFormGroup } from '@rxweb/reactive-form-validators';
+import { FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-force-choice',
@@ -10,48 +10,28 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class ForceChoiceComponent implements OnInit {
 
-  @Input() options: Array<Force>;
-  @Output() optionsChange = new EventEmitter();
+  @Input() parentForm: RxFormGroup;
 
-  constructor(private forceService: ForceService) {}
+  constructor() {}
 
   ngOnInit() {
-    this.getOptions();
   }
 
-  getOptions(): void {
-    if(!this.options || !this.options[0]){
-      this.forceService.getAll().subscribe(forceItems => 
-        {
-          console.log(forceItems);  
-          this.options = new Array<Force>();
-          let i = 1;
-          for(let item of forceItems){
-            let force = new Force();
-            force.position = i;
-            force.parent2 = new ForceItem();
-            force.parent2.id = item.id;
-            force.parent2.description = item.description;
-            this.options.push(force);
-            i=i+1;
-          }
-          this.optionsChange.emit(this.options);
-        }
-        );
-    }
+  get forces() {
+    return this.parentForm.get('forces') as FormArray;
   }
-
+  
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.options, event.previousIndex, event.currentIndex);
-    this.correctPosition();
+    moveItemInArray(this.forces.controls, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.forces.value, event.previousIndex, event.currentIndex);
+    this.correctForcePositions();
   }
 
-  correctPosition(){
-    let i=1;
-    for(let option of this.options)
-    {
-      option.position=i;
-      i=i+1;
-    }
+  correctForcePositions()
+  {
+    this.forces.controls.forEach((force, idx) => {
+      force.get('position').setValue(idx+1);
+    })
+    
   }
 }
