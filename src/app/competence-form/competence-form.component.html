@@ -1,30 +1,46 @@
-<div *ngIf="show">
-  <div *ngFor="let group of groups">
+<form 
+*ngIf="show" 
+[formGroup]="competencesForm" 
+(ngSubmit)="onSubmit()"
+novalidate>
+<div formArrayName="groups">
+  <div *ngFor="let group of groups.controls; let i=index" [formGroupName]="i">
           <div>
-              {{group.description}}
+              <h3>{{group.value.group_description}}</h3>
           </div>
+          <div formArrayName="items">
           <table mdbTable striped="true" bordered="true">
-                  <thead>
+                 
                     <tr>
                     <th *ngFor="let head of headElements" scope="col">{{head}} </th>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <tr mdbTableCol *ngFor="let competence of group.items">
-                      <th scope="row">{{competence.description}}</th>
-                      <td><input [(ngModel)]="competence.items[0].niveau"/></td>
-                      <td><input [(ngModel)]="competence.items[0].experience"/></td>
-                      <td><input [(ngModel)]="competence.items[0].annee"/></td>
-                      <td><input [(ngModel)]="competence.items[0].contexte"/></td>
-                      <td><input [(ngModel)]="competence.items[0].interet"/></td>
-                    <td> <button class="delete" title="delete" (click)="delete(competence)">Delete</button> </td>
+               
+                 
+                  <tbody
+                  *ngFor="let competence of group.controls.items.controls; let j=index"
+                    [formGroupName]="j">
+                   
+                    <tr mdbTableCol 
+                    formGroupName="item"
+                    >
+                      <th scope="row">{{competence.value.description}}</th>
+                      <td><input formControlName="niveau"/></td>
+                      <td><input formControlName="experience"/></td>
+                      <td><input formControlName="annee"/></td>
+                      <td><input formControlName="contexte"/></td>
+                      <td><input formControlName="interet"/></td>
+                      <td> <button class="delete" title="delete" (click)="delete(competence)">Delete</button> </td>
+                    
                     </tr>
-                  </tbody>
+                 
+                  </tbody                  >
+               
           </table>
+        </div>
   </div>
-  <a routerLink="/edit/{{consultant.id}}">
+</div>
+  <a routerLink="/edit/{{id}}">
           <button type="button" class="btn btn-primary btn-lg btn-block"  (click)="save()">Save and go back to edit consultant</button>   
   </a>
-  <br>
-      <br><br>
-</div>
+{{competencesForm.value | json}}
+</form>  

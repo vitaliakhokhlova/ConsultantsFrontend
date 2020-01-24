@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormArray, FormControl } from '@angular/forms';
 import { ConsultantService} from '../services/consultant.service';
 import { DataStorageService } from "../services/data-storage.service";
@@ -12,7 +12,8 @@ import { LangueService } from '../services/langue.service';
 @Component({
   selector: 'app-input-form-editor',
   templateUrl: './input-form-editor.component.html',
-  styleUrls: ['./input-form-editor.component.css']
+  styleUrls: ['./input-form-editor.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputFormEditorComponent implements OnInit {
 
@@ -23,6 +24,7 @@ export class InputFormEditorComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private cdRef: ChangeDetectorRef,
     private router: Router,
     private fb: RxFormBuilder,
     private dataStorageService: DataStorageService,
@@ -36,20 +38,14 @@ export class InputFormEditorComponent implements OnInit {
       forces => 
       { 
         this.createForm(forces);
+        this.langueService.getAllOrdered("description").subscribe(
+          result => this.options=result);  
       },
       err => {
           console.log(err);
       },
       () => {
-        this.patchForm(id); 
-        this.langueService.getAllOrdered("description").subscribe(
-          result => 
-          {
-           this.options=result;       
-          },
-          err => {
-            console.log(err);
-          });  
+        this.patchForm(id);
       });
        
   }
@@ -103,7 +99,8 @@ export class InputFormEditorComponent implements OnInit {
             //x.details.push(new ResourceWithDescription());
             this.parcours.push(this.fb.group(x));
           }); 
-          this.isPatched = true;            
+          this.isPatched = true;   
+          this.cdRef.detectChanges();         
         }     
     ); 
   }
@@ -174,11 +171,8 @@ export class InputFormEditorComponent implements OnInit {
 
   onSubmit() {
     if (this.consultantForm.valid) {
-      console.log(this.consultantForm.value);
       this.consultantService.update(this.consultantForm.value).subscribe(result=>{
-        console.log("Consultant: "+result);
         this.dataStorageService.consultant = result;
-        this.consultantForm.reset();
         this.router.navigate([`detail/${result.id}`]);
        });       
     }

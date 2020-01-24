@@ -80,9 +80,13 @@ export class Competence extends Resource{
     annee?: number = 0;
     contexte?: string;
     interet?: string;
-    niveau?: number | string;
     @prop()
     experience?: number = 0;
+}
+
+export class InformaticCompetence extends Resource{
+    niveau: number;
+    parent2: CompetenceItem;
 }
 
 export class Langue extends Competence{
@@ -125,8 +129,7 @@ export class Consultant extends Resource{
         projets?: Array<HistoryObjectWithChildren> = new Array<HistoryObjectWithChildren>(); 
         @propArray()
         forces?: Array<Force> = new Array<Force> ();   
-        @propArray()
-        competences?: Array<Competence> = Array<Competence>();
+        competences?: Array<InformaticCompetence> = Array<InformaticCompetence>();
         @propArray()
         langues?: Array<Langue> = Array<Langue>();
         // deserialize(input: any): this {
@@ -165,7 +168,8 @@ export class CompetenceGroup extends ResourceWithDescription{
 }
 
 export class CompetenceItem extends ResourceWithDescription{
-    parent2_id: number;
+    parent2: CompetenceGroup;
+    items?: Array<InformaticCompetence>;
 }
 
 export class Factory {

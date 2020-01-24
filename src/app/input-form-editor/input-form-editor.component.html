@@ -136,10 +136,17 @@ novalidate>
  
 <br>
   <button mdbBtn color="primary" type="submit" [disabled]="!consultantForm.valid">Sauvegarder</button>
- 
+ {{consultantForm.value | json}}
+ <fieldset class="cadre">
+  <legend>COMPETENCES TECHNIQUES</legend>
+  <div id="competences">  
+     <a routerLink="/competences/{{consultantForm.value.id}}">     
+         <div class="module">Ouvrir formulaire de competences</div>
+     </a>
+  </div>
+</fieldset>
 </form>  
 
-
-  <ng-template #loading>
-    Loading (check console for errors)...
-  </ng-template>
+<ng-template #loading>
+  Loading (check console for errors)...
+</ng-template>
