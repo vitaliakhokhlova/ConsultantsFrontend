@@ -31,6 +31,7 @@ import { ListShowComponent } from './list-show/list-show.component';
 import { CompetenceSearchComponent } from './competence-search/competence-search.component';
 import { ListEditComponent } from './list-edit/list-edit.component';
 import { InputFormEditorComponent } from './input-form-editor/input-form-editor.component';
+import { GroupByPipe } from './pipes/group.pipe';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { InputFormEditorComponent } from './input-form-editor/input-form-editor.
     ListShowComponent,
     CompetenceSearchComponent,
     ListEditComponent,
-    InputFormEditorComponent
+    InputFormEditorComponent,
+    GroupByPipe
   ],
   imports: [
     BrowserModule,

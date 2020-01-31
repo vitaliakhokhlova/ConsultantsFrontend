@@ -44,15 +44,15 @@ export class CrudService <T extends Resource> {
       return this.httpClient.put<T>(this.urlcomplete, item)
       .pipe(
         tap(_ => this.log(`updated ${this.endpoint} id=${item.id}`)),
-        catchError(this.handleError<any>('update id=${id}'))
+        catchError(this.handleError<any>(`update id=${item.id}`))
       );
     }
 
     delete(id: number) {
-      return this.httpClient.delete(`${this.urlcomplete}/${id}`)
+      return this.httpClient.delete(`${this.urlcomplete}/${id}`, {responseType: 'text'})
       .pipe(
         tap(_ => this.log(`deleted ${this.endpoint} id=${id}`)),
-        catchError(this.handleError<any>('delete id=${id}'))
+        catchError(this.handleError<any>(`delete id=${id}`))
       );
     }   
 
@@ -89,6 +89,7 @@ export class CrudService <T extends Resource> {
     }
 
     private log(message: string) {
+      console.log(`CrudService: ${message}`);
       // this.messageService.add(`CrudService: ${message}`);
     }
 }

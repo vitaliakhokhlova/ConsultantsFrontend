@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Consultant } from '../classes';
+import { Consultant, LangueItem, ForceItem, CompetenceItem } from '../classes';
 import { Observable, of } from 'rxjs';
 import { ConsultantService } from './consultant.service';
+import { LangueService } from './langue.service';
+import { ForceService } from './force.service';
+import { CompetenceItemService } from './competence-item.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +12,15 @@ import { ConsultantService } from './consultant.service';
 export class DataStorageService {
 
   consultant: Consultant;
+  langues: Array<LangueItem>;
+  forces: Array<ForceItem>;
+  competenceItems: Array<CompetenceItem>;
 
   constructor(
-    private consultantService: ConsultantService
+    private consultantService: ConsultantService,
+    private langueService: LangueService,
+    private forceService: ForceService,
+    private competenceItemService: CompetenceItemService
     ) { }
 
   getConsultant(id: number): Observable<Consultant>{
@@ -28,6 +37,33 @@ export class DataStorageService {
       else{
         return this.consultantService.read(id);
       }
+    }
+  }
+
+  getLangues(): Observable<LangueItem[]>{
+    if(this.langues){
+      return of(this.langues);
+    }
+    else{
+      return this.langueService.getAllOrdered("description");
+    }
+  }
+
+  getCompetenceItems(): Observable<CompetenceItem[]>{
+    if(this.competenceItems){
+      return of(this.competenceItems);
+    }
+    else{
+      return this.competenceItemService.getAll();
+    }
+  }
+
+  getForces(): Observable<ForceItem[]>{
+    if(this.forces){
+      return of(this.forces);
+    }
+    else{
+      return this.forceService.getAll();
     }
   }
 }

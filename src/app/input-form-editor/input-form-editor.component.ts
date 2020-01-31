@@ -19,40 +19,27 @@ export class InputFormEditorComponent implements OnInit {
 
   consultantForm: RxFormGroup;
   forces_loaded = false;
-  isPatched: boolean = false;  
+  isPatched: boolean;  
   options: Array<LangueItem>;
 
   constructor(
     private route: ActivatedRoute,
-    private cdRef: ChangeDetectorRef,
+    //  private cdRef: ChangeDetectorRef,
     private router: Router,
     private fb: RxFormBuilder,
     private dataStorageService: DataStorageService,
     private consultantService: ConsultantService,
-    private langueService: LangueService,
-    private forceService: ForceService) { }
+    private langueService: LangueService
+    ) { }
 
   ngOnInit() {   
-    const id = +this.route.snapshot.paramMap.get('id');    
-    this.forceService.getAll().subscribe(
-      forces => 
-      { 
-        this.createForm(forces);
-        this.langueService.getAllOrdered("description").subscribe(
-          result => this.options=result);  
-      },
-      err => {
-          console.log(err);
-      },
-      () => {
-        this.patchForm(id);
-      });
-       
+    const id = +this.route.snapshot.paramMap.get('id'); 
+    this.createForm();
+    this.patchForm(id);
   }
 
-  createForm(forces){
+  createForm(){
     this.consultantForm = this.fb.formGroup(new Consultant()) as RxFormGroup;
-    this.addForcesToForm(forces);
    
     // this.consultantForm = this.fb.group({
     //   id: [0],
@@ -76,21 +63,27 @@ export class InputFormEditorComponent implements OnInit {
     // });
   }
 
-  patchForm(id){
+  patchForm(id: number){
     this.dataStorageService.getConsultant(id).subscribe(
       data => 
         {      
-          if(data.forces.length > 0)
-          {         
-            for(let i = this.forces.length-1; i >= 0; i--) {
-              this.forces.removeAt(i);
-            }            
-          }
           this.consultantForm.patchValue(data);
           this.consultantForm.patchValue({birthday: new Date(data.birthday)});
           data.formations.forEach(x => this.formations.push(this.fb.group(x)));    
           data.forces.forEach(x => this.forces.push(this.fb.group(x)));
           data.langues.forEach(x => this.langues.push(this.fb.group(x)));
+          data.competences.forEach(x => {
+            let comp = this.fb.group({
+              id: x.id,
+              experience: x.experience,
+              annee: x.annee,
+              contexte: x.contexte,
+              interet: x.interet,
+              niveau: x.niveau,
+              parent2: {id: x.parent2.id}
+            });
+            this.competences.push(comp);
+          });
           data.projets.forEach(x => {
             //x.details.push(new ResourceWithDescription());     
             this.projets.push(this.fb.group(x));
@@ -98,10 +91,46 @@ export class InputFormEditorComponent implements OnInit {
           data.parcours.forEach(x => {
             //x.details.push(new ResourceWithDescription());
             this.parcours.push(this.fb.group(x));
-          }); 
-          this.isPatched = true;   
-          this.cdRef.detectChanges();         
-        }     
+          });              
+        },
+        err => {
+          console.log(err);
+        },
+        ()=>{          
+          //  this.cdRef.detectChanges(); 
+          this.dataStorageService.getLangues().subscribe
+          (langues => 
+            {
+              this.options=langues;
+            },
+            err => {
+              console.log(err);
+            },
+            () => 
+            {   
+              if(this.forces.value.length == 0)
+              {
+                this.dataStorageService.getForces().subscribe(
+                  forces => 
+                  { 
+                    this.addForcesToForm(forces);
+                  },
+                  err => {
+                    console.log(err);
+                  },
+                  () => 
+                  { 
+                    this.isPatched = true;
+                    console.log(this.isPatched);
+                  });   
+              }     
+              else{
+                this.isPatched = true;
+            }
+            }
+          );
+           
+        }
     ); 
   }
 
@@ -118,21 +147,19 @@ export class InputFormEditorComponent implements OnInit {
     return this.consultantForm.get('forces') as FormArray;
   }
 
-  addForcesToForm(forces) {
-    if(this.forces.length==0){
-      let i = 1;
-      this.forces_loaded = true;
-      for(let item of forces){
-        let force = new Force();
-        force.position = i;
-        force.parent2 = new ForceItem();
-        force.parent2.id = item.id;
-        force.parent2.description = item.description;
-        this.forces.push(this.fb.group(force));
-        i=i+1;
-      }
-      this.forces_loaded = true;
+  addForcesToForm(forces) {  
+    let i = 1;
+    this.forces_loaded = true;
+    for(let item of forces){
+      let force = new Force();
+      force.position = i;
+      force.parent2 = new ForceItem();
+      force.parent2.id = item.id;
+      force.parent2.description = item.description;
+      this.forces.push(this.fb.group(force));
+      i=i+1;
     }
+    this.forces_loaded = true;    
   }
   
   get parcours() {

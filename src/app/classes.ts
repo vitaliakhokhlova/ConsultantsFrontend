@@ -27,6 +27,16 @@ export class ResourceWithDescription extends Resource{
     // }
 }
 
+
+export class CompetenceGroup extends ResourceWithDescription{
+    items?: CompetenceItem[];
+}
+
+export class CompetenceItem extends ResourceWithDescription{
+    @prop()
+    parent2?: CompetenceGroup = new CompetenceGroup();
+}
+
 export class HistoryObject extends Resource{
     @prop()
     description: string = "";
@@ -78,15 +88,21 @@ export class LangueItem extends ResourceWithDescription{
 export class Competence extends Resource{
     @prop()
     annee?: number = 0;
-    contexte?: string;
-    interet?: string;
+    @prop()
+    contexte?: string = '';
+    @prop()
+    interet?: string = '';
     @prop()
     experience?: number = 0;
 }
 
-export class InformaticCompetence extends Resource{
-    niveau: number;
-    parent2: CompetenceItem;
+export class InformaticCompetence extends Competence{
+    @prop()
+    niveau: number = 0;
+    @prop()
+    parent2: CompetenceItem = null;
+    @prop()
+    parent: Consultant = null;
 }
 
 export class Langue extends Competence{
@@ -129,6 +145,7 @@ export class Consultant extends Resource{
         projets?: Array<HistoryObjectWithChildren> = new Array<HistoryObjectWithChildren>(); 
         @propArray()
         forces?: Array<Force> = new Array<Force> ();   
+        @propArray()
         competences?: Array<InformaticCompetence> = Array<InformaticCompetence>();
         @propArray()
         langues?: Array<Langue> = Array<Langue>();
@@ -163,14 +180,7 @@ export class Consultant extends Resource{
         //   }
 }
 
-export class CompetenceGroup extends ResourceWithDescription{
-    items?: CompetenceItem[];
-}
 
-export class CompetenceItem extends ResourceWithDescription{
-    parent2: CompetenceGroup;
-    items?: Array<InformaticCompetence>;
-}
 
 export class Factory {
     create<T>(type: (new () => T)): T {

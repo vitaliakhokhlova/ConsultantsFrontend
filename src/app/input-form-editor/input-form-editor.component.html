@@ -1,5 +1,5 @@
 <form 
-*ngIf="isPatched" 
+*ngIf="true; else loading" 
 [formGroup]="consultantForm" 
 (ngSubmit)="onSubmit()"
 novalidate>

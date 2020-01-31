@@ -3,44 +3,38 @@
 [formGroup]="competencesForm" 
 (ngSubmit)="onSubmit()"
 novalidate>
-<div formArrayName="groups">
-  <div *ngFor="let group of groups.controls; let i=index" [formGroupName]="i">
-          <div>
-              <h3>{{group.value.group_description}}</h3>
-          </div>
-          <div formArrayName="items">
-          <table mdbTable striped="true" bordered="true">
-                 
-                    <tr>
-                    <th *ngFor="let head of headElements" scope="col">{{head}} </th>
-                    </tr>
-               
-                 
-                  <tbody
-                  *ngFor="let competence of group.controls.items.controls; let j=index"
-                    [formGroupName]="j">
-                   
-                    <tr mdbTableCol 
-                    formGroupName="item"
-                    >
-                      <th scope="row">{{competence.value.description}}</th>
-                      <td><input formControlName="niveau"/></td>
-                      <td><input formControlName="experience"/></td>
-                      <td><input formControlName="annee"/></td>
-                      <td><input formControlName="contexte"/></td>
-                      <td><input formControlName="interet"/></td>
-                      <td> <button class="delete" title="delete" (click)="delete(competence)">Delete</button> </td>
-                    
-                    </tr>
-                 
-                  </tbody                  >
-               
-          </table>
-        </div>
+  <div formArrayName="competences">
+    <div *ngFor="let group of competences.controls  | groupBy: 'parent2':'description'; let i=index">
+      <div>
+          <h3>{{group.key}}</h3>
+      </div>
+      
+      <table mdbTable striped="true" bordered="true">
+        <thead>                 
+          <tr>
+            <th *ngFor="let head of headElements" scope="col">
+              {{head}} 
+            </th>
+          </tr>
+        </thead>
+              
+        <tbody *ngFor="let item of group.value ; let j=index" [formGroupName]="item.controls.n.value">
+          <tr mdbTableCol formGroupName="competenceConsultant">
+            <th scope="row">
+              {{item.value.description}}
+            </th>
+            <td *ngFor="let key of keysToShow">
+              <input [formControlName]="key"/>
+            </td>
+            <td> 
+              <button type="button" (click)="empty(item)">Delete</button> 
+            </td>             
+          </tr>      
+        </tbody>               
+      </table>
+    </div>
   </div>
-</div>
-  <a routerLink="/edit/{{id}}">
-          <button type="button" class="btn btn-primary btn-lg btn-block"  (click)="save()">Save and go back to edit consultant</button>   
-  </a>
-{{competencesForm.value | json}}
+  
+  <button type="submit" class="btn btn-primary btn-lg btn-block">Save and go back to edit consultant</button>   
+  {{competencesForm.value | json}}
 </form>  

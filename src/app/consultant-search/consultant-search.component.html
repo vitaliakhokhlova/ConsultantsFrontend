@@ -17,7 +17,7 @@
 </form>
 <br>
 
-<div *ngIf=items>
+<div *ngIf="items; else loading">
 <app-list-show 
 [(inputArray)]="items"
 [keysToShow]="keysToShow"
@@ -26,3 +26,7 @@
 >
 </app-list-show>
 </div>
+
+<ng-template #loading>
+  Loading (check console for errors)...
+</ng-template>
