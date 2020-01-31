@@ -17,14 +17,14 @@ export class CompetenceFormComponent implements OnInit {
   headElements = ['Competence','Niveau', 'Expérience', 'Dernière utilisaton', 'Contexte','Intérêt'];
   keysToShow = ["niveau", "experience", "annee", "contexte","interet"];
   consultant: Consultant;
-  compConsultant: InformaticCompetence[];
   id: number;
   show: boolean;
   competencesForm: FormGroup;
 
+
   constructor(
     private dataStorageService: DataStorageService,
-    private groupService: GroupService,
+    private consultantService: ConsultantService,
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder
@@ -35,13 +35,12 @@ export class CompetenceFormComponent implements OnInit {
 
   ngOnInit() {
     this.id = +this.route.snapshot.paramMap.get('id');
+    this.createForm();
     this.dataStorageService.getConsultant(this.id)
     .subscribe(result=>
       {
-        this.consultant=result;
-        this.compConsultant = result.competences;
-        this.createForm();
-        this.patchForm();
+        this.consultant=result;       
+        this.patchForm(result);
       });
   }
 
@@ -61,7 +60,8 @@ export class CompetenceFormComponent implements OnInit {
     });
   }
 
-  patchForm(){    
+  patchForm(result){    
+    let comp = result.competences;
     this.dataStorageService.getCompetenceItems().subscribe(
       items =>
       {
@@ -70,12 +70,12 @@ export class CompetenceFormComponent implements OnInit {
           item => 
           {    
             let competenceConsultant = new InformaticCompetence();
-            for(let x of this.compConsultant)
+            for(let x of comp)
             {            
               if(x.parent2.id==item.id)
               {   
                 competenceConsultant = x;
-                this.compConsultant = this.compConsultant.filter(item => item !== x);
+                comp = comp.filter(item => item !== x);
                 break;
               }
             }
@@ -101,24 +101,20 @@ export class CompetenceFormComponent implements OnInit {
   }
 
   onSubmit(){
-    // this.consultant.competences = new Array<InformaticCompetence>();
-    // this.groups.controls.forEach(
-    //   group => {
-    //     (<FormArray>group.get('items')).controls.forEach(
-    //       item => {
-    //         //if(item.dirty){
-    //           let competenceConsultant = item.get('item').value;
-    //           competenceConsultant.parent2.description = item.value.description;
-    //           competenceConsultant.parent2.parent2 = {"id": group.value.group_id, "description": group.value.group_description};
-    //           this.consultant.competences.push(competenceConsultant);
-    //           //this.competenceService.update(item.get('item').value).subscribe();
-    //         //}
-    //       }
-    //     )
-    //   }
-    // )
-    // this.dataStorageService.consultant = this.consultant;
-    // this.router.navigate([`edit/${this.id}`]);
+    this.consultant.competences = [];
+    this.competences.value.forEach(
+      x =>
+      {
+        if(x.competenceConsultant.niveau!=0)
+        {
+          this.consultant.competences.push(x.competenceConsultant);
+        }
+      }
+    );
+    this.consultantService.update(this.consultant).subscribe(result=>{
+      this.dataStorageService.consultant = result;
+      this.router.navigate([`detail/${result.id}`]);
+     });   
   }
   
   empty(item) {    
