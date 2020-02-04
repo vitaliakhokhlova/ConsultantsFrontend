@@ -89,6 +89,9 @@ h1 {
     }
   }
   
+  @media print{
+    .doNotPrint{display:none !important;}
+  }
   
   /*
   Copyright 2017-2018 Google Inc. All Rights Reserved.

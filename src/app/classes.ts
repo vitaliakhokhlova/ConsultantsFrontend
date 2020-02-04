@@ -19,7 +19,7 @@ export class Resource {
 
 export class ResourceWithDescription extends Resource{
     @prop()
-    description: string ="";
+    description?: string ="";
 
     // deserialize(input: any): this {
     //     Object.assign(this, input);
@@ -115,11 +115,11 @@ export class Langue extends Competence{
 
 export class Consultant extends Resource{ 
         @prop() 
-        photoname: string = ""; 
+        photoname?: string = "incognito.png"; 
         @required()
-        lastname: string = "";
+        lastname?: string = "";
         @required()
-        firstname: string = "";
+        firstname?: string = "";
         @prop()
         title?: string = "";
         @prop()

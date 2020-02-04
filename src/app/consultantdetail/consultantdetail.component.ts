@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Consultant, CompetenceGroup, CompetenceItem } from '../classes';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataStorageService } from '../services/data-storage.service';
 
 @Component({
@@ -19,6 +19,7 @@ export class ConsultantdetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private dataStorageService: DataStorageService
   ) { }
 
@@ -64,4 +65,12 @@ export class ConsultantdetailComponent implements OnInit {
     }   
     console.log(this.groups);   
   }
+
+  goTo(route: string){
+    this.router.navigate([route]);
+  }
+
+  onPrint(){
+    window.print();
+}
 }

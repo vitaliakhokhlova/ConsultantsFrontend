@@ -1,7 +1,7 @@
 <div *ngIf="consultant">
     <div id="logo"><img src='assets/logo.svg'></div>
 
-    <div id="name">
+    <div  id="name">
         <span id="prenom">  
             {{consultant.firstname }}
         </span> 
@@ -34,7 +34,7 @@
             <span id="mobilite">{{consultant.mobility}}</span>           
         </div>
     </div>
-    <div id="expression" align="center">{{consultant.expression}} &#8212; {{consultant.author}}</div>
+    <div id="expression" align="center">« {{consultant.expression}} » &#8212; {{consultant.author}}</div>
     <div class="block">
         <legend class="header">Profil</legend>
         <div id="profil">{{consultant.profile}}</div>
@@ -50,6 +50,15 @@
                         </span>        
                 </div>   
             </div>
+        </div>
+        <div class="doNotPrint"> 
+        <button 
+            mdbBtn 
+            color="primary" 
+            type="button" 
+            (click)="goTo('competences/'+consultant.id)">
+            Voir le formulaire des competences
+            </button>
         </div>
     </div>
   
@@ -112,10 +121,20 @@
         <legend class="header">Intérêts</legend>
         <div id="interets">{{consultant.interests}}</div>
     </div>
-
-    <p style="page-break-before: always"></p>
-    <a routerLink="/edit/{{consultant.id}}">
-        <div class="module">Corriger</div>   
-        </a>
-        {{consultant | json}}
+    <div class="doNotPrint">   
+        <button 
+            mdbBtn color="primary" 
+            type="button" 
+            (click)="goTo('edit/'+consultant.id)"
+            >
+            Corriger
+        </button>
+        
+        <button 
+            mdbBtn color="primary" 
+            type="button" 
+            (click)="onPrint()">
+            Print
+        </button>
+    </div>
 </div>

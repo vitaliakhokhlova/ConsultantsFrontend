@@ -27,7 +27,7 @@ export class GroupByPipe implements PipeTransform {
             }, 
             {}
         );
-        
+        console.log(groupedCollection);
         // this will return an array of objects, each object containing a group of objects
         return Object.keys(groupedCollection).map(
             key => ({ key, value: groupedCollection[key] }));
@@ -39,6 +39,7 @@ export class GroupByPipe implements PipeTransform {
         {
             return property;
         }
-        return { value: current, key: (<FormGroup>current.controls[property]).controls[subproperty].value };
+        return { value: current, 
+            key: (<FormGroup>current.controls[property]).controls['id'].value };
     }
 }

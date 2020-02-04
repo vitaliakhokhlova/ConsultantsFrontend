@@ -1,6 +1,6 @@
 div{
     font-family: "Calibri";
-    font-size: 10pt;
+    font-size: 12pt;
 }
 
 .subheader{
@@ -125,4 +125,8 @@ ul {
     min-width: 120px;
     background-color: #607D8B;
     border-radius: 2px;
+  }
+
+  @media print{
+    .doNotPrint{display:none !important;}
   }

@@ -196,13 +196,24 @@ export class InputFormEditorComponent implements OnInit {
     array.removeAt(i);
   }
 
-  onSubmit() {
+  onSubmit(competences?) {
+    console.log(event)
     if (this.consultantForm.valid) {
       this.consultantService.update(this.consultantForm.value).subscribe(result=>{
-        this.dataStorageService.consultant = result;
-        this.router.navigate([`detail/${result.id}`]);
+        this.dataStorageService.consultant = result;  
+        if(competences)
+        {
+          this.goTo(`competences/${result.id}`);
+        }
+        else{
+          this.goTo(`detail/${result.id}`);    
+        }
        });       
     }
   }
 
+  goTo(route: string){
+    this.router.navigate([route]);
+  }
+  
 }

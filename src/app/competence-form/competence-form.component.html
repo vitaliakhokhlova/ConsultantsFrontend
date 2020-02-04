@@ -6,7 +6,7 @@ novalidate>
   <div formArrayName="competences">
     <div *ngFor="let group of competences.controls  | groupBy: 'parent2':'description'; let i=index">
       <div>
-          <h3>{{group.key}}</h3>
+          <h3>{{group.value[0].value.parent2.description}}</h3>
       </div>
       
       <table mdbTable striped="true" bordered="true">
@@ -19,11 +19,11 @@ novalidate>
         </thead>
               
         <tbody *ngFor="let item of group.value ; let j=index" [formGroupName]="item.controls.n.value">
-          <tr mdbTableCol formGroupName="competenceConsultant">
+          <tr mdbTableCol>
             <th scope="row">
-              {{item.value.description}}
+              <input formControlName="description"/>
             </th>
-            <td *ngFor="let key of keysToShow">
+            <td *ngFor="let key of keysToShow" formGroupName="competenceConsultant" >
               <input [formControlName]="key"/>
             </td>
             <td> 
@@ -32,6 +32,7 @@ novalidate>
           </tr>      
         </tbody>               
       </table>
+      <button type="button" (click)="addCompetence(group.key)">Ajouter une compétence</button>
     </div>
   </div>
   

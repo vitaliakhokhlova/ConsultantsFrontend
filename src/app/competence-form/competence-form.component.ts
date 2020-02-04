@@ -70,6 +70,8 @@ export class CompetenceFormComponent implements OnInit {
           item => 
           {    
             let competenceConsultant = new InformaticCompetence();
+            competenceConsultant.parent = {id: this.id};
+            competenceConsultant.parent2 = {id: item.id};
             for(let x of comp)
             {            
               if(x.parent2.id==item.id)
@@ -120,4 +122,16 @@ export class CompetenceFormComponent implements OnInit {
   empty(item) {    
     item.patchValue({competenceConsultant: new InformaticCompetence()});    
   }
+
+
+  addCompetence(group_id: number){
+    let competenceConsultant = new InformaticCompetence();
+    competenceConsultant.parent = {id: this.id};
+    let item = new CompetenceItem();
+    item.parent2 = {id: group_id};
+    competenceConsultant.parent2 = item;
+    let n = this.competences.length;
+    (<FormArray>this.competences).push(this.createCompetenceItem(n, item, competenceConsultant));
+  }
+
 }
