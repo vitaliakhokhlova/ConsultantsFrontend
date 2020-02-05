@@ -70,14 +70,19 @@ novalidate>
 
   <div formArrayName="langues">
     <div class="container">
-    <div class="row" *ngFor="let langueConsultant of langues.controls; let i=index"  [formGroupName]="i">  
-          <app-langue-choice
-            [parentForm] = "langueConsultant" 
+    <div class="row" 
+    *ngFor="let langueConsultant of langues.controls; let i=index"  
+    [formGroupName]="i">  
+      <div formGroupName="parent2"> 
+        <app-langue-choice
+            [parentForm] = "langueConsultant.controls.parent2" 
             [options] = "langueItems"
             placeholder = "Chercher et cliquer"
+            property="description"
             (createNewOption)="createNewLanguage(langueConsultant)"
             >
           </app-langue-choice>  
+          </div>
           <mat-form-field  fxFlex="20%"> 
             <input matInput placeholder="Niveau" formControlName="niveau">
           </mat-form-field>         

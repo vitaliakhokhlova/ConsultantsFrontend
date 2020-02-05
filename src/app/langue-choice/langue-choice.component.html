@@ -1,14 +1,9 @@
 <div [formGroup]="parentForm">
-  <!-- <mat-error *ngIf="!parentDescription.valid"   
-  >       
-    Il faut cliquer sur une langue dans la liste
-  </mat-error> -->
     <mat-form-field  style="width:20vw" #focusMe>
-      <div formGroupName="parent2">
         <input 
           matInput
           [placeholder]="placeholder" 
-          formControlName="description"    
+          [formControlName]="property"    
           [matAutocomplete]="auto"
           required
         >        
@@ -18,11 +13,10 @@
             <mat-option 
               *ngFor="let option of filteredOptions | async" 
               (onSelectionChange)="selectedOption(option)"
-              [value]="option.description" >
-              {{option.description}}
+              [value]="option[this.property]" >
+              {{option[this.property]}}
             </mat-option>
           </mat-autocomplete>
-      </div>
     </mat-form-field>
 </div>
    

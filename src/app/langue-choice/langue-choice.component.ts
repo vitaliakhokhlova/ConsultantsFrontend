@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
-import { FormGroup, ValidatorFn, AbstractControl, FormControl} from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { MatAutocompleteTrigger, MatOptionSelectionChange } from '@angular/material';
+import { MatAutocompleteTrigger } from '@angular/material';
 
 @Component({
   selector: 'app-langue-choice',
@@ -13,56 +13,37 @@ export class LangueChoiceComponent implements OnInit {
 
   @Input() parentForm: FormGroup;  
   @Input() options: any[];
-  @Input() placeholder: String;
+  @Input() placeholder: string;
+  @Input() property: string;
   @Output() createNewOption = new EventEmitter<boolean>();
 
   filteredOptions: Observable<any[]>;
-  isSelected: boolean;
 
   @ViewChild(MatAutocompleteTrigger, { static: false }) trigger: MatAutocompleteTrigger;
   @ViewChild('focusMe',{ static: false }) _focusMe: ElementRef;
   activeOptionValueOnPanelClosingActions;
-  isAnythingEmitted: boolean = null;
-  emittedValue: any;
-
   subscription: any;
 
-  constructor() {
-   }
+  constructor() {}
 
   ngOnInit() {   
-    this.filteredOptions = this.parent.valueChanges
+    this.filteredOptions = this.parentProperty.valueChanges
     .pipe(
       startWith<string | any>(''),
-      map(value => typeof value === 'string' ? value : value.description),
-      map(description => description ? this._filter(description) : this.options)
+      map(input => typeof input === 'string' ? input : input[this.property]),
+      map(input => input ? this._filter(input) : this.options)
     );
-      //this.parentDescription.setValidators(this.forceToChoose());
-      //this.parentDescription.setErrors({notSelected: true});
-      //this.parentDescription.updateValueAndValidity();
   }
 
   ngAfterViewInit() {
-    this.subscription = this.trigger.panelClosingActions
-      .subscribe(e => 
-        {
-        if (!!e) {
-          this.isAnythingEmitted = true;
-        }
-
-        if (e instanceof MatOptionSelectionChange) {
-          this.emittedValue = e.source.value;
-        }
-        if (!e) {
-          // this.trigger.writeValue(null);
-          this.parentDescription.setValue(null);
-          this.emittedValue = null;
+    this.subscription = this.trigger.panelClosingActions.subscribe(event => 
+      {
+        if (!event) {
+          this.parentProperty.setValue("");
           this._subscribeAgain();
-          //setTimeout(() => this._focusMe.nativeElement.focus(), 500);
         }
-        console.log(e)
-      },
-      e => console.log('error', e));
+        console.log(event)
+      });
   }
 
   private _subscribeAgain() {
@@ -72,47 +53,31 @@ export class LangueChoiceComponent implements OnInit {
     this.ngAfterViewInit();
   }
 
-  get parent(){
-    return this.parentForm.get('parent2');
+  get parentProperty(){
+    return this.parentForm.get(this.property);
   }
 
-  get parentDescription(){
-    return this.parent.get('description');
-  }
-
-  private _filter(description: string){
+  private _filter(input: string){
     let filteredResults = this.options.filter(option => 
-      option.description.toLowerCase().indexOf(description.toLowerCase()) === 0);
+      option[this.property].toLowerCase().indexOf(input.toLowerCase()) === 0);
     if (filteredResults.length < 1) 
     {
-      filteredResults= [{"description": "Pas de langue '"+description+"'. Créer?", "langue": description, "id": 0}];
+      filteredResults= [{[this.property]: "Pas de '"+input+"'. Créer?", "new": input, "id": 0}];
     }
     return filteredResults;
   }
   
   displayFn(item): string | undefined {
-    return item ? item.description : undefined;
+    return item ? item[this.property] : undefined;
   }
 
   selectedOption(option){
-    this.parentForm.patchValue({
-          parent2: {
-            id: option.id
-          }
-        });
+    this.parentForm.patchValue({id: option.id});
     if(option.id === 0){	
-      this.options.push({id: 0, description: option.langue});
-      this.parentForm.patchValue({parent2:{description: option.langue}}) 
+      this.options.push({id: 0, [this.property]: option.new});
+      this.parentForm.patchValue({[this.property]: option.new}) 
       this.createNewOption.emit(true);
     }
   }
 
-  // forceToChoose(): ValidatorFn {
-  //   return (control: AbstractControl): { [key: string]: any } | null => {
-  //     const index = this.options.findIndex(option => {
-  //       return new RegExp("^" + option.description + "$").test(control.value);
-  //     });
-  //     return index < 0 ? { forbiddenNames: { value: control.value } } : null;
-  //   };
-  // }
 }
