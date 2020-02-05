@@ -18,7 +18,7 @@ export class Resource {
   }
 
 export class ResourceWithDescription extends Resource{
-    @prop()
+    @required()
     description?: string ="";
 
     // deserialize(input: any): this {

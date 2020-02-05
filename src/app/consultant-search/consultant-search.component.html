@@ -1,8 +1,11 @@
 <form (ngSubmit)="onSubmit()">
   <mat-form-field>
     <mat-label>Chercher dans: </mat-label>
-      <mat-select>
-  <!-- <label for="name">Prénom</label> -->
+      <mat-select 
+        matNativeControl 
+        [formControl]="selectFormControl"
+        required
+      >
         <mat-option 
           *ngFor="let option of options" 
           (onSelectionChange)="selectedOption(option)"
@@ -11,6 +14,9 @@
           {{option.description}}
         </mat-option>
       </mat-select>
+      <mat-error *ngIf="selectFormControl.hasError('required')">
+        Ce champs est obligatoire
+      </mat-error>
   </mat-form-field>
   <input type="search" [(ngModel)]="searchString" name="firstname" placeholder="Search text">
   <button type="submit" class="btn btn-success">OK</button> 

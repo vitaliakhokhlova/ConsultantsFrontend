@@ -1,12 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, FormArray } from '@angular/forms';
 import { ConsultantService} from '../services/consultant.service';
 import { DataStorageService } from "../services/data-storage.service";
 import { Consultant, HistoryObject, HistoryObjectWithChildren, Factory, ResourceWithDescription, Force, ForceItem, Langue, LangueItem } from '../classes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxFormBuilder, RxFormGroup, RxFormArray } from '@rxweb/reactive-form-validators';
-import { ForceService } from '../services/force.service';
-import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { LangueService } from '../services/langue.service';
 
 @Component({
@@ -20,7 +18,7 @@ export class InputFormEditorComponent implements OnInit {
   consultantForm: RxFormGroup;
   forces_loaded = false;
   isPatched: boolean;  
-  options: Array<LangueItem>;
+  langueItems: Array<LangueItem>;
 
   constructor(
     private route: ActivatedRoute,
@@ -85,11 +83,11 @@ export class InputFormEditorComponent implements OnInit {
             this.competences.push(comp);
           });
           data.projets.forEach(x => {
-            //x.details.push(new ResourceWithDescription());     
+            x.details.push(new ResourceWithDescription());     
             this.projets.push(this.fb.group(x));
           });
           data.parcours.forEach(x => {
-            //x.details.push(new ResourceWithDescription());
+            x.details.push(new ResourceWithDescription());
             this.parcours.push(this.fb.group(x));
           });              
         },
@@ -101,7 +99,7 @@ export class InputFormEditorComponent implements OnInit {
           this.dataStorageService.getLangues().subscribe
           (langues => 
             {
-              this.options=langues;
+              this.langueItems=langues;
             },
             err => {
               console.log(err);
@@ -192,16 +190,27 @@ export class InputFormEditorComponent implements OnInit {
     return this.consultantForm.get('langues') as FormArray;
   }
 
+    addLangue() {
+    this.langues.push(this.fb.group(new Langue()));
+  }
+
   delete(array, i) {
     array.removeAt(i);
   }
 
-  onSubmit(competences?) {
+  onSubmit(showCompetences?) {
     console.log(event)
     if (this.consultantForm.valid) {
-      this.consultantService.update(this.consultantForm.value).subscribe(result=>{
+      let consultant = this.consultantForm.value;
+      consultant.projets.forEach(projet =>{
+        projet.details = projet.details.filter(detail => detail.description!="");
+      });
+      consultant.parcours.forEach(parcour =>{
+        parcour.details = parcour.details.filter(detail => detail.description!="");
+      });
+      this.consultantService.update(consultant).subscribe(result=>{
         this.dataStorageService.consultant = result;  
-        if(competences)
+        if(showCompetences)
         {
           this.goTo(`competences/${result.id}`);
         }
@@ -214,6 +223,14 @@ export class InputFormEditorComponent implements OnInit {
 
   goTo(route: string){
     this.router.navigate([route]);
+  }
+
+  createNewLanguage(langueConsultant){
+    let item = new LangueItem();
+    item.description = langueConsultant.value.parent2.description;
+    this.langueService.update(item).subscribe(result => {
+      langueConsultant.controls['parent2'].patchValue({"id": result.id, "description": result.description});
+    });	 
   }
   
 }

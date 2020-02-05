@@ -90,7 +90,10 @@
         <div class="row" *ngFor="let p of consultant.projets">            
             <div class="col-md-3">
                 <div class="subheader">{{p.dates}} :</div>
-                <img src='assets/{{p.pictogram}}' height="100">
+                <div *ngIf="p.pictogram">
+                    <img src='assets/{{p.pictogram}}' height="100">
+                </div>
+
             </div>
             <div class="col-md-9">
                 <div class="subheader" id="parcours_header">
@@ -137,4 +140,5 @@
             Print
         </button>
     </div>
+    
 </div>

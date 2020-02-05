@@ -25,7 +25,7 @@ export class CrudService <T extends Resource> {
       console.log("creating "+this.urlcomplete);
       return this.httpClient.post<T>(this.urlcomplete, item)
       .pipe(
-        tap(_ => this.log(`created ${this.endpoint} id=${item.id}`)),
+        tap(result => this.log(`created ${this.endpoint} id=${result.id}`)),
         catchError(this.handleError<any>('create id=${id}'))
       );
     }
@@ -43,7 +43,7 @@ export class CrudService <T extends Resource> {
       console.log(item);
       return this.httpClient.put<T>(this.urlcomplete, item)
       .pipe(
-        tap(_ => this.log(`updated ${this.endpoint} id=${item.id}`)),
+        tap(result => this.log(`updated ${this.endpoint} id=${result.id}`)),
         catchError(this.handleError<any>(`update id=${item.id}`))
       );
     }

@@ -1,41 +1,31 @@
 <div [formGroup]="parentForm">
-  <div formArrayName="langues">
-    <div *ngFor="let item of items.controls; let i=index"  [formGroupName]="i"> 
-          <mat-form-field  fxFlex="15%">
-          <div formGroupName="parent2">
-           <input 
-              matInput
-              placeholder="Choisir langue dans la liste" 
-              formControlName="description"    
-              [matAutocomplete]="auto"
-            >        
-              <mat-autocomplete 
-              #auto="matAutocomplete" 
-              >   
-                <mat-option 
-                  *ngFor="let option of filteredOptions[i] | async" 
-                  (onSelectionChange)="selectedOption(i, option)"
-                  [value]="option.description" >
-                  {{option.description}}
-                </mat-option>
-              </mat-autocomplete>
-            </div>
-          </mat-form-field>
-      
-
-          <mat-form-field  fxFlex="5%" fxFlex.xs="20"> 
-            <input matInput placeholder="Niveau" formControlName="niveau">
-          </mat-form-field>
-
-          <button type="button" mat-fab (click)="removeItem(i)">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-    </div>    
-    <button mat-fab type="button" (click)="addItem()">
-      <i class="fas fa-plus-circle"></i>
-    </button> 
-  </div> 
+  <!-- <mat-error *ngIf="!parentDescription.valid"   
+  >       
+    Il faut cliquer sur une langue dans la liste
+  </mat-error> -->
+    <mat-form-field  style="width:20vw" #focusMe>
+      <div formGroupName="parent2">
+        <input 
+          matInput
+          [placeholder]="placeholder" 
+          formControlName="description"    
+          [matAutocomplete]="auto"
+          required
+        >        
+          <mat-autocomplete 
+          #auto="matAutocomplete" 
+          >   
+            <mat-option 
+              *ngFor="let option of filteredOptions | async" 
+              (onSelectionChange)="selectedOption(option)"
+              [value]="option.description" >
+              {{option.description}}
+            </mat-option>
+          </mat-autocomplete>
+      </div>
+    </mat-form-field>
 </div>
+   
 
 
 

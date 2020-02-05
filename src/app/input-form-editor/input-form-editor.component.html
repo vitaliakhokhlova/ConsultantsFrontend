@@ -67,12 +67,32 @@ novalidate>
   </div>
 
   <h3>Langues</h3>
-  
-  <app-langue-choice 
-  [parentForm] = "consultantForm" 
-  [options] = "options"
-  >
-  </app-langue-choice>
+
+  <div formArrayName="langues">
+    <div class="container">
+    <div class="row" *ngFor="let langueConsultant of langues.controls; let i=index"  [formGroupName]="i">  
+          <app-langue-choice
+            [parentForm] = "langueConsultant" 
+            [options] = "langueItems"
+            placeholder = "Chercher et cliquer"
+            (createNewOption)="createNewLanguage(langueConsultant)"
+            >
+          </app-langue-choice>  
+          <mat-form-field  fxFlex="20%"> 
+            <input matInput placeholder="Niveau" formControlName="niveau">
+          </mat-form-field>         
+        <button 
+          type="button" 
+          mat-fab 
+          (click)="delete(langues,i)">
+            <i class="fas fa-trash-alt"></i>
+        </button>        
+      </div>  
+      <button mat-fab type="button" (click)="addLangue()">
+        <i class="fas fa-plus-circle"></i>
+      </button>  
+    </div>
+  </div>             
 
 <div formArrayName="projets">
   <h3>Projets</h3>
