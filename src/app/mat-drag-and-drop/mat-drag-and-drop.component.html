@@ -1,0 +1,13 @@
+<div [formGroup]="parentForm">
+    <div
+      cdkDropList class="example-list" 
+      (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of items.controls" cdkDrag>
+          <span cdkDragHandle>
+            {{item.value[positionField]}} 
+            {{resolve(subproperty,item.value)}}
+          </span>
+        </div>
+    </div>
+  </div>
+  

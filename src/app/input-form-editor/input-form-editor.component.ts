@@ -19,6 +19,17 @@ export class InputFormEditorComponent implements OnInit {
   forces_loaded = false;
   isPatched: boolean;  
   langueItems: Array<LangueItem>;
+  simpleinputs = [
+                {name: 'photoname', placeholder: 'Fichier de la photo'},
+                {name: 'firstname', placeholder: 'Prénom'}, 
+                {name: 'lastname', placeholder: 'Nom'},
+                {name: 'title', placeholder: 'Métier'},
+                {name: 'expression', placeholder: 'Citation'},
+                {name: 'author', placeholder: 'Auteur de la citation'},
+                {name: 'mobility', placeholder: 'Mobilité'},
+                {name: 'interests', placeholder: 'Intérêts'}];
+  
+  startDate = new Date(1990, 0, 1);
 
   constructor(
     private route: ActivatedRoute,

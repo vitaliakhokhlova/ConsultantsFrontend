@@ -1,8 +1,10 @@
-<form (ngSubmit)="onSubmit()">
+<div class="container">
+<form (ngSubmit)="onSubmit()" #myForm="ngForm">
   <mat-form-field>
     <mat-label>Chercher dans: </mat-label>
       <mat-select 
         matNativeControl 
+        name="searchCriteria"
         [formControl]="selectFormControl"
         required
       >
@@ -19,20 +21,46 @@
       </mat-error>
   </mat-form-field>
   <input type="search" [(ngModel)]="searchString" name="firstname" placeholder="Search text">
-  <button type="submit" class="btn btn-success">OK</button> 
+  <button type="submit" class="btn btn-success" [disabled]="!myForm.form.valid">OK</button> 
 </form>
+
 <br>
 
-<div *ngIf="items; else loading">
-<app-list-show 
-[(inputArray)]="items"
-[keysToShow]="keysToShow"
-[headElements]="headElements"
-(itemToDelete)="delete($event)"
->
-</app-list-show>
+
+<form 
+  [formGroup]="competenceChoice" 
+  (ngSubmit)="onSubmitCompetenceChoice()"
+  novalidate
+  >
+  <div class="row">
+    <app-mat-autocomplete
+      [parentForm] = "competenceChoice" 
+      [options] = "competenceItems"
+      placeholder = "Chercher dans les compétences"
+      property="description"
+      >
+    </app-mat-autocomplete>  
+    <button 
+        type="submit"
+        class="btn btn-success" 
+        [disabled]="!competenceChoice.valid"
+        >
+        Chercher
+      </button>   
+    </div> 
+</form>
+
+ <div *ngIf="allLoaded; else loading" >
+  <app-list-show 
+    [(inputArray)]="consultants"
+    [keysToShow]="keysToShow"
+    [headElements]="headElements"
+    (itemToDelete)="delete($event)"
+  >
+  </app-list-show>
 </div>
 
 <ng-template #loading>
   Loading (check console for errors)...
 </ng-template>
+</div>

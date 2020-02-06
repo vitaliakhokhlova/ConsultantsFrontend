@@ -11,6 +11,10 @@
     width: 100%;
   }
 
+  .example-half-width {
+    width: 50%;
+  }
+
   .example-list {
     width: 500px;
     max-width: 100%;

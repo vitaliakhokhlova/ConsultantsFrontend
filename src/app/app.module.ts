@@ -19,36 +19,32 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConsultantdetailComponent } from './consultantdetail/consultantdetail.component';
-import { ConsultantEditComponent } from './consultant-edit/consultant-edit.component';
 import { ConsultantSearchComponent } from './consultant-search/consultant-search.component';
 import { CompetenceFormComponent } from './competence-form/competence-form.component';
-import { ForceChoiceComponent } from './force-choice/force-choice.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { DateComponent } from './date/date.component';
-import { LangueChoiceComponent } from './langue-choice/langue-choice.component';
+import { MatAutocompleteComponent } from './mat-autocomplete/mat-autocomplete.component';
 import { ListShowComponent } from './list-show/list-show.component';
-import { CompetenceSearchComponent } from './competence-search/competence-search.component';
 import { ListEditComponent } from './list-edit/list-edit.component';
 import { InputFormEditorComponent } from './input-form-editor/input-form-editor.component';
 import { GroupByPipe } from './pipes/group.pipe';
+import { MatDragAndDropComponent } from './mat-drag-and-drop/mat-drag-and-drop.component';
+import { MatDatepickerComponent } from './mat-datepicker/mat-datepicker.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ConsultantdetailComponent,
-    ConsultantEditComponent,
     ConsultantSearchComponent,
     CompetenceFormComponent,
-    ForceChoiceComponent,
-    DateComponent,
-    LangueChoiceComponent,
     ListShowComponent,
-    CompetenceSearchComponent,
     ListEditComponent,
     InputFormEditorComponent,
-    GroupByPipe
+    GroupByPipe,
+    MatAutocompleteComponent,
+    MatDragAndDropComponent,
+    MatDatepickerComponent
   ],
   imports: [
     BrowserModule,

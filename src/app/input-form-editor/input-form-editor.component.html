@@ -1,65 +1,66 @@
+<div class="container" >
 <form 
-*ngIf="true; else loading" 
 [formGroup]="consultantForm" 
 (ngSubmit)="onSubmit()"
 novalidate>
 
-  <mat-form-field>
-    <input matInput type="text" placeholder="Prénom" id="firstname" formControlName="firstname">
-  </mat-form-field>
 
-  <mat-form-field>
-    <input matInput placeholder="Nom" type="text" id="lastname" formControlName="lastname">  
-  </mat-form-field>
+  <app-mat-datepicker  
+    name="birthday"    
+    placeholder="Date de naissance" 
+    local="fr"
+    [startDate]="consultantForm.value.birthday ? consultantForm.value.birthday :startDate"
+  ></app-mat-datepicker>
 
-  <mat-form-field class="example-full-width">
-    <input matInput placeholder="Métier" type="text" id="title" formControlName="title">  
-  </mat-form-field>
-
-  <app-date [parentForm] = "consultantForm" ></app-date>
-
-  <mat-form-field class="example-full-width">
-    <input matInput placeholder="Fichier de photo" type="text" id="photoname" formControlName="photoname">  
-  </mat-form-field>
-
-  <mat-form-field class="example-full-width">
-    <input matInput placeholder="Citation" type="text" id="expression" formControlName="expression">  
-  </mat-form-field>
-
-  <mat-form-field class="example-full-width">
-    <input matInput placeholder="Auteur" type="text" id="author" formControlName="author">  
-  </mat-form-field>
-
-  <mat-form-field class="example-full-width">
-    <input matInput placeholder="Mobilité" type="text" id="mobility" formControlName="mobility">  
-  </mat-form-field>
+  
+  <div *ngFor="let simpleinput of simpleinputs">
+    <mat-form-field class="example-full-width">
+      <input 
+        matInput 
+        type="text" 
+        [placeholder]="simpleinput.placeholder" 
+        [id]="simpleinput.name" 
+        [formControlName]="simpleinput.name"
+      >
+    </mat-form-field>
+  </div>
 
   <mat-form-field class="example-full-width">
     <textarea matInput cols="12" rows="5" placeholder="Profile" formControlName="profile"></textarea>
   </mat-form-field>
 
-
-  <mat-form-field class="example-full-width">
-    <input matInput placeholder="Intérêts" type="text" id="interests" formControlName="interests">  
-  </mat-form-field>
-
   <h3>Forces cognitives (drag and drop)</h3>
-  <app-force-choice [parentForm] = "consultantForm" ></app-force-choice>
+  <app-mat-drag-and-drop
+    [parentForm] = "consultantForm" 
+    arrayName="forces"
+    positionField="position"
+    subproperty="parent2.description"
+  ></app-mat-drag-and-drop>
 
 
   <div formArrayName="formations">
     <h3>Formations</h3>
     <div *ngFor="let element of formations.controls; let i=index" 
           [formGroupName]="i">
+          <div>
+        <mat-form-field >
+          <input matInput formControlName="dates" placeholder="Date" >
+        </mat-form-field>
+          <mat-form-field >
+          <input matInput formControlName="description" placeholder="Description">
+          </mat-form-field>
+          <mat-form-field >
+          <input matInput formControlName="institution" placeholder="Organisation">
+          </mat-form-field>
+          <mat-form-field>
+          <input matInput formControlName="place" placeholder="Ville">
+          </mat-form-field>
 
-        <input formControlName="dates" placeholder="Date" >
-        <input formControlName="description" placeholder="Description">
-        <input formControlName="institution" placeholder="Organisation">
-        <input formControlName="place" placeholder="Ville">
-
-        <button mat-fab  type="button" (click)="delete(formations, i)">
-          <i class="fas fa-trash-alt"></i>
-        </button>
+          <button mat-fab  type="button" (click)="delete(formations, i)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+      
+      </div>
     </div>
     <button mat-fab type="button" (click)="addFormation()">
       <i class="fas fa-plus-circle"></i>   
@@ -69,20 +70,20 @@ novalidate>
   <h3>Langues</h3>
 
   <div formArrayName="langues">
-    <div class="container">
     <div class="row" 
     *ngFor="let langueConsultant of langues.controls; let i=index"  
     [formGroupName]="i">  
       <div formGroupName="parent2"> 
-        <app-langue-choice
+        <app-mat-autocomplete
             [parentForm] = "langueConsultant.controls.parent2" 
             [options] = "langueItems"
             placeholder = "Chercher et cliquer"
             property="description"
             (createNewOption)="createNewLanguage(langueConsultant)"
             >
-          </app-langue-choice>  
-          </div>
+          </app-mat-autocomplete>  
+        </div>
+        
           <mat-form-field  fxFlex="20%"> 
             <input matInput placeholder="Niveau" formControlName="niveau">
           </mat-form-field>         
@@ -96,10 +97,9 @@ novalidate>
       <button mat-fab type="button" (click)="addLangue()">
         <i class="fas fa-plus-circle"></i>
       </button>  
-    </div>
   </div>             
 
-<div formArrayName="projets">
+<div formArrayName="projets" class="example-full-width">
   <h3>Projets</h3>
   <div *ngFor="let item of projets.controls; let i=index" 
         [formGroupName]="i">
@@ -114,15 +114,17 @@ novalidate>
         <i class="fas fa-trash-alt"></i>
        </button>
        <br>
+       <div class="container">
        <div formArrayName="details">
         <div *ngFor="let detail of item.controls.details.controls; let j=index" 
-          [formGroupName]="j">
-          <input formControlName="description" placeholder="Tâche">
+          [formGroupName]="j" class="example-full-width">
+          <input class="example-half-width" formControlName="description" placeholder="Tâche">
           <button  mat-fab type="button" (click)="delete(item.controls.details, j)">
             <i class="fas fa-trash-alt"></i>
            </button>
         </div>
        </div>
+      </div>
        <button type="button" (click)="addDetail(item)">Ajouter une tâche</button>
   </div>
   <button mat-fab type="button" (click)="addProject()">
@@ -176,12 +178,10 @@ novalidate>
     (click)="onSubmit(false)"
     >
     Sauvegarder et voir le profile
-  </button>
-
- {{consultantForm.value | json}}
-    
+  </button>    
 </form>  
 
 <ng-template #loading>
   Loading (check console for errors)...
 </ng-template>
+</div>

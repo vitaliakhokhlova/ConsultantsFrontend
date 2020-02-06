@@ -1,15 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-langue-choice',
-  templateUrl: './langue-choice.component.html',
-  styleUrls: ['./langue-choice.component.css']
+  selector: 'app-mat-autocomplete',
+  templateUrl: './mat-autocomplete.component.html',
+  styleUrls: ['./mat-autocomplete.component.css']
 })
-export class LangueChoiceComponent implements OnInit {
+export class MatAutocompleteComponent implements OnInit {
 
   @Input() parentForm: FormGroup;  
   @Input() options: any[];
@@ -26,7 +26,8 @@ export class LangueChoiceComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {   
+  ngOnInit() {
+    console.log(this.options);   
     this.filteredOptions = this.parentProperty.valueChanges
     .pipe(
       startWith<string | any>(''),

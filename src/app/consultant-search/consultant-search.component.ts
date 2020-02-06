@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ConsultantdetailComponent } from '../consultantdetail/consultantdetail.component';
-import { Consultant } from '../classes';
+import { Consultant, CompetenceItem } from '../classes';
 import { ConsultantService } from '../services/consultant.service';
 import {  Router } from '@angular/router';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { DataStorageService } from '../services/data-storage.service';
 
 @Component({
   selector: 'app-consultant-search',
@@ -12,7 +13,7 @@ import { FormControl, Validators } from '@angular/forms';
 })
 export class ConsultantSearchComponent implements OnInit {
 
-  items: Consultant[];
+  consultants: Consultant[];
   searchString: string;
   keysToShow=["firstname", "lastname", "title"];
   headElements=['ID', 'Prénom', 'Nom','Métier'];
@@ -43,37 +44,101 @@ export class ConsultantSearchComponent implements OnInit {
                   "description" : "Intérêts"},
   ]
 
-  constructor(private consultantService: ConsultantService, private router: Router) {
-    this.router.routeReuseStrategy.shouldReuseRoute = function() {
-      return false;
-  };
+  competenceChoice: FormGroup;
+  competenceItems: Array<CompetenceItem>;
+  allLoaded: boolean;
+
+  constructor
+  (
+    private consultantService: ConsultantService, 
+    private router: Router,
+    private fb: FormBuilder,
+    private dataStorageService: DataStorageService
+  ) 
+  {
+      this.router.routeReuseStrategy.shouldReuseRoute = function() 
+      {
+        return false;
+      };
   }
 
   ngOnInit() {
-    this.getAll();
-  }
-
-  getAll(){
-    this.consultantService.getAll().subscribe(results => this.items = results);
+    this.competenceChoice =  this.fb.group({id: 0, description: ""});
+    this.dataStorageService.getCompetenceItems().subscribe(
+      result => 
+      {
+        this.competenceItems = result;
+      },
+      error => console.log(error),
+      () =>
+      {
+        this.consultantService.getAll().subscribe(
+          results => 
+          {
+            this.consultants = results;
+          },
+          error => console.log(error),
+          () => this.allLoaded = true);
+      }
+      );
+    
   }
 
   onSubmit() : void{
     this.selectFormControl.reset();
     this.consultantService.searchBySubstring(this.property, this.searchString).subscribe(
-      result => this.items = result);
+      result => this.consultants = result);
+  }
+
+  onSubmitCompetenceChoice(): void{
+    let description =this.competenceChoice.value.description;
+    console.log(description);
+    let newFields = [
+      {property: "niveau", description: "Niveau"},
+      {property: "experience", description: "Expérience, ans"},
+      {property: "annee", description: "Dernière utilisation, année"},
+      {property: "contexte", description: "Contexte"},
+      {property: "interet", description: "Intérêt"}
+    ];
+    this.changeFieldsToShow(newFields);
+    this.consultantService.searchByCompetences(description).subscribe(
+      result => 
+      {
+        this.consultants = result;
+        this.consultants.forEach(consultant =>{      
+          let competence = consultant.competences.filter(
+            competence => competence.parent2.description==description);  
+            console.log(competence[0].parent2);  
+            newFields.forEach(field =>
+              {
+                consultant[field.property] = competence[0][field.property];
+              });          
+        })
+      });
+      console.log(this.consultants)
+      this.selectFormControl.reset();
+  }
+
+  changeFieldsToShow(newFields: {property: string, description: string}[])
+  {
+    this.keysToShow.pop();
+    this.headElements.pop();
+    newFields.forEach(field =>
+      {
+        this.keysToShow.push(field.property);
+        this.headElements.push(field.description);
+      }
+    );
   }
 
   selectedOption(option: any){
     this.property = option.property;
-    this.keysToShow.pop();
-    this.headElements.pop();
-    this.keysToShow.push(option.property);
-    this.headElements.push(option.description);
+    this.changeFieldsToShow([option]);
   }
 
   delete(consultant: Consultant){
     console.log(consultant);
-    this.items = this.items.filter(h => h !== consultant);
+    this.consultants = this.consultants.filter(h => h !== consultant);
     this.consultantService.delete(consultant.id).subscribe();
   }
 }

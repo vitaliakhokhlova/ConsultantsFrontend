@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ConsultantdetailComponent } from './consultantdetail/consultantdetail.component';
-import {ConsultantEditComponent} from './consultant-edit/consultant-edit.component';
 import { ConsultantSearchComponent } from './consultant-search/consultant-search.component';
 import { CompetenceFormComponent} from './competence-form/competence-form.component';
 import { InputFormEditorComponent } from './input-form-editor/input-form-editor.component';
