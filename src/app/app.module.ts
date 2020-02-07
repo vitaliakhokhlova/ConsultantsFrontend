@@ -30,6 +30,7 @@ import { InputFormEditorComponent } from './input-form-editor/input-form-editor.
 import { GroupByPipe } from './pipes/group.pipe';
 import { MatDragAndDropComponent } from './mat-drag-and-drop/mat-drag-and-drop.component';
 import { MatDatepickerComponent } from './mat-datepicker/mat-datepicker.component';
+import { ReactiveFormArrayComponent } from './reactive-form-array/reactive-form-array.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { MatDatepickerComponent } from './mat-datepicker/mat-datepicker.componen
     GroupByPipe,
     MatAutocompleteComponent,
     MatDragAndDropComponent,
-    MatDatepickerComponent
+    MatDatepickerComponent,
+    ReactiveFormArrayComponent
   ],
   imports: [
     BrowserModule,

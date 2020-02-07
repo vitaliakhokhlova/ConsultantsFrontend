@@ -1,0 +1,6 @@
+.row {
+    display: flex; /* 2. display flex to the rescue */
+    flex-direction: row;
+}
+
+

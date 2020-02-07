@@ -29,6 +29,8 @@ export class InputFormEditorComponent implements OnInit {
                 {name: 'mobility', placeholder: 'Mobilité'},
                 {name: 'interests', placeholder: 'Intérêts'}];
   
+  historyObjectFields=['dates','description','institution','place'];
+  historyObjectPlaceholders=['Dates','Description','Organisation','Ville'];
   startDate = new Date(1990, 0, 1);
 
   constructor(
@@ -94,11 +96,17 @@ export class InputFormEditorComponent implements OnInit {
             this.competences.push(comp);
           });
           data.projets.forEach(x => {
-            x.details.push(new ResourceWithDescription());     
+            if(!x.details.length)
+            {
+              x.details.push(new ResourceWithDescription());     
+            }
             this.projets.push(this.fb.group(x));
           });
           data.parcours.forEach(x => {
+            if(!x.details.length)
+            {
             x.details.push(new ResourceWithDescription());
+            }
             this.parcours.push(this.fb.group(x));
           });              
         },
@@ -149,7 +157,6 @@ export class InputFormEditorComponent implements OnInit {
 
   addFormation() {
     this.formations.push(<RxFormGroup>this.fb.formGroup(new HistoryObject()));
-    console.log(this.consultantForm);
   }
 
   get forces() {

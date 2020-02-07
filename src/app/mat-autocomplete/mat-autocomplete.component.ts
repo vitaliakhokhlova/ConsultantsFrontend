@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, SkipSelf } from '@angular/core';
+import { ControlContainer, FormGroupDirective } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { MatAutocompleteTrigger } from '@angular/material';
 import { startWith, map } from 'rxjs/operators';
@@ -7,11 +7,15 @@ import { startWith, map } from 'rxjs/operators';
 @Component({
   selector: 'app-mat-autocomplete',
   templateUrl: './mat-autocomplete.component.html',
-  styleUrls: ['./mat-autocomplete.component.css']
+  styleUrls: ['./mat-autocomplete.component.css'],
+  viewProviders: [{ 
+    provide: ControlContainer, 
+    useFactory: (container: ControlContainer) => container,
+    deps: [[new SkipSelf(), ControlContainer]],
+  }]
 })
 export class MatAutocompleteComponent implements OnInit {
-
-  @Input() parentForm: FormGroup;  
+ 
   @Input() options: any[];
   @Input() placeholder: string;
   @Input() property: string;
@@ -20,14 +24,12 @@ export class MatAutocompleteComponent implements OnInit {
   filteredOptions: Observable<any[]>;
 
   @ViewChild(MatAutocompleteTrigger, { static: false }) trigger: MatAutocompleteTrigger;
-  @ViewChild('focusMe',{ static: false }) _focusMe: ElementRef;
-  activeOptionValueOnPanelClosingActions;
   subscription: any;
 
-  constructor() {}
+  constructor(private parentForm: ControlContainer) {
+  }
 
   ngOnInit() {
-    console.log(this.options);   
     this.filteredOptions = this.parentProperty.valueChanges
     .pipe(
       startWith<string | any>(''),
@@ -55,7 +57,7 @@ export class MatAutocompleteComponent implements OnInit {
   }
 
   get parentProperty(){
-    return this.parentForm.get(this.property);
+    return this.parentForm.control.get(this.property);
   }
 
   private _filter(input: string){
@@ -73,10 +75,10 @@ export class MatAutocompleteComponent implements OnInit {
   }
 
   selectedOption(option){
-    this.parentForm.patchValue({id: option.id});
+    this.parentForm.control.patchValue({id: option.id});
     if(option.id === 0){	
       this.options.push({id: 0, [this.property]: option.new});
-      this.parentForm.patchValue({[this.property]: option.new}) 
+      this.parentForm.control.patchValue({[this.property]: option.new}) 
       this.createNewOption.emit(true);
     }
   }

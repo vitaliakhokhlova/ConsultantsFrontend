@@ -1,0 +1,23 @@
+<div *ngFor="let item of formArray.controls; let i=index" [formGroupName]="i">
+    <span *ngFor="let property of properties; let i=index">         
+        <input  
+            [formControlName]="property" 
+            [placeholder]="placeholders[i]">     
+    </span>
+
+    <button  mat-fab type="button" (click)="delete(i)">
+        <i class="fas fa-trash-alt"></i>
+    </button>
+
+    <br>
+    <div *ngIf="subproperty" formArrayName="details">
+    <div class="container">
+        <app-reactive-form-array 
+            [properties]="[subproperty]"
+            [placeholders]="[subpropertyPlaceholder]"
+        >                
+        </app-reactive-form-array>             
+    </div>
+</div>
+
+</div>

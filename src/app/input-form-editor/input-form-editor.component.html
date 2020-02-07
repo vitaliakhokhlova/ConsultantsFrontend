@@ -1,9 +1,9 @@
 <div class="container" >
 <form 
-[formGroup]="consultantForm" 
-(ngSubmit)="onSubmit()"
-novalidate>
-
+  [formGroup]="consultantForm" 
+  (ngSubmit)="onSubmit()"
+  novalidate
+>
 
   <app-mat-datepicker  
     name="birthday"    
@@ -11,7 +11,6 @@ novalidate>
     local="fr"
     [startDate]="consultantForm.value.birthday ? consultantForm.value.birthday :startDate"
   ></app-mat-datepicker>
-
   
   <div *ngFor="let simpleinput of simpleinputs">
     <mat-form-field class="example-full-width">
@@ -29,137 +28,84 @@ novalidate>
     <textarea matInput cols="12" rows="5" placeholder="Profile" formControlName="profile"></textarea>
   </mat-form-field>
 
-  <h3>Forces cognitives (drag and drop)</h3>
+<h3>Forces cognitives (drag and drop)</h3>
+<div formArrayName="forces">
   <app-mat-drag-and-drop
-    [parentForm] = "consultantForm" 
-    arrayName="forces"
-    positionField="position"
-    subproperty="parent2.description"
+    [orderProperty]="['position']"
+    [nameProperty]="['parent2','description']"
   ></app-mat-drag-and-drop>
+</div>
 
-
-  <div formArrayName="formations">
-    <h3>Formations</h3>
-    <div *ngFor="let element of formations.controls; let i=index" 
-          [formGroupName]="i">
-          <div>
-        <mat-form-field >
-          <input matInput formControlName="dates" placeholder="Date" >
-        </mat-form-field>
-          <mat-form-field >
-          <input matInput formControlName="description" placeholder="Description">
-          </mat-form-field>
-          <mat-form-field >
-          <input matInput formControlName="institution" placeholder="Organisation">
-          </mat-form-field>
-          <mat-form-field>
-          <input matInput formControlName="place" placeholder="Ville">
-          </mat-form-field>
-
-          <button mat-fab  type="button" (click)="delete(formations, i)">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-      
-      </div>
-    </div>
-    <button mat-fab type="button" (click)="addFormation()">
-      <i class="fas fa-plus-circle"></i>   
-    </button>     
-  </div>
+<h3>Formations</h3>
+<div formArrayName="formations">
+  <app-reactive-form-array
+    [properties]="historyObjectFields"
+    [placeholders]="historyObjectPlaceholders"  
+  >                
+  </app-reactive-form-array>  
+</div> 
+<button mat-fab type="button" (click)="addFormation()">
+  <i class="fas fa-plus-circle"></i>   
+</button>  
 
   <h3>Langues</h3>
-
   <div formArrayName="langues">
     <div class="row" 
     *ngFor="let langueConsultant of langues.controls; let i=index"  
     [formGroupName]="i">  
       <div formGroupName="parent2"> 
         <app-mat-autocomplete
-            [parentForm] = "langueConsultant.controls.parent2" 
-            [options] = "langueItems"
-            placeholder = "Chercher et cliquer"
-            property="description"
-            (createNewOption)="createNewLanguage(langueConsultant)"
-            >
-          </app-mat-autocomplete>  
-        </div>
+          [options] = "langueItems"
+          placeholder = "Chercher et cliquer"
+          property="description"
+          (createNewOption)="createNewLanguage(langueConsultant)"
+          >
+        </app-mat-autocomplete>  
+      </div>
         
-          <mat-form-field  fxFlex="20%"> 
-            <input matInput placeholder="Niveau" formControlName="niveau">
-          </mat-form-field>         
-        <button 
-          type="button" 
-          mat-fab 
-          (click)="delete(langues,i)">
-            <i class="fas fa-trash-alt"></i>
-        </button>        
-      </div>  
-      <button mat-fab type="button" (click)="addLangue()">
-        <i class="fas fa-plus-circle"></i>
-      </button>  
+      <mat-form-field  fxFlex="20%"> 
+        <input matInput placeholder="Niveau" formControlName="niveau">
+      </mat-form-field>         
+      <button 
+        type="button" 
+        mat-fab 
+        (click)="delete(langues,i)">
+          <i class="fas fa-trash-alt"></i>
+      </button>        
+    </div>  
+    <button mat-fab type="button" (click)="addLangue()">
+      <i class="fas fa-plus-circle"></i>
+    </button>  
   </div>             
 
-<div formArrayName="projets" class="example-full-width">
-  <h3>Projets</h3>
-  <div *ngFor="let item of projets.controls; let i=index" 
-        [formGroupName]="i">
 
-      <input formControlName="dates" placeholder="Date" >
-      <input formControlName="description" placeholder="Description">
-      <input formControlName="institution" placeholder="Organisation">
-      <input formControlName="place" placeholder="Ville">
-      <input formControlName="pictogram" placeholder="Pictogram">
+<h3>Projets</h3>
+<div formArrayName="projets">
+  <app-reactive-form-array
+    [properties]="['dates','description','institution','place','pictogram']"
+    [placeholders]="['Dates','Description','Organisation','Ville','Pictogram']"  
+    subproperty="description"
+    subpropertyPlaceholder="Tâche"
+  >                
+  </app-reactive-form-array>  
+</div> 
+<button mat-fab type="button" (click)="addProject()">
+  <i class="fas fa-plus-circle"></i>
+</button> 
 
-      <button  mat-fab type="button" (click)="delete(projets, i)">
-        <i class="fas fa-trash-alt"></i>
-       </button>
-       <br>
-       <div class="container">
-       <div formArrayName="details">
-        <div *ngFor="let detail of item.controls.details.controls; let j=index" 
-          [formGroupName]="j" class="example-full-width">
-          <input class="example-half-width" formControlName="description" placeholder="Tâche">
-          <button  mat-fab type="button" (click)="delete(item.controls.details, j)">
-            <i class="fas fa-trash-alt"></i>
-           </button>
-        </div>
-       </div>
-      </div>
-       <button type="button" (click)="addDetail(item)">Ajouter une tâche</button>
-  </div>
-  <button mat-fab type="button" (click)="addProject()">
-    <i class="fas fa-plus-circle"></i></button>    
-</div>
-
+<h3>Parcours</h3>
 <div formArrayName="parcours">
-  <h3>Parcours</h3>
-  <div *ngFor="let item of parcours.controls; let i=index" 
-        [formGroupName]="i">
-
-      <input formControlName="dates" placeholder="Date" >
-      <input formControlName="description" placeholder="Description">
-      <input formControlName="institution" placeholder="Organisation">
-      <input formControlName="place" placeholder="Ville">
-      <input formControlName="pictogram" placeholder="Pictogram">
-
-      <button  mat-fab type="button" (click)="delete(parcours, i)">
-        <i class="fas fa-trash-alt"></i>
-       </button>
-       <br>
-       <div formArrayName="details">
-        <div *ngFor="let detail of item.controls.details.controls; let j=index" 
-          [formGroupName]="j">
-          <input formControlName="description" placeholder="Tâche">
-          <button  mat-fab type="button" (click)="delete(item.controls.details, j)">
-            <i class="fas fa-trash-alt"></i>
-           </button>
-        </div>
-       </div>
-       <button type="button" (click)="addDetail(item)">Ajouter une tâche</button>
-  </div>
-  <button mat-fab type="button" (click)="addParcours()">
-    <i class="fas fa-plus-circle"></i></button>    
-</div>
+  <app-reactive-form-array
+    [properties]="['dates','description','institution','place','pictogram']"
+    [placeholders]="['Dates','Description','Organisation','Ville','Pictogram']"  
+    subproperty="description"
+    subpropertyPlaceholder="Tâche"
+  >                
+  </app-reactive-form-array>  
+</div> 
+<button mat-fab type="button" (click)="addParcours()">
+  <i class="fas fa-plus-circle"></i>
+</button> 
  
 <br>
 <button 
@@ -172,7 +118,8 @@ novalidate>
 </button>
 
   <button 
-    mdbBtn color="primary" 
+    mdbBtn 
+    color="primary" 
     type="button" 
     [disabled]="!consultantForm.valid"
     (click)="onSubmit(false)"
