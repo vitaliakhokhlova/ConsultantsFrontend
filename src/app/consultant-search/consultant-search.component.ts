@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SkipSelf } from '@angular/core';
 import { ConsultantdetailComponent } from '../consultantdetail/consultantdetail.component';
 import { Consultant, CompetenceItem } from '../classes';
 import { ConsultantService } from '../services/consultant.service';
 import {  Router } from '@angular/router';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder, ControlContainer } from '@angular/forms';
 import { DataStorageService } from '../services/data-storage.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-consultant-search',
@@ -14,46 +16,30 @@ import { DataStorageService } from '../services/data-storage.service';
 export class ConsultantSearchComponent implements OnInit {
 
   consultants: Consultant[];
-  searchString: string;
-  keysToShow=["firstname", "lastname", "title"];
-  headElements=['ID', 'Prénom', 'Nom','Métier'];
-  itemToDelete;
-  selectFormControl = new FormControl('', Validators.required);
-  property: string;
+  itemToDelete: Consultant;
+  keysToShow: string[];
+  headElements: string[];
+  selectSearchForm: FormGroup;
   options=[
-    {
-      "property":"firstname",
-      "description" : "Prénom"},
-      {
-        "property":"lastname",
-        "description" : "Nom"},
-        {
-          "property":"title",
-          "description" : "Métier"},
-          {
-            "property":"profile",
-            "description" : "Profile"},
-            {
-              "property":"occupancy",
-              "description" : "Temps"},
-              {
-                "property":"mobility",
-                "description" : "Mobilité"},
-                {
-                  "property":"interests",
-                  "description" : "Intérêts"},
+    { "property":"firstname", "description" : "Prénom"},
+    { "property":"lastname", "description" : "Nom"},
+    { "property":"title", "description" : "Métier"},
+    { "property":"profile", "description" : "Profile"},
+    { "property":"occupancy", "description" : "Temps"},
+    { "property":"mobility", "description" : "Mobilité"},
+    { "property":"interests", "description" : "Intérêts"},
   ]
 
   competenceChoice: FormGroup;
   competenceItems: Array<CompetenceItem>;
-  allLoaded: boolean;
 
   constructor
   (
     private consultantService: ConsultantService, 
     private router: Router,
     private fb: FormBuilder,
-    private dataStorageService: DataStorageService
+    private dataStorageService: DataStorageService,
+    private dialog: MatDialog
   ) 
   {
       this.router.routeReuseStrategy.shouldReuseRoute = function() 
@@ -63,6 +49,12 @@ export class ConsultantSearchComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.keysToShow=["lastname", "firstname", "title"];
+    this.headElements = ['Nom', 'Prénom','Métier'];
+    this.selectSearchForm = this.fb.group({
+      selectFormControl: ['', Validators.required],
+      searchString: ['', Validators.required]
+    });
     this.competenceChoice =  this.fb.group({id: 0, description: ""});
     this.dataStorageService.getCompetenceItems().subscribe(
       result => 
@@ -77,30 +69,35 @@ export class ConsultantSearchComponent implements OnInit {
           {
             this.consultants = results;
           },
-          error => console.log(error),
-          () => this.allLoaded = true);
+          error => console.log(error));
       }
-      );
-    
+      );    
   }
 
-  onSubmit() : void{
-    this.selectFormControl.reset();
-    this.consultantService.searchBySubstring(this.property, this.searchString).subscribe(
+  onSubmitCriteria() : void{
+    let formValue = this.selectSearchForm.value;
+    let newFields = [
+      {property: "lastname", description: "Nom"},
+      {property: "firstname", description: "Prénom"},
+      {property: formValue.selectFormControl, description: formValue.selectFormControl}
+    ];
+    this.changeFieldsToShow(newFields);
+    this.consultantService.searchBySubstring(formValue.selectFormControl, formValue.searchString).subscribe(
       result => this.consultants = result);
   }
 
-  onSubmitCompetenceChoice(): void{
-    let description =this.competenceChoice.value.description;
-    console.log(description);
+  onSubmitCompetenceChoice(): void{    
     let newFields = [
+      {property: "lastname", description: "Nom"},
+      {property: "firstname", description: "Prénom"},
       {property: "niveau", description: "Niveau"},
-      {property: "experience", description: "Expérience, ans"},
-      {property: "annee", description: "Dernière utilisation, année"},
+      {property: "experience", description: "Expérience"},
+      {property: "annee", description: "Dernière utilisation"},
       {property: "contexte", description: "Contexte"},
       {property: "interet", description: "Intérêt"}
     ];
     this.changeFieldsToShow(newFields);
+    let description = this.competenceChoice.value.description;
     this.consultantService.searchByCompetences(description).subscribe(
       result => 
       {
@@ -108,21 +105,18 @@ export class ConsultantSearchComponent implements OnInit {
         this.consultants.forEach(consultant =>{      
           let competence = consultant.competences.filter(
             competence => competence.parent2.description==description);  
-            console.log(competence[0].parent2);  
-            newFields.forEach(field =>
+            Object.keys(competence[0]).forEach(key =>
               {
-                consultant[field.property] = competence[0][field.property];
+                consultant[key] = competence[0][key];
               });          
         })
       });
-      console.log(this.consultants)
-      this.selectFormControl.reset();
   }
 
   changeFieldsToShow(newFields: {property: string, description: string}[])
   {
-    this.keysToShow.pop();
-    this.headElements.pop();
+    this.keysToShow = [];
+    this.headElements = [];
     newFields.forEach(field =>
       {
         this.keysToShow.push(field.property);
@@ -131,14 +125,24 @@ export class ConsultantSearchComponent implements OnInit {
     );
   }
 
-  selectedOption(option: any){
-    this.property = option.property;
-    this.changeFieldsToShow([option]);
-  }
-
   delete(consultant: Consultant){
     console.log(consultant);
     this.consultants = this.consultants.filter(h => h !== consultant);
     this.consultantService.delete(consultant.id).subscribe();
   }
+
+  openDialog(consultant: Consultant) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400',
+      data: {item: consultant.firstname.concat(" ",consultant.lastname), message: "Vous êtes sur que vous voulez supprimer le consultant "}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if(result){
+        this.delete(consultant);
+      }
+    });
+}
+
 }

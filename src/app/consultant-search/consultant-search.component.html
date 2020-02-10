@@ -1,41 +1,37 @@
 <div class="container">
-<form (ngSubmit)="onSubmit()" #myForm="ngForm">
-  <mat-form-field>
-    <mat-label>Chercher dans: </mat-label>
-      <mat-select 
-        matNativeControl 
-        name="searchCriteria"
-        [formControl]="selectFormControl"
-        required
-      >
-        <mat-option 
-          *ngFor="let option of options" 
-          (onSelectionChange)="selectedOption(option)"
-          [value]="option.property"
-        >
-          {{option.description}}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="selectFormControl.hasError('required')">
-        Ce champs est obligatoire
-      </mat-error>
-  </mat-form-field>
-  <input type="search" [(ngModel)]="searchString" name="firstname" placeholder="Search text">
-  <button type="submit" class="btn btn-success" [disabled]="!myForm.form.valid">OK</button> 
+<form 
+  (ngSubmit)="onSubmitCriteria()" 
+  [formGroup]="selectSearchForm" 
+  novalidate
+  >
+      <app-mat-select
+        controlName="selectFormControl"
+        [options]="options"
+        propertyToShow="description"
+        propertyToGet="property"
+        placeholder="Choisir le critère de recherche"
+      ></app-mat-select>
+    <input formControlName="searchString" placeholder="Valeur">
+  <button 
+    type="submit" 
+    class="btn btn-success" 
+    [disabled]="!selectSearchForm.valid"
+  >
+    OK
+  </button> 
 </form>
 
 <br>
-
 
 <form 
   [formGroup]="competenceChoice" 
   (ngSubmit)="onSubmitCompetenceChoice()"
   novalidate
   >
-  <div class="row">
     <app-mat-autocomplete
       [options] = "competenceItems"
       placeholder = "Chercher dans les compétences"
+      controlName="description"
       property="description"
       >
     </app-mat-autocomplete>  
@@ -44,17 +40,17 @@
         class="btn btn-success" 
         [disabled]="!competenceChoice.valid"
         >
-        Chercher
+        OK
       </button>   
-    </div> 
+    
 </form>
 
- <div *ngIf="allLoaded; else loading" >
+ <div *ngIf="consultants; else loading" >
   <app-list-show 
     [(inputArray)]="consultants"
     [keysToShow]="keysToShow"
     [headElements]="headElements"
-    (itemToDelete)="delete($event)"
+    (itemToDelete)="openDialog($event)"
   >
   </app-list-show>
 </div>

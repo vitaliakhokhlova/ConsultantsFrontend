@@ -1,5 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-list-show',
@@ -11,26 +13,53 @@ export class ListShowComponent implements OnInit {
   @Input() inputArray: any[];
   @Input() headElements: string[];
   @Input() keysToShow: string[];
-
+  keysToShowPlus: string[];
   @Output() itemToDelete = new EventEmitter();
 
-  constructor(private router: Router) { }
+  dataSource: MatTableDataSource<any>;
+  buttons = ['view', 'edit', 'delete'];
+  buttonNames = ['Imprimer','Corriger','Supprimer'];
+  buttonClasses = ["btn btn-info","btn btn-success","btn btn-danger"];
+  buttonIconClasses = ['fas fa-eye','fas fa-user-edit','fas fa-trash-alt'];
 
-  ngOnInit() {
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+
+  constructor
+  (
+    private router: Router
+  ) { 
   }
 
-  show(item): void { 
-    this.router.navigate([`detail/${item.id}`]);    
- }
-
-  edit(item): void { 
-    this.router.navigate([`edit/${item.id}`]);    
+  ngOnInit() {  
+    console.log(this.inputArray);
+    this.keysToShowPlus =Object.assign([],  this.keysToShow);
+    for(let button of this.buttons)
+    {  
+      this.keysToShowPlus.push(button); 
+    }
+    this.dataSource = new MatTableDataSource(this.inputArray);
+    this.dataSource.sort = this.sort;    
+  }
+  
+  ngOnChanges() {
+    this.ngOnInit();
   }
 
-  delete(item): void{
-    this.itemToDelete.emit(item);
+  buttonFunction(item, type){
+    if(type == 'view'){
+      this.router.navigate([`detail/${item.id}`]);  
+    }
+    else{
+      if(type=='edit'){
+        this.router.navigate([`edit/${item.id}`]);  
+      }
+      else{
+        if(type=='delete'){
+          this.itemToDelete.emit(item);
+        }
+      }
+    }
   }
-
 }
 
 

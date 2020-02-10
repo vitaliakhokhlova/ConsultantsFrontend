@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, SkipSelf } from '@angular/core';
-import { ControlContainer, FormGroupDirective } from '@angular/forms';
+import { ControlContainer } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { MatAutocompleteTrigger } from '@angular/material';
 import { startWith, map } from 'rxjs/operators';
@@ -16,6 +16,7 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class MatAutocompleteComponent implements OnInit {
  
+  @Input() controlName: string;
   @Input() options: any[];
   @Input() placeholder: string;
   @Input() property: string;

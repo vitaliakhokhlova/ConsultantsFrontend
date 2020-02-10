@@ -2,7 +2,7 @@
     <input 
       matInput
       [placeholder]="placeholder" 
-      [formControlName]="property"    
+      [formControlName]="controlName"    
       [matAutocomplete]="auto"
       required
     >        
@@ -12,8 +12,8 @@
         <mat-option 
           *ngFor="let option of filteredOptions | async" 
           (onSelectionChange)="selectedOption(option)"
-          [value]="option[this.property]" >
-          {{option[this.property]}}
+          [value]="option[property]" >
+          {{option[property]}}
         </mat-option>
       </mat-autocomplete>
 </mat-form-field>

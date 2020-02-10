@@ -32,6 +32,7 @@ export class InputFormEditorComponent implements OnInit {
   historyObjectFields=['dates','description','institution','place'];
   historyObjectPlaceholders=['Dates','Description','Organisation','Ville'];
   startDate = new Date(1990, 0, 1);
+  historyArraysNames = ['formations', 'projets', 'parcours'];
 
   constructor(
     private route: ActivatedRoute,
@@ -190,8 +191,8 @@ export class InputFormEditorComponent implements OnInit {
     return this.consultantForm.get('projets') as RxFormArray;
   }
 
-  addProject(){
-    this.projets.push(this.fb.formGroup(new HistoryObjectWithChildren()) as RxFormGroup);
+  addHistoryObjectWithChildren(array: FormArray){
+    array.push(this.fb.formGroup(new HistoryObjectWithChildren()) as RxFormGroup);
   }
 
   addDetail(item){
@@ -210,10 +211,6 @@ export class InputFormEditorComponent implements OnInit {
 
     addLangue() {
     this.langues.push(this.fb.group(new Langue()));
-  }
-
-  delete(array, i) {
-    array.removeAt(i);
   }
 
   onSubmit(showCompetences?) {

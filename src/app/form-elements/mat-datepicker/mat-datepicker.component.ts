@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, SkipSelf } from '@angular/core';
 
 import {
   MAT_MOMENT_DATE_FORMATS,
@@ -6,7 +6,7 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import { FormGroup, FormControl, ControlContainer, FormGroupDirective } from '@angular/forms';
+import { FormControl, ControlContainer } from '@angular/forms';
 
 @Component({
   selector: 'app-mat-datepicker',
@@ -25,7 +25,8 @@ import { FormGroup, FormControl, ControlContainer, FormGroupDirective } from '@a
   viewProviders: [
       {
           provide: ControlContainer,
-          useExisting: FormGroupDirective
+          useFactory: (container: ControlContainer) => container,
+          deps: [[new SkipSelf(), ControlContainer]],
       }]
 })
 
@@ -34,7 +35,7 @@ export class MatDatepickerComponent implements OnInit {
   @Input() placeholder: string;
   @Input() local: string;
   @Input() startDate: Date;
-  @Input() name: FormControl;
+  @Input() controlName: string;
 
   constructor(private _adapter: DateAdapter<any>) { }
 

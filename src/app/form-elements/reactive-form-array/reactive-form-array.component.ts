@@ -16,6 +16,7 @@ export class ReactiveFormArrayComponent {
   @Input() placeholders: string[];
   @Input() subproperty?: string;
   @Input() subpropertyPlaceholder?: string;
+  @Input() subarrayName?: string;
 
   constructor(private parentForm: ControlContainer) { 
     }

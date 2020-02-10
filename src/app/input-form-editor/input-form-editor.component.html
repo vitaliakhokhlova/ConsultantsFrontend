@@ -6,7 +6,7 @@
 >
 
   <app-mat-datepicker  
-    name="birthday"    
+    controlName="birthday"    
     placeholder="Date de naissance" 
     local="fr"
     [startDate]="consultantForm.value.birthday ? consultantForm.value.birthday :startDate"
@@ -36,77 +36,53 @@
   ></app-mat-drag-and-drop>
 </div>
 
-<h3>Formations</h3>
-<div formArrayName="formations">
+<h3>Langues</h3>
+<div formArrayName="langues">
+  <div class="row" 
+  *ngFor="let langueConsultant of langues.controls; let i=index"  
+  [formGroupName]="i">  
+    <div formGroupName="parent2"> 
+      <app-mat-autocomplete
+        [options] = "langueItems"
+        placeholder = "Chercher et cliquer"
+        property="description"
+        (createNewOption)="createNewLanguage(langueConsultant)"
+        >
+      </app-mat-autocomplete>  
+    </div>
+      
+    <mat-form-field  fxFlex="20%"> 
+      <input matInput placeholder="Niveau" formControlName="niveau">
+    </mat-form-field>         
+    <button 
+      type="button" 
+      mat-fab 
+      (click)="delete(langues,i)">
+        <i class="fas fa-trash-alt"></i>
+    </button>        
+  </div>  
+  <button mat-fab type="button" (click)="addLangue()">
+    <i class="fas fa-plus-circle"></i>
+  </button>  
+</div>    
+
+<div *ngFor="let name of historyArraysNames">
+<h3>{{name}}</h3>
+<div [formArrayName]="name">
   <app-reactive-form-array
     [properties]="historyObjectFields"
-    [placeholders]="historyObjectPlaceholders"  
+    [placeholders]="historyObjectPlaceholders" 
+    subarrayName="details" 
+    subproperty="description"
+    subpropertyPlaceholder="Tâche"
   >                
   </app-reactive-form-array>  
 </div> 
-<button mat-fab type="button" (click)="addFormation()">
+<button mat-fab type="button" (click)="addHistoryObjectWithChildren(name)">
   <i class="fas fa-plus-circle"></i>   
 </button>  
+</div>
 
-  <h3>Langues</h3>
-  <div formArrayName="langues">
-    <div class="row" 
-    *ngFor="let langueConsultant of langues.controls; let i=index"  
-    [formGroupName]="i">  
-      <div formGroupName="parent2"> 
-        <app-mat-autocomplete
-          [options] = "langueItems"
-          placeholder = "Chercher et cliquer"
-          property="description"
-          (createNewOption)="createNewLanguage(langueConsultant)"
-          >
-        </app-mat-autocomplete>  
-      </div>
-        
-      <mat-form-field  fxFlex="20%"> 
-        <input matInput placeholder="Niveau" formControlName="niveau">
-      </mat-form-field>         
-      <button 
-        type="button" 
-        mat-fab 
-        (click)="delete(langues,i)">
-          <i class="fas fa-trash-alt"></i>
-      </button>        
-    </div>  
-    <button mat-fab type="button" (click)="addLangue()">
-      <i class="fas fa-plus-circle"></i>
-    </button>  
-  </div>             
-
-
-<h3>Projets</h3>
-<div formArrayName="projets">
-  <app-reactive-form-array
-    [properties]="['dates','description','institution','place','pictogram']"
-    [placeholders]="['Dates','Description','Organisation','Ville','Pictogram']"  
-    subproperty="description"
-    subpropertyPlaceholder="Tâche"
-  >                
-  </app-reactive-form-array>  
-</div> 
-<button mat-fab type="button" (click)="addProject()">
-  <i class="fas fa-plus-circle"></i>
-</button> 
-
-<h3>Parcours</h3>
-<div formArrayName="parcours">
-  <app-reactive-form-array
-    [properties]="['dates','description','institution','place','pictogram']"
-    [placeholders]="['Dates','Description','Organisation','Ville','Pictogram']"  
-    subproperty="description"
-    subpropertyPlaceholder="Tâche"
-  >                
-  </app-reactive-form-array>  
-</div> 
-<button mat-fab type="button" (click)="addParcours()">
-  <i class="fas fa-plus-circle"></i>
-</button> 
- 
 <br>
 <button 
   mdbBtn 

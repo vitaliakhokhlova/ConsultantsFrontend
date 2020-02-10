@@ -10,14 +10,11 @@
     </button>
 
     <br>
-    <div *ngIf="subproperty" formArrayName="details">
-    <div class="container">
+    <div *ngIf="item.subproperty" [formArrayName]="subarrayName">
         <app-reactive-form-array 
             [properties]="[subproperty]"
             [placeholders]="[subpropertyPlaceholder]"
         >                
         </app-reactive-form-array>             
     </div>
-</div>
-
 </div>
