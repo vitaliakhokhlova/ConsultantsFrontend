@@ -12,9 +12,12 @@ import {
   MatInputModule, 
   MatDatepickerModule,
   MatNativeDateModule,
-  MatIconModule,
   MatDialogModule,
-  MatTableModule
+  MatTableModule,
+  MatSidenavModule,
+  MatToolbarModule,
+  MatIconModule,
+  MatListModule,
 } from '@angular/material';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -75,7 +78,10 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
     RxReactiveFormsModule,
     MatTableModule,
     MatSortModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule,
   ],
   providers: [MatDatepickerModule],
   bootstrap: [AppComponent],

@@ -3,4 +3,7 @@
     flex-direction: row;
 }
 
+.example-full-width {
+    width: 100%;
+  }
 

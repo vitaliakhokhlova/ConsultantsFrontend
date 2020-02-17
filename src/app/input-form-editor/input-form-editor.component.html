@@ -1,4 +1,4 @@
-<div class="container" >
+<div class="container" *ngIf="isPatched">
 <form 
   [formGroup]="consultantForm" 
   (ngSubmit)="onSubmit()"
@@ -43,6 +43,7 @@
   [formGroupName]="i">  
     <div formGroupName="parent2"> 
       <app-mat-autocomplete
+        controlName="description"
         [options] = "langueItems"
         placeholder = "Chercher et cliquer"
         property="description"
@@ -52,8 +53,19 @@
     </div>
       
     <mat-form-field  fxFlex="20%"> 
-      <input matInput placeholder="Niveau" formControlName="niveau">
-    </mat-form-field>         
+      <input 
+        matInput 
+        formControlName="niveau"
+        placeholder="Niveau"
+        [errorStateMatcher]="matcher" 
+      >
+      <mat-error *ngIf="langueConsultant.controls.niveau.hasError('maxLength')">
+        Max length 20 
+      </mat-error>
+      <mat-error *ngIf="langueConsultant.controls.niveau.hasError('required')">
+        <strong>Required</strong>
+      </mat-error>
+    </mat-form-field>        
     <button 
       type="button" 
       mat-fab 
@@ -66,21 +78,53 @@
   </button>  
 </div>    
 
-<div *ngFor="let name of historyArraysNames">
-<h3>{{name}}</h3>
-<div [formArrayName]="name">
-  <app-reactive-form-array
-    [properties]="historyObjectFields"
-    [placeholders]="historyObjectPlaceholders" 
-    subarrayName="details" 
-    subproperty="description"
-    subpropertyPlaceholder="Tâche"
-  >                
-  </app-reactive-form-array>  
+<div *ngFor="let arrayName of historyArraysNames; let i=index">
+<h3>{{arrayName | titlecase}} </h3>
+<div [formArrayName]="arrayName">
+  <div 
+    *ngFor="let item of consultantForm.get(arrayName).controls; let j=index" 
+    [formGroupName]="j"
+  >
+    <app-reactive-form-array
+      [properties]="historyObjectFields"
+      [placeholders]="historyObjectPlaceholders" 
+    >                
+    </app-reactive-form-array> 
+
+    <div *ngIf="isWithChildren[i]">
+      <ul formArrayName="details">
+      <li 
+        *ngFor="let detail of item.get('details').controls; let k=index" 
+        [formGroupName]="k"
+      >     
+      <mat-form-field class="example-full-width">
+        <textarea  
+        matInput
+        formControlName="description" 
+        placeholder="Tâche"> 
+        </textarea>
+     
+        <button  mat-button type="button" matSuffix mat-icon-button aria-label="Delete" (click)="delete( item.get('details'),k)">
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+    </mat-form-field> 
+    
+      </li>
+     <li>
+      <button mat-fab type="button" 
+        (click)="addDetail(item)">
+        <i class="fas fa-plus-circle">Ajouter une tâche</i>   
+      </button> 
+    </li>
+    </ul>
+    </div>    
+    </div>
+
+  <button mat-fab type="button" (click)="addHistoryObjectWithChildren(arrayName,isWithChildren[i])">
+    <i class="fas fa-plus-circle"></i>   
+  </button>  
 </div> 
-<button mat-fab type="button" (click)="addHistoryObjectWithChildren(name)">
-  <i class="fas fa-plus-circle"></i>   
-</button>  
+
 </div>
 
 <br>
@@ -101,7 +145,8 @@
     (click)="onSubmit(false)"
     >
     Sauvegarder et voir le profile
-  </button>    
+  </button> 
+  {{consultantForm.value | json}}   
 </form>  
 
 <ng-template #loading>

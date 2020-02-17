@@ -28,6 +28,7 @@ export class MatAutocompleteComponent implements OnInit {
   subscription: any;
 
   constructor(private parentForm: ControlContainer) {
+    console.log(this.parentForm);
   }
 
   ngOnInit() {
@@ -58,7 +59,8 @@ export class MatAutocompleteComponent implements OnInit {
   }
 
   get parentProperty(){
-    return this.parentForm.control.get(this.property);
+    let v= this.parentForm.control.get(this.property);
+    return v;
   }
 
   private _filter(input: string){
@@ -71,8 +73,8 @@ export class MatAutocompleteComponent implements OnInit {
     return filteredResults;
   }
   
-  displayFn(item): string | undefined {
-    return item ? item[this.property] : undefined;
+  displayFn(item): string {
+    return item[this.property];
   }
 
   selectedOption(option){

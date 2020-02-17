@@ -1,23 +1,31 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormArray } from '@angular/forms';
+import { FormGroup, FormArray, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ConsultantService} from '../services/consultant.service';
 import { DataStorageService } from "../services/data-storage.service";
 import { Consultant, HistoryObject, HistoryObjectWithChildren, Factory, ResourceWithDescription, Force, ForceItem, Langue, LangueItem } from '../classes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxFormBuilder, RxFormGroup, RxFormArray } from '@rxweb/reactive-form-validators';
 import { LangueService } from '../services/langue.service';
+import {ErrorStateMatcher} from '@angular/material/core';
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+}
 
 @Component({
   selector: 'app-input-form-editor',
   templateUrl: './input-form-editor.component.html',
-  styleUrls: ['./input-form-editor.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./input-form-editor.component.css']
 })
 export class InputFormEditorComponent implements OnInit {
 
   consultantForm: RxFormGroup;
+  matcher = new MyErrorStateMatcher();
   forces_loaded = false;
-  isPatched: boolean;  
+  isPatched = false;  
   langueItems: Array<LangueItem>;
   simpleinputs = [
                 {name: 'photoname', placeholder: 'Fichier de la photo'},
@@ -29,10 +37,11 @@ export class InputFormEditorComponent implements OnInit {
                 {name: 'mobility', placeholder: 'Mobilité'},
                 {name: 'interests', placeholder: 'Intérêts'}];
   
-  historyObjectFields=['dates','description','institution','place'];
-  historyObjectPlaceholders=['Dates','Description','Organisation','Ville'];
+  historyObjectFields=['description','institution','place','dates'];
+  historyObjectPlaceholders=['Description','Organisation','Ville','Dates'];
   startDate = new Date(1990, 0, 1);
   historyArraysNames = ['formations', 'projets', 'parcours'];
+  isWithChildren = [false, true, true];
 
   constructor(
     private route: ActivatedRoute,
@@ -76,88 +85,89 @@ export class InputFormEditorComponent implements OnInit {
   }
 
   patchForm(id: number){
-    this.dataStorageService.getConsultant(id).subscribe(
-      data => 
-        {      
-          this.consultantForm.patchValue(data);
-          this.consultantForm.patchValue({birthday: new Date(data.birthday)});
-          data.formations.forEach(x => this.formations.push(this.fb.group(x)));    
-          data.forces.forEach(x => this.forces.push(this.fb.group(x)));
-          data.langues.forEach(x => this.langues.push(this.fb.group(x)));
-          data.competences.forEach(x => {
-            let comp = this.fb.group({
-              id: x.id,
-              experience: x.experience,
-              annee: x.annee,
-              contexte: x.contexte,
-              interet: x.interet,
-              niveau: x.niveau,
-              parent2: {id: x.parent2.id}
-            });
-            this.competences.push(comp);
-          });
-          data.projets.forEach(x => {
-            if(!x.details.length)
-            {
-              x.details.push(new ResourceWithDescription());     
-            }
-            this.projets.push(this.fb.group(x));
-          });
-          data.parcours.forEach(x => {
-            if(!x.details.length)
-            {
-            x.details.push(new ResourceWithDescription());
-            }
-            this.parcours.push(this.fb.group(x));
-          });              
-        },
-        err => {
-          console.log(err);
-        },
-        ()=>{          
-          //  this.cdRef.detectChanges(); 
-          this.dataStorageService.getLangues().subscribe
-          (langues => 
-            {
-              this.langueItems=langues;
+    this.dataStorageService.getLangues().subscribe(
+      langues => 
+      {
+        this.langueItems=langues;
+      },
+      err => 
+      {
+        console.log(err);
+      },                    
+      () => 
+      { 
+        this.dataStorageService.getConsultant(id).subscribe(
+          data => 
+            {      
+              this.consultantForm.patchValue(data);
+              this.consultantForm.patchValue({birthday: new Date(data.birthday)});
+              data.formations.forEach(x => this.formations.push(this.fb.group(x)));    
+              data.forces.forEach(x => this.forces.push(this.fb.group(x)));
+              data.langues.forEach(x => {
+                let langue = this.fb.formGroup(new Langue());
+                langue.patchValue(x);
+                this.langues.push(langue);
+              }
+              );
+              data.competences.forEach(x => {
+                let comp = this.fb.group({
+                  id: x.id,
+                  experience: x.experience,
+                  annee: x.annee,
+                  contexte: x.contexte,
+                  interet: x.interet,
+                  niveau: x.niveau,
+                  parent2: {id: x.parent2.id}
+                });
+                this.competences.push(comp);
+              });
+              data.projets.forEach(x => {
+                if(!x.details.length)
+                {
+                  x.details.push(new ResourceWithDescription());     
+                }
+                this.projets.push(this.fb.group(x));
+              });
+              data.parcours.forEach(x => {
+                if(!x.details.length)
+                {
+                x.details.push(new ResourceWithDescription());
+                }
+                this.parcours.push(this.fb.group(x));
+              });              
             },
-            err => {
-              console.log(err);
-            },
-            () => 
-            {   
-              if(this.forces.value.length == 0)
+          err => 
+          {
+            console.log(err);
+          },
+          () =>
+          {          
+          //  this.cdRef.detectChanges();             
+            if(this.forces.value.length == 0)
+            {
+              this.dataStorageService.getForces().subscribe(
+                forces => 
+                { 
+                  this.addForcesToForm(forces);
+                },
+                err => {
+                  console.log(err);
+                },
+                () => 
+                { 
+                  this.isPatched = true;
+                  console.log("The form is patched");
+                });   
+            }     
+              else
               {
-                this.dataStorageService.getForces().subscribe(
-                  forces => 
-                  { 
-                    this.addForcesToForm(forces);
-                  },
-                  err => {
-                    console.log(err);
-                  },
-                  () => 
-                  { 
-                    this.isPatched = true;
-                    console.log(this.isPatched);
-                  });   
-              }     
-              else{
                 this.isPatched = true;
+                console.log("The form is patched");
+              }
             }
-            }
-          );
-           
-        }
+        );           
+      }
     ); 
-  }
-
-  get formations(): FormArray {
-    return this.consultantForm.get('formations') as RxFormArray;
-  }
-
-  addFormation() {
-    this.formations.push(<RxFormGroup>this.fb.formGroup(new HistoryObject()));
   }
 
   get forces() {
@@ -178,21 +188,26 @@ export class InputFormEditorComponent implements OnInit {
     }
     this.forces_loaded = true;    
   }
-  
-  get parcours() {
-    return this.consultantForm.get('parcours') as RxFormArray;
+  get formations(): FormArray {
+    return this.consultantForm.get('formations') as RxFormArray;
   }
 
-  addParcours(){
-    this.parcours.push(this.fb.formGroup(new HistoryObjectWithChildren()) as RxFormGroup);
+  get parcours() {
+    return this.consultantForm.get('parcours') as RxFormArray;
   }
 
   get projets() {
     return this.consultantForm.get('projets') as RxFormArray;
   }
 
-  addHistoryObjectWithChildren(array: FormArray){
-    array.push(this.fb.formGroup(new HistoryObjectWithChildren()) as RxFormGroup);
+  addHistoryObjectWithChildren(arrayName: string, isWithDetails: boolean){
+    let array = this.consultantForm.get(arrayName) as RxFormArray;
+    if(isWithDetails){
+      array.push(this.fb.formGroup(new HistoryObjectWithChildren()) as RxFormGroup);
+    }
+    else{
+      array.push(this.fb.formGroup(new HistoryObject()) as RxFormGroup);
+    }
   }
 
   addDetail(item){
@@ -209,8 +224,8 @@ export class InputFormEditorComponent implements OnInit {
     return this.consultantForm.get('langues') as FormArray;
   }
 
-    addLangue() {
-    this.langues.push(this.fb.group(new Langue()));
+  addLangue() {
+    this.langues.push(this.fb.formGroup(new Langue()));
   }
 
   onSubmit(showCompetences?) {
@@ -246,6 +261,10 @@ export class InputFormEditorComponent implements OnInit {
     this.langueService.update(item).subscribe(result => {
       langueConsultant.controls['parent2'].patchValue({"id": result.id, "description": result.description});
     });	 
+  }
+
+  delete(array, i: number) {
+    array.removeAt(i);
   }
   
 }

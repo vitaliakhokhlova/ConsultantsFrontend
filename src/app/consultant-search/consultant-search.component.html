@@ -23,6 +23,7 @@
 
 <br>
 
+<div *ngIf="competenceChoice">
 <form 
   [formGroup]="competenceChoice" 
   (ngSubmit)="onSubmitCompetenceChoice()"
@@ -44,6 +45,7 @@
       </button>   
     
 </form>
+</div>
 
  <div *ngIf="consultants; else loading" >
   <app-list-show 

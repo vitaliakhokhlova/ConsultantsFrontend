@@ -14,18 +14,19 @@ import { FormArray, ControlContainer } from '@angular/forms';
 export class ReactiveFormArrayComponent {
   @Input() properties: string[];
   @Input() placeholders: string[];
-  @Input() subproperty?: string;
-  @Input() subpropertyPlaceholder?: string;
-  @Input() subarrayName?: string;
 
   constructor(private parentForm: ControlContainer) { 
+    console.log(parentForm);
     }
 
   get formArray(){
-    return this.parentForm.control as FormArray;
+    return this.parentForm.control.parent as FormArray;
   }
 
-  delete(i: number) {
-    this.formArray.removeAt(i);
+  delete() {
+    let last = this.parentForm.path.length-1;
+    let i = this.parentForm.path[last];
+    console.log(i);
+    this.formArray.removeAt(+i);
   }
 }

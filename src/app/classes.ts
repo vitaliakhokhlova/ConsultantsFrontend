@@ -1,6 +1,4 @@
-import { ConsultantdetailComponent } from "./consultantdetail/consultantdetail.component";
-
-import {  propArray, prop, required } from '@rxweb/reactive-form-validators';  
+import {  propArray, prop, required, maxLength, propObject } from '@rxweb/reactive-form-validators';  
 
 
 export interface Deserializable {
@@ -33,7 +31,7 @@ export class CompetenceGroup extends ResourceWithDescription{
 }
 
 export class CompetenceItem extends ResourceWithDescription{
-    @prop()
+    @propObject()
     parent2?: CompetenceGroup = new CompetenceGroup();
 }
 
@@ -99,16 +97,18 @@ export class Competence extends Resource{
 export class InformaticCompetence extends Competence{
     @prop()
     niveau: number = 0;
-    @prop()
+    @propObject()
     parent2: CompetenceItem = null;
-    @prop()
+    @propObject()
     parent: Consultant = null;
 }
 
 export class Langue extends Competence{
-    @prop()
+    @propObject()
     parent2: LangueItem = new LangueItem();
     @prop()
+    @maxLength({value: 20})
+    @required()
     niveau: string = "";
 }
 

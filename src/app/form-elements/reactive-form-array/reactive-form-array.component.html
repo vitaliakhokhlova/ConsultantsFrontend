@@ -1,20 +1,18 @@
-<div *ngFor="let item of formArray.controls; let i=index" [formGroupName]="i">
-    <span *ngFor="let property of properties; let i=index">         
-        <input  
-            [formControlName]="property" 
-            [placeholder]="placeholders[i]">     
-    </span>
+<table class="example-full-width" cellspacing="0"><tr>
+    <td *ngFor="let property of properties; let k=index">
+        <mat-form-field class="example-full-width">        
+            <textarea  
+                matInput
+                [formControlName]="property" 
+                [placeholder]="placeholders[k]"
+            >   
+            </textarea>  
+        </mat-form-field>
+    </td>
+    <td>
+        <button  mat-button type="button" matSuffix mat-icon-button aria-label="Delete" (click)="delete()">
+            <mat-icon>delete_forever</mat-icon>
+        </button>
+    </td>
+</table>
 
-    <button  mat-fab type="button" (click)="delete(i)">
-        <i class="fas fa-trash-alt"></i>
-    </button>
-
-    <br>
-    <div *ngIf="item.subproperty" [formArrayName]="subarrayName">
-        <app-reactive-form-array 
-            [properties]="[subproperty]"
-            [placeholders]="[subpropertyPlaceholder]"
-        >                
-        </app-reactive-form-array>             
-    </div>
-</div>
