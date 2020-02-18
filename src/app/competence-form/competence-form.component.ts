@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ConsultantService } from '../services/consultant.service';
 import { CompetenceService } from '../services/competence.service';
 import { DataStorageService } from '../services/data-storage.service';
+import { CompetenceItemService } from '../services/competence-item.service';
 
 @Component({
   selector: 'app-competence-form',
@@ -25,6 +26,8 @@ export class CompetenceFormComponent implements OnInit {
   constructor(
     private dataStorageService: DataStorageService,
     private consultantService: ConsultantService,
+    private competenceItemService: CompetenceItemService,
+    private groupService: GroupService,
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder
@@ -46,52 +49,72 @@ export class CompetenceFormComponent implements OnInit {
 
   createForm(){
     this.competencesForm = this.fb.group({
-        competences: this.fb.array([])
+        groups: this.fb.array([])
        });
-  }   
+  }  
 
-  createGroupedCompetence(): FormGroup{
+  get groups(): FormArray{
+    return this.competencesForm.get('groups') as FormArray;
+  }
+  
+  newGroup(): FormGroup{
     return this.fb.group({
-      n: '',
-      id: '',
+      id: 0,
       description: '',
-      parent2: this.fb.group({id: 0, description: ''}),
-      competenceConsultant: this.fb.group({
-        id: '',
-        niveau: ['', [Validators.min(0), Validators.max(9)]],
-        experience: ['', [Validators.min(0), Validators.max(100)]],
-        annee: ['', [Validators.max((new Date()).getFullYear())]],
-        interet: '',
-        contexte: ''
-      })
-    })
-  } 
+      items: this.fb.array([])
+    });
+  }
+
+  newCompetenceItem(): FormGroup{
+    return this.fb.group({
+      id: 0,
+      description: ['', Validators.required],
+      consultantCompetence: this.newConsultantCompetence()
+    });
+  }
+
+  newConsultantCompetence(){
+    return this.fb.group({
+      id: 0,
+      niveau: [0, [Validators.min(0), Validators.max(9)]],
+      experience: [0, [Validators.min(0), Validators.max(100)]],
+      annee: [0, [Validators.max((new Date()).getFullYear())]],
+      interet: '',
+      contexte: ''
+    });
+  }
 
   patchForm(consultant: Consultant){    
     let comp = consultant.competences;
-    this.dataStorageService.getCompetenceItems().subscribe(
-      items =>
+    this.groupService.getAll().subscribe(
+      groups =>
       {
         let i=0;
-        items.forEach(
-          item => 
+        groups.forEach(
+          group => 
           {    
-            let competenceConsultant = new InformaticCompetence();
-            competenceConsultant.parent = {id: this.idConsultant};
-            competenceConsultant.parent2 = {id: item.id};
-            for(let x of comp)
-            {            
-              if(x.parent2.id==item.id)
-              {   
-                competenceConsultant = x;
-                comp = comp.filter(item => item !== x);
-                break;
+            let newGroup = this.newGroup();
+            newGroup.patchValue(group);
+            group.items.forEach(
+              item =>
+              {
+                let newItem = this.newCompetenceItem();
+                newItem.patchValue(item);
+                for(let consultantCompetence of comp)
+                {          
+                  if(consultantCompetence.parent2.id==item.id)
+                  {   
+                    let newCompetenceConsultant = this.newConsultantCompetence();
+                    newCompetenceConsultant.patchValue(consultantCompetence);
+                    newItem.controls.consultantCompetence = newCompetenceConsultant;
+                    comp = comp.filter(item => item !== consultantCompetence);
+                    break;
+                  }
+                }
+                (<FormArray>newGroup.controls.items).push(newItem);
               }
-            }
-            let groupedCompetence = this.createGroupedCompetence();
-            groupedCompetence.patchValue({n: i, id: item.id, description: item.description, parent2: item.parent2, competenceConsultant: competenceConsultant});
-            (<FormArray>this.competences).push(groupedCompetence);
-            i=i+1;
+            )
+            this.groups.push(newGroup);
           }
         );
       },
@@ -107,52 +130,49 @@ export class CompetenceFormComponent implements OnInit {
     );
   }
 
-  get competences(){
-    return this.competencesForm.get('competences') as FormArray;
-  }
-
   onSubmit(){
     this.consultant.competences = [];
-    this.competences.value.forEach(
-      x =>
-      {
-        if(x.competenceConsultant.niveau!=0)
-        {
-          this.consultant.competences.push(x.competenceConsultant);
-        }
+    this.groups.value.forEach(
+      group =>{
+        group.items.forEach(
+          x =>
+          {
+            if(x.id==0){
+              let newCompetence = {description: x.description, parent2:{id: group.id}};
+              this.competenceItemService.create(newCompetence).subscribe(
+                result => 
+                {
+                  x.id = result.id;
+                },
+                err => console.log(err),
+                () => {
+                  if(x.consultantCompetence.niveau!=0)
+                  {
+                    x.consultantCompetence.parent2={id: x.id, description: x.description};
+                    this.consultant.competences.push(x.consultantCompetence);
+                  }
+                });	 
+            }
+
+          }
+        )
       }
     );
     this.consultantService.update(this.consultant).subscribe(result=>{
       this.dataStorageService.consultant = result;
       this.router.navigate([`detail/${result.id}`]);
-     });   
+     });    
   }
   
   empty(item) {    
-    item.patchValue({competenceConsultant: new InformaticCompetence()});    
+    item.controls.consultantCompetence.reset();
+    item.value.consultantCompetence = new InformaticCompetence();  
+    item.controls.consultantCompetence = this.newConsultantCompetence();
   }
 
 
-  addCompetence(group_id: number){
-    console.log(group_id);
-    let competenceConsultant = new InformaticCompetence();
-    competenceConsultant.parent = {id: this.idConsultant};
-    let groupedCompetence = this.createGroupedCompetence();
-    let value = {
-      n: this.competences.length, 
-      id: 0, 
-      description: '', 
-      parent2: {id: group_id}, 
-      competenceConsultant: competenceConsultant};
-    groupedCompetence.patchValue(value);
-    this.competences.push(groupedCompetence);
-    // let form = this.competencesForm.getRawValue();
-    // console.log(form);
-    // form.competences.push(value);
-    // this.createForm();
-    // console.log(form);
-    // this.competencesForm.patchValue(form);      
-    // console.log(this.competencesForm);
+  addCompetence(group){
+    group.controls.items.push(this.newCompetenceItem());
   }
 
 }
