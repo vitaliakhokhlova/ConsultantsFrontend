@@ -25,9 +25,16 @@
   </div>
 
   <mat-form-field class="example-full-width">
-    <textarea matInput cols="12" rows="5" placeholder="Profile" formControlName="profile"></textarea>
+    <textarea 
+    matInput
+    cdkTextareaAutosize
+    #autosize="cdkTextareaAutosize"
+    cdkAutosizeMinRows="1"
+    cdkAutosizeMaxRows="10"
+    placeholder="Profile" 
+    formControlName="profile"></textarea>
   </mat-form-field>
-
+<br><br>
 <h3>Forces cognitives (drag and drop)</h3>
 <div formArrayName="forces">
   <app-mat-drag-and-drop
@@ -35,12 +42,13 @@
     [nameProperty]="['parent2','description']"
   ></app-mat-drag-and-drop>
 </div>
-
+<br><br>
 <h3>Langues</h3>
 <div formArrayName="langues">
-  <div class="row" 
-  *ngFor="let langueConsultant of langues.controls; let i=index"  
+  <div  *ngFor="let langueConsultant of langues.controls; let i=index"  
   [formGroupName]="i">  
+  <table cellspacing="0"><tr>
+    <td>
     <div formGroupName="parent2"> 
       <app-mat-autocomplete
         controlName="description"
@@ -51,13 +59,15 @@
         >
       </app-mat-autocomplete>  
     </div>
-      
+  </td>
+      <td>
     <mat-form-field  fxFlex="20%"> 
       <input 
         matInput 
         formControlName="niveau"
         placeholder="Niveau"
         [errorStateMatcher]="matcher" 
+        required
       >
       <mat-error *ngIf="langueConsultant.controls.niveau.hasError('maxLength')">
         Max length 20 
@@ -65,18 +75,24 @@
       <mat-error *ngIf="langueConsultant.controls.niveau.hasError('required')">
         <strong>Required</strong>
       </mat-error>
-    </mat-form-field>        
+    </mat-form-field> 
+  </td>
+  <td>
     <button 
-      type="button" 
-      mat-fab 
+    mat-button type="button" matSuffix mat-icon-button aria-label="Delete"
       (click)="delete(langues,i)">
-        <i class="fas fa-trash-alt"></i>
-    </button>        
+      <mat-icon>delete_forever</mat-icon>
+    </button>    
+  </td>         
+  </tr>  
+  </table>
   </div>  
   <button mat-fab type="button" (click)="addLangue()">
     <i class="fas fa-plus-circle"></i>
   </button>  
-</div>    
+</div>  
+
+<br><br>
 
 <div *ngFor="let arrayName of historyArraysNames; let i=index">
 <h3>{{arrayName | titlecase}} </h3>
@@ -91,40 +107,51 @@
     >                
     </app-reactive-form-array> 
 
-    <div *ngIf="isWithChildren[i]">
-      <ul formArrayName="details">
-      <li 
+    <div *ngIf="isWithChildren[i]" formArrayName="details">
+      <div 
         *ngFor="let detail of item.get('details').controls; let k=index" 
         [formGroupName]="k"
-      >     
-      <mat-form-field class="example-full-width">
+      >    
+      <p style="margin-left: 200px">
+        <app-reactive-form-array
+          [properties]="['description']"
+          [placeholders]="['Tâche']" 
+        >                
+        </app-reactive-form-array>  
+      </p>
+      <!-- <table class="example-full-width" cellspacing="0"><tr>
+      <td>
+        <mat-form-field class="example-full-width">
         <textarea  
         matInput
         formControlName="description" 
         placeholder="Tâche"> 
         </textarea>
+      </mat-form-field>
+    </td>
+    <td>
      
         <button  mat-button type="button" matSuffix mat-icon-button aria-label="Delete" (click)="delete( item.get('details'),k)">
           <mat-icon>delete_forever</mat-icon>
         </button>
-    </mat-form-field> 
-    
-      </li>
-     <li>
-      <button mat-fab type="button" 
-        (click)="addDetail(item)">
-        <i class="fas fa-plus-circle">Ajouter une tâche</i>   
-      </button> 
-    </li>
-    </ul>
-    </div>    
+      </td>
+    </table> -->
+
+  </div>
+  <p style="margin-left: 200px">
+    <button mat-fab type="button" (click)="addDetail(item)">
+      <i class="fas fa-plus-circle">Ajouter une tâche</i>   
+    </button>    
+  </p>
+    </div>  
+   
     </div>
 
   <button mat-fab type="button" (click)="addHistoryObjectWithChildren(arrayName,isWithChildren[i])">
     <i class="fas fa-plus-circle"></i>   
   </button>  
 </div> 
-
+<br><br>
 </div>
 
 <br>
@@ -146,7 +173,6 @@
     >
     Sauvegarder et voir le profile
   </button> 
-  {{consultantForm.value | json}}   
 </form>  
 
 <ng-template #loading>

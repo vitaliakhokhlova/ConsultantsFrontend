@@ -40,6 +40,7 @@ import { ReactiveFormArrayComponent } from './form-elements/reactive-form-array/
 import { MatSelectComponent } from './form-elements/mat-select/mat-select.component';
 import {MatSortModule} from '@angular/material/sort';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { ControlMessagesComponent } from './control-messages.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
     MatDatepickerComponent,
     ReactiveFormArrayComponent,
     MatSelectComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    ControlMessagesComponent
   ],
   imports: [
     BrowserModule,

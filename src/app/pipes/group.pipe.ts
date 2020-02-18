@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 
-@Pipe({name: 'groupBy'})
+@Pipe({name: 'groupBy', pure: true})
 export class GroupByPipe implements PipeTransform {
     transform(collection: FormGroup[], property: string, subproperty: string): any[] 
     {
@@ -40,6 +40,6 @@ export class GroupByPipe implements PipeTransform {
             return property;
         }
         return { value: current, 
-            key: (<FormGroup>current.controls[property]).controls['id'].value };
+            key: (<FormGroup>current.controls[property]).controls[subproperty].value };
     }
 }

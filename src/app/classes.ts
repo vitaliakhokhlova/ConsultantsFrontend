@@ -1,4 +1,4 @@
-import {  propArray, prop, required, maxLength, propObject } from '@rxweb/reactive-form-validators';  
+import {  propArray, prop, required, maxLength, propObject, maxNumber, minNumber } from '@rxweb/reactive-form-validators';  
 
 
 export interface Deserializable {
@@ -37,6 +37,7 @@ export class CompetenceItem extends ResourceWithDescription{
 
 export class HistoryObject extends Resource{
     @prop()
+    @required()
     description: string = "";
     @prop()
     institution: string = "";
@@ -96,6 +97,8 @@ export class Competence extends Resource{
 
 export class InformaticCompetence extends Competence{
     @prop()
+    @maxNumber({value:9 })
+    @minNumber({value:0 })
     niveau: number = 0;
     @propObject()
     parent2: CompetenceItem = null;

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GroupService} from '../services/group.service';
 import { Consultant, InformaticCompetence, CompetenceGroup, CompetenceItem } from '../classes';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ConsultantService } from '../services/consultant.service';
 import { CompetenceService } from '../services/competence.service';
 import { DataStorageService } from '../services/data-storage.service';
@@ -17,7 +17,7 @@ export class CompetenceFormComponent implements OnInit {
   headElements = ['Competence','Niveau', 'Expérience', 'Dernière utilisaton', 'Contexte','Intérêt'];
   keysToShow = ["niveau", "experience", "annee", "contexte","interet"];
   consultant: Consultant;
-  id: number;
+  idConsultant: number;
   show: boolean;
   competencesForm: FormGroup;
 
@@ -34,9 +34,9 @@ export class CompetenceFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.id = +this.route.snapshot.paramMap.get('id');
+    this.idConsultant = +this.route.snapshot.paramMap.get('id');
     this.createForm();
-    this.dataStorageService.getConsultant(this.id)
+    this.dataStorageService.getConsultant(this.idConsultant)
     .subscribe(result=>
       {
         this.consultant=result;       
@@ -50,18 +50,25 @@ export class CompetenceFormComponent implements OnInit {
        });
   }   
 
-  createCompetenceItem(n: number, item: CompetenceItem, competenceConsultant: InformaticCompetence){
+  createGroupedCompetence(): FormGroup{
     return this.fb.group({
-      n: n,
-      id: item.id,
-      description: item.description,
-      parent2: this.fb.group(item.parent2),
-      competenceConsultant: this.fb.group(competenceConsultant)
-    });
-  }
+      n: '',
+      id: '',
+      description: '',
+      parent2: this.fb.group({id: 0, description: ''}),
+      competenceConsultant: this.fb.group({
+        id: '',
+        niveau: ['', [Validators.min(0), Validators.max(9)]],
+        experience: ['', [Validators.min(0), Validators.max(100)]],
+        annee: ['', [Validators.max((new Date()).getFullYear())]],
+        interet: '',
+        contexte: ''
+      })
+    })
+  } 
 
-  patchForm(result){    
-    let comp = result.competences;
+  patchForm(consultant: Consultant){    
+    let comp = consultant.competences;
     this.dataStorageService.getCompetenceItems().subscribe(
       items =>
       {
@@ -70,7 +77,7 @@ export class CompetenceFormComponent implements OnInit {
           item => 
           {    
             let competenceConsultant = new InformaticCompetence();
-            competenceConsultant.parent = {id: this.id};
+            competenceConsultant.parent = {id: this.idConsultant};
             competenceConsultant.parent2 = {id: item.id};
             for(let x of comp)
             {            
@@ -81,7 +88,9 @@ export class CompetenceFormComponent implements OnInit {
                 break;
               }
             }
-            (<FormArray>this.competences).push(this.createCompetenceItem(i, item, competenceConsultant));
+            let groupedCompetence = this.createGroupedCompetence();
+            groupedCompetence.patchValue({n: i, id: item.id, description: item.description, parent2: item.parent2, competenceConsultant: competenceConsultant});
+            (<FormArray>this.competences).push(groupedCompetence);
             i=i+1;
           }
         );
@@ -125,13 +134,25 @@ export class CompetenceFormComponent implements OnInit {
 
 
   addCompetence(group_id: number){
+    console.log(group_id);
     let competenceConsultant = new InformaticCompetence();
-    competenceConsultant.parent = {id: this.id};
-    let item = new CompetenceItem();
-    item.parent2 = {id: group_id};
-    competenceConsultant.parent2 = item;
-    let n = this.competences.length;
-    (<FormArray>this.competences).push(this.createCompetenceItem(n, item, competenceConsultant));
+    competenceConsultant.parent = {id: this.idConsultant};
+    let groupedCompetence = this.createGroupedCompetence();
+    let value = {
+      n: this.competences.length, 
+      id: 0, 
+      description: '', 
+      parent2: {id: group_id}, 
+      competenceConsultant: competenceConsultant};
+    groupedCompetence.patchValue(value);
+    this.competences.push(groupedCompetence);
+    // let form = this.competencesForm.getRawValue();
+    // console.log(form);
+    // form.competences.push(value);
+    // this.createForm();
+    // console.log(form);
+    // this.competencesForm.patchValue(form);      
+    // console.log(this.competencesForm);
   }
 
 }

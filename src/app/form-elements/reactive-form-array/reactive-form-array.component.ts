@@ -26,7 +26,6 @@ export class ReactiveFormArrayComponent {
   delete() {
     let last = this.parentForm.path.length-1;
     let i = this.parentForm.path[last];
-    console.log(i);
     this.formArray.removeAt(+i);
   }
 }

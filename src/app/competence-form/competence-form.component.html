@@ -1,3 +1,4 @@
+<div *ngIf="consultant">
 <h1>LISTE DE COMPETENCES IT DU CONSULTANT:</h1> 
 <h2> {{consultant.firstname}} {{consultant.lastname}}</h2>
 
@@ -7,7 +8,7 @@
 <br>
 
 
-Pour le niveau, indiquez un chiffre entre 0 et 9:
+Pour le <b>niveau</b>, indiquez un chiffre entre 0 et 9:
 <br>
 <ul>
   <li>
@@ -42,12 +43,12 @@ Pour le niveau, indiquez un chiffre entre 0 et 9:
 </li>
 </ul>
 <br>
-Indiquez ensuite votre expérience en nombre d’années,
-ainsi que l’année (approximative !) de votre dernière utilisation de cette compétence.
+Indiquez ensuite votre <b>expérience</b> en nombre d’années,
+ainsi que l’année (approximative !) de votre <b>dernière utilisation</b> de cette compétence.
 <br><br>
-Précisez le(s) contexte(s) d’utilisation: professionnel, apprentissage, personnel, hobby, …
+Précisez le(s) <b>contexte(s)</b> d’utilisation: professionnel, apprentissage, personnel, hobby, …
 <br><br>
-Terminez en évaluant éventuellement votre intérêt pour cette activité.<br>
+Terminez en évaluant éventuellement votre <b>intérêt</b> pour cette activité.<br>
 Exemples:<br>
 « Cette discipline ne m’intéresse pas »<br>
 « Je souhaite progresser dans ce domaine »<br>
@@ -65,14 +66,14 @@ Merci d’avance.
 
 Bon courage !
 <br>
-
+</div>
 <form 
 *ngIf="show" 
 [formGroup]="competencesForm" 
 (ngSubmit)="onSubmit()"
 novalidate>
   <div formArrayName="competences">
-    <div *ngFor="let group of competences.controls  | groupBy: 'parent2':'description'; let i=index">
+    <div *ngFor="let group of competences.controls  | groupBy: 'parent2':'id'; let i=index">
       <div>
           <h3>{{group.value[0].value.parent2.description}}</h3>
       </div>
@@ -92,7 +93,8 @@ novalidate>
               <input formControlName="description"/>
             </th>
             <td *ngFor="let key of keysToShow" formGroupName="competenceConsultant" >
-              <input [formControlName]="key"/>
+              <input #competenceInput [formControlName]="key"  />
+              <control-messages [key]="key"></control-messages>
             </td>
             <td> 
               <button type="button" (click)="empty(item)">Delete</button> 
@@ -104,5 +106,5 @@ novalidate>
     </div>
   </div>
   
-  <button type="submit" class="btn btn-primary btn-lg btn-block">Sauvegarder</button>   
+  <button type="submit" [disabled]="!competencesForm.valid" class="btn btn-primary btn-lg btn-block">Sauvegarder</button>   
 </form>  
