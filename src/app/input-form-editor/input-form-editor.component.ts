@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormArray, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { FormGroup, FormArray, FormControl, FormGroupDirective, NgForm, FormBuilder } from '@angular/forms';
 import { ConsultantService} from '../services/consultant.service';
 import { DataStorageService } from "../services/data-storage.service";
 import { Consultant, HistoryObject, HistoryObjectWithChildren, Factory, ResourceWithDescription, Force, ForceItem, Langue, LangueItem } from '../classes';
@@ -22,11 +22,13 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 })
 export class InputFormEditorComponent implements OnInit {
 
+  consultant: Consultant;
   consultantForm: RxFormGroup;
   matcher = new MyErrorStateMatcher();
   forces_loaded = false;
   isPatched = false;  
   langueItems: Array<LangueItem>;
+  forceItems = new FormArray([]);
   simpleinputs = [
                 {name: 'photoname', placeholder: 'Fichier de la photo'},
                 {name: 'firstname', placeholder: 'Prénom'}, 
@@ -48,6 +50,7 @@ export class InputFormEditorComponent implements OnInit {
     //  private cdRef: ChangeDetectorRef,
     private router: Router,
     private fb: RxFormBuilder,
+    private forceFB: FormBuilder,
     private dataStorageService: DataStorageService,
     private consultantService: ConsultantService,
     private langueService: LangueService
@@ -99,6 +102,7 @@ export class InputFormEditorComponent implements OnInit {
         this.dataStorageService.getConsultant(id).subscribe(
           data => 
             {      
+              this.consultant = data;
               this.consultantForm.patchValue(data);
               this.consultantForm.patchValue({birthday: new Date(data.birthday)});
               data.formations.forEach(x => this.formations.push(this.fb.group(x)));    
@@ -143,12 +147,23 @@ export class InputFormEditorComponent implements OnInit {
           () =>
           {          
           //  this.cdRef.detectChanges();             
-            if(this.forces.value.length == 0)
-            {
+            //if(this.forces.value.length == 0)
+            //{
               this.dataStorageService.getForces().subscribe(
                 forces => 
                 { 
-                  this.addForcesToForm(forces);
+                  //this.addForcesToForm(forces);
+                  //this.forceItems = this.forceFB.group({items: FormArray});
+                  let indexes = [];
+                  this.consultant.forces.forEach(x => indexes.push(x.parent2.id));
+                  forces = forces.filter(x => indexes.indexOf(x.id)==-1);
+                  forces.forEach(force => 
+                    (<FormArray>this.forceItems).push(this.fb.group(
+                      {
+                        position: 0,
+                        parent2: force
+                      }
+                      )))
                 },
                 err => {
                   console.log(err);
@@ -158,12 +173,12 @@ export class InputFormEditorComponent implements OnInit {
                   this.isPatched = true;
                   console.log("The form is patched");
                 });   
-            }     
-              else
-              {
-                this.isPatched = true;
-                console.log("The form is patched");
-              }
+            //}     
+              // else
+              // {
+              //   this.isPatched = true;
+              //   console.log("The form is patched");
+              // }
             }
         );           
       }

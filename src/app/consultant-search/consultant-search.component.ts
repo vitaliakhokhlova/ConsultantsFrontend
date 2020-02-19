@@ -78,9 +78,11 @@ export class ConsultantSearchComponent implements OnInit {
     let formValue = this.selectSearchForm.value;
     let newFields = [
       {property: "lastname", description: "Nom"},
-      {property: "firstname", description: "Prénom"},
-      {property: formValue.selectFormControl, description: formValue.selectFormControl}
+      {property: "firstname", description: "Prénom"}
     ];
+    if(formValue.selectFormControl!='lastname' && formValue.selectFormControl!='firstname'){
+      newFields.push(  {property: formValue.selectFormControl, description: formValue.selectFormControl});
+    }
     this.changeFieldsToShow(newFields);
     this.consultantService.searchBySubstring(formValue.selectFormControl, formValue.searchString).subscribe(
       result => this.consultants = result);

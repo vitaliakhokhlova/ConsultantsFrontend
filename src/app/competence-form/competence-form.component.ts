@@ -7,6 +7,7 @@ import { ConsultantService } from '../services/consultant.service';
 import { CompetenceService } from '../services/competence.service';
 import { DataStorageService } from '../services/data-storage.service';
 import { CompetenceItemService } from '../services/competence-item.service';
+import { Observable, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-competence-form',
@@ -76,9 +77,9 @@ export class CompetenceFormComponent implements OnInit {
   newConsultantCompetence(){
     return this.fb.group({
       id: 0,
-      niveau: [0, [Validators.min(0), Validators.max(9)]],
-      experience: [0, [Validators.min(0), Validators.max(100)]],
-      annee: [0, [Validators.max((new Date()).getFullYear())]],
+      niveau: ['', [Validators.min(0), Validators.max(9)]],
+      experience: ['', [Validators.min(0), Validators.max(100)]],
+      annee: ['', [Validators.max((new Date()).getFullYear())]],
       interet: '',
       contexte: ''
     });
@@ -132,32 +133,51 @@ export class CompetenceFormComponent implements OnInit {
 
   onSubmit(){
     this.consultant.competences = [];
+    let newObservableCompetenceItems = new Array<Observable<CompetenceItem>>();
     this.groups.value.forEach(
-      group =>{
+      group =>
+      {
         group.items.forEach(
-          x =>
+          item =>
           {
-            if(x.id==0){
-              let newCompetence = {description: x.description, parent2:{id: group.id}};
-              this.competenceItemService.create(newCompetence).subscribe(
-                result => 
-                {
-                  x.id = result.id;
-                },
-                err => console.log(err),
-                () => {
-                  if(x.consultantCompetence.niveau!=0)
-                  {
-                    x.consultantCompetence.parent2={id: x.id, description: x.description};
-                    this.consultant.competences.push(x.consultantCompetence);
-                  }
-                });	 
+            //if(item.id==0)
+            // {
+            //   let newCompetence = {description: x.description, parent2:{id: group.id}};
+            //   newObservableCompetenceItems.push(this.competenceItemService.create(newCompetence));
+              
+            // }
+            if(item.consultantCompetence.niveau!=0)
+            {
+              item.consultantCompetence.parent = {id: this.idConsultant};
+              item.consultantCompetence.parent2={
+              id: item.id, 
+              description: item.description,
+              parent2: {id: group.id}};
+              this.consultant.competences.push(item.consultantCompetence);
             }
-
           }
         )
       }
     );
+    // forkJoin(newObservableCompetenceItems).subscribe(
+    //   newCompetenceItems => 
+    // {
+    //   newCompetenceItems.forEach(x =>
+    //     {
+    //       x.id = result.id;
+    //     })
+    // },
+    // err => console.log(err),
+    // () => {
+    //   if(x.consultantCompetence.niveau!=0)
+    //   {
+    //     x.consultantCompetence.parent2={id: x.id, description: x.description};
+    //     this.consultant.competences.push(x.consultantCompetence);
+    //   }
+    // });	 
+    // );
+    
+    console.log(this.consultant);
     this.consultantService.update(this.consultant).subscribe(result=>{
       this.dataStorageService.consultant = result;
       this.router.navigate([`detail/${result.id}`]);

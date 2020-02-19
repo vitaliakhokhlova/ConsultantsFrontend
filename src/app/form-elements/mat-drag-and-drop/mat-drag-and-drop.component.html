@@ -1,4 +1,4 @@
-<div
+<!-- <div
   cdkDropList class="example-list" 
   (cdkDropListDropped)="drop($event)">
     <div class="example-box" *ngFor="let item of formArray.controls" cdkDrag>
@@ -7,6 +7,48 @@
         {{item.get(nameProperty).value}}
       </span>
     </div>
+</div> -->
+
+<div class="example-container">
+  <h5>Ajouter dans cette liste</h5>
+  <div [formGroup]="destination">
+  <div
+    cdkDropList
+    #destinationList="cdkDropList"
+    [cdkDropListData]="destination.controls"
+    [cdkDropListConnectedTo]="[sourceList]"
+    class="example-list"
+    (cdkDropListDropped)="drop($event, true)">
+    <div 
+    cdkDrag
+    class="example-box" 
+    *ngFor="let item of destination.controls"
+    >
+    <span cdkDragHandle>
+      {{item.get(orderProperty).value}} 
+      {{item.get(nameProperty).value}}
+    </span>
+    </div>
+  </div>
+  </div>
+</div>
+
+
+<div class="example-container">
+<div [formGroup]="source">
+  <h5>...à partir de cette liste</h5>
+  <div
+    cdkDropList
+    #sourceList="cdkDropList"
+    [cdkDropListData]="source.controls"
+    [cdkDropListConnectedTo]="[destinationList]"
+    class="example-list"
+    (cdkDropListDropped)="drop($event, false)">
+    <div cdkDrag class="example-box" *ngFor="let item of source.controls">
+      {{item.get(nameProperty).value}}
+    </div>
+  </div>
+</div>
 </div>
 
   
