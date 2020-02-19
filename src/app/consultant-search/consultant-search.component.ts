@@ -1,4 +1,4 @@
-import { Component, OnInit, SkipSelf } from '@angular/core';
+import { Component, OnInit, SkipSelf, ViewChild, TemplateRef } from '@angular/core';
 import { ConsultantdetailComponent } from '../consultantdetail/consultantdetail.component';
 import { Consultant, CompetenceItem } from '../classes';
 import { ConsultantService } from '../services/consultant.service';
@@ -32,6 +32,8 @@ export class ConsultantSearchComponent implements OnInit {
 
   competenceChoice: FormGroup;
   competenceItems: Array<CompetenceItem>;
+  @ViewChild('deleteDialogTemplate', {static: false})
+  deleteDialogTemplate: TemplateRef<any>;
 
   constructor
   (
@@ -135,8 +137,12 @@ export class ConsultantSearchComponent implements OnInit {
 
   openDialog(consultant: Consultant) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400',
-      data: {item: consultant.firstname.concat(" ",consultant.lastname), message: "Vous êtes sur que vous voulez supprimer le consultant "}
+      width: '400px',
+      data: {
+        item: consultant.firstname.concat(" ",consultant.lastname), 
+        headerText: "Vous voulez supprimer le consultant ",
+        template: this.deleteDialogTemplate
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -145,6 +151,8 @@ export class ConsultantSearchComponent implements OnInit {
         this.delete(consultant);
       }
     });
+
+
 }
 
 }

@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { GroupService} from '../services/group.service';
 import { Consultant, InformaticCompetence, CompetenceGroup, CompetenceItem } from '../classes';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 import { ConsultantService } from '../services/consultant.service';
 import { CompetenceService } from '../services/competence.service';
 import { DataStorageService } from '../services/data-storage.service';
 import { CompetenceItemService } from '../services/competence-item.service';
 import { Observable, forkJoin } from 'rxjs';
+import { MatDialog } from '@angular/material';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-competence-form',
@@ -22,7 +24,9 @@ export class CompetenceFormComponent implements OnInit {
   idConsultant: number;
   show: boolean;
   competencesForm: FormGroup;
-
+  @ViewChild('newCompetenceDialogTemplate', {static: false})
+  newCompetenceDialogTemplate: TemplateRef<any>;
+  newCompetence: string;
 
   constructor(
     private dataStorageService: DataStorageService,
@@ -31,7 +35,8 @@ export class CompetenceFormComponent implements OnInit {
     private groupService: GroupService,
     private route: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dialog: MatDialog
   ) 
   {
       this.show=false;
@@ -131,7 +136,7 @@ export class CompetenceFormComponent implements OnInit {
     );
   }
 
-  onSubmit(){
+  onSubmit(isEnd: boolean){
     this.consultant.competences = [];
     let newObservableCompetenceItems = new Array<Observable<CompetenceItem>>();
     this.groups.value.forEach(
@@ -180,7 +185,9 @@ export class CompetenceFormComponent implements OnInit {
     console.log(this.consultant);
     this.consultantService.update(this.consultant).subscribe(result=>{
       this.dataStorageService.consultant = result;
+      if(isEnd){
       this.router.navigate([`detail/${result.id}`]);
+    }
      });    
   }
   
@@ -191,8 +198,58 @@ export class CompetenceFormComponent implements OnInit {
   }
 
 
-  addCompetence(group){
-    group.controls.items.push(this.newCompetenceItem());
+  addCompetence(group: CompetenceGroup, i: number){
+    this.onSubmit(false);
+    this.openDialog(group, i);
+  }
+
+  openDialog(group: CompetenceGroup, i: number) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '700px',
+      data: {
+        item: group.description, 
+        headerText: "Entrez le nom de la nouvelle compétence informatique dans le groupe ",
+        template: this.newCompetenceDialogTemplate
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        // let newCompetence = {
+        //   description: this.newCompetence,
+        //   parent2: {id: group.id}
+        // };
+        let updatedGroup={
+          id: this.groups.controls[i].value.id,
+          description: this.groups.controls[i].value.description,
+          items: []
+        };
+        for(let item of this.groups.controls[i].value.items){
+          updatedGroup.items.push({
+            id: item.id, 
+            description: item.description,
+            parent2: {id: updatedGroup.id, description: updatedGroup.description}});
+        }
+        updatedGroup.items.push({
+          id:0,
+          description: this.newCompetence,
+          parent2: {id: updatedGroup.id}
+        });
+        this.groupService.update(updatedGroup).subscribe();
+        this.ngOnInit();
+        // this.competenceItemService.create(newCompetence).subscribe(
+        //   serverResponse =>
+        //   {
+        //     let newItem =this.newCompetenceItem();
+        //     newItem.patchValue({
+        //       id: serverResponse.id,
+        //       description: serverResponse.description
+        //     });
+        //     (<FormArray>this.groups.controls[i].get('items')).push(newItem);
+        //   }
+        // );
+      }
+    });
   }
 
 }

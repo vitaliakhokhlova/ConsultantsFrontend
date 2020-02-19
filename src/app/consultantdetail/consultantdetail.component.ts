@@ -55,6 +55,9 @@ export class ConsultantdetailComponent implements OnInit {
         let existingGroup = this.groups.filter(x => x.id == newGroup.id)[0];
         if(existingGroup){
           existingGroup.items.push({description: competence.parent2.description});
+          if(!existingGroup.description && newGroup.description){
+            existingGroup.description = newGroup.description;
+          }
         }
         else{
           newGroup.items = new Array<CompetenceItem>();

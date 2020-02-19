@@ -61,3 +61,10 @@
   Loading (check console for errors)...
 </ng-template>
 </div>
+
+<ng-template #deleteDialogTemplate>
+  <div mat-dialog-actions align="center">
+    <button mat-button mat-dialog-close cdkFocusInitial class="mat-raised-button btn btn-danger">Non</button>
+    <button mat-button [mat-dialog-close]="true" class="mat-raised-button btn btn-success">Oui</button>
+  </div>
+</ng-template>
