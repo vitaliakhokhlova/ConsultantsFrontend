@@ -42,5 +42,9 @@
   .example-box span {
     cursor: move;
   }
+
+  h3{
+    text-transform: uppercase;
+  }
   
   

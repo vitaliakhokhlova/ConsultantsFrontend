@@ -28,6 +28,7 @@ export class ResourceWithDescription extends Resource{
 
 export class CompetenceGroup extends ResourceWithDescription{
     items?: CompetenceItem[];
+  deep_id?: number;
 }
 
 export class CompetenceItem extends ResourceWithDescription{

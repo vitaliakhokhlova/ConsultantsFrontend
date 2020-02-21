@@ -44,13 +44,15 @@ export class ConsultantdetailComponent implements OnInit {
     if(consultant.competences){
       for(let competence of consultant.competences){
         let newGroup = new CompetenceGroup();
-        if(typeof competence.parent2.parent2 === 'number')
+        let parent = competence.parent2.parent2;
+        console.log(parent);
+        if(typeof parent === 'number')
         {
-          newGroup.id=competence.parent2.parent2;
+          newGroup.id=parent;
         }   
         else{
-          newGroup.id=competence.parent2.parent2.id;
-          newGroup.description = competence.parent2.parent2.description;
+          newGroup.id=parent.deep_id;
+          newGroup.description = parent.description;
         }  
         let existingGroup = this.groups.filter(x => x.id == newGroup.id)[0];
         if(existingGroup){
@@ -66,7 +68,6 @@ export class ConsultantdetailComponent implements OnInit {
         }      
       } 
     }   
-    console.log(this.groups);   
   }
 
   goTo(route: string){

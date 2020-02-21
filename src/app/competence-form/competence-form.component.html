@@ -106,11 +106,12 @@ novalidate>
                
       </table>
     </div> 
-      <button type="button" (click)="addCompetence(group.value, i)">Ajouter une compétence</button>
+      <button type="button" (click)="addCompetence(i)">Ajouter une compétence</button>
     </div>
   </div>
   
   <button type="submit" class="btn btn-primary btn-lg btn-block">Sauvegarder</button>   
+  {{competencesForm.value | json}}
 </form>  
 
 <ng-template #newCompetenceDialogTemplate let-data="newCompetence">

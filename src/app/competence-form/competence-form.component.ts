@@ -95,34 +95,26 @@ export class CompetenceFormComponent implements OnInit {
     this.groupService.getAll().subscribe(
       groups =>
       {
-        let i=0;
-        groups.forEach(
-          group => 
-          {    
-            let newGroup = this.newGroup();
-            newGroup.patchValue(group);
-            group.items.forEach(
-              item =>
-              {
-                let newItem = this.newCompetenceItem();
-                newItem.patchValue(item);
-                for(let consultantCompetence of comp)
-                {          
-                  if(consultantCompetence.parent2.id==item.id)
-                  {   
-                    let newCompetenceConsultant = this.newConsultantCompetence();
-                    newCompetenceConsultant.patchValue(consultantCompetence);
-                    newItem.controls.consultantCompetence = newCompetenceConsultant;
-                    comp = comp.filter(item => item !== consultantCompetence);
-                    break;
-                  }
+        for (let group of groups){
+          let newGroup = this.newGroup();
+          newGroup.patchValue(group);
+          for (let item of group.items)
+          {
+            let newItem = this.newCompetenceItem();
+            newItem.patchValue(item);
+            for(let consultantCompetence of comp)
+              {          
+                if(consultantCompetence.parent2.id==item.id)
+                {   
+                  newItem.controls.consultantCompetence.patchValue(consultantCompetence);
+                  comp = comp.filter(x => x !== consultantCompetence);
+                  break;
                 }
-                (<FormArray>newGroup.controls.items).push(newItem);
               }
-            )
-            this.groups.push(newGroup);
+            (<FormArray>newGroup.get('items')).push(newItem);
           }
-        );
+          this.groups.push(newGroup);
+        }
       },
       err => 
       {
@@ -131,26 +123,18 @@ export class CompetenceFormComponent implements OnInit {
       () =>
       {
         this.show = true;
-        console.log(this.competencesForm);
       }
     );
   }
 
   onSubmit(isEnd: boolean){
     this.consultant.competences = [];
-    let newObservableCompetenceItems = new Array<Observable<CompetenceItem>>();
     this.groups.value.forEach(
       group =>
       {
         group.items.forEach(
           item =>
           {
-            //if(item.id==0)
-            // {
-            //   let newCompetence = {description: x.description, parent2:{id: group.id}};
-            //   newObservableCompetenceItems.push(this.competenceItemService.create(newCompetence));
-              
-            // }
             if(item.consultantCompetence.niveau!=0)
             {
               item.consultantCompetence.parent = {id: this.idConsultant};
@@ -158,30 +142,13 @@ export class CompetenceFormComponent implements OnInit {
               id: item.id, 
               description: item.description,
               parent2: {id: group.id}};
+              console.log(item.consultantCompetence);
               this.consultant.competences.push(item.consultantCompetence);
             }
           }
         )
       }
-    );
-    // forkJoin(newObservableCompetenceItems).subscribe(
-    //   newCompetenceItems => 
-    // {
-    //   newCompetenceItems.forEach(x =>
-    //     {
-    //       x.id = result.id;
-    //     })
-    // },
-    // err => console.log(err),
-    // () => {
-    //   if(x.consultantCompetence.niveau!=0)
-    //   {
-    //     x.consultantCompetence.parent2={id: x.id, description: x.description};
-    //     this.consultant.competences.push(x.consultantCompetence);
-    //   }
-    // });	 
-    // );
-    
+    );    
     console.log(this.consultant);
     this.consultantService.update(this.consultant).subscribe(result=>{
       this.dataStorageService.consultant = result;
@@ -197,17 +164,16 @@ export class CompetenceFormComponent implements OnInit {
     item.controls.consultantCompetence = this.newConsultantCompetence();
   }
 
-
-  addCompetence(group: CompetenceGroup, i: number){
+  addCompetence(i: number){
     this.onSubmit(false);
-    this.openDialog(group, i);
+    this.openDialog(i);
   }
 
-  openDialog(group: CompetenceGroup, i: number) {
+  openDialog(i: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '700px',
       data: {
-        item: group.description, 
+        item:  this.groups.controls[i].value.description, 
         headerText: "Entrez le nom de la nouvelle compétence informatique dans le groupe ",
         template: this.newCompetenceDialogTemplate
       }
@@ -215,41 +181,27 @@ export class CompetenceFormComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        // let newCompetence = {
-        //   description: this.newCompetence,
-        //   parent2: {id: group.id}
-        // };
-        let updatedGroup={
-          id: this.groups.controls[i].value.id,
-          description: this.groups.controls[i].value.description,
-          items: []
-        };
-        for(let item of this.groups.controls[i].value.items){
-          updatedGroup.items.push({
-            id: item.id, 
-            description: item.description,
-            parent2: {id: updatedGroup.id, description: updatedGroup.description}});
-        }
-        updatedGroup.items.push({
-          id:0,
-          description: this.newCompetence,
-          parent2: {id: updatedGroup.id}
-        });
-        this.groupService.update(updatedGroup).subscribe();
-        this.ngOnInit();
-        // this.competenceItemService.create(newCompetence).subscribe(
-        //   serverResponse =>
-        //   {
-        //     let newItem =this.newCompetenceItem();
-        //     newItem.patchValue({
-        //       id: serverResponse.id,
-        //       description: serverResponse.description
-        //     });
-        //     (<FormArray>this.groups.controls[i].get('items')).push(newItem);
-        //   }
-        // );
+        this.updateGroup(i);
       }
     });
+  }
+
+  updateGroup(i: number){
+    let group = this.groups.controls[i].value;
+    for(let item of group.items){
+      delete item.consultantCompetence;
+    }
+    group.items.push({
+      id:0,
+      description: this.newCompetence
+    });
+
+    this.groupService.update(group).subscribe(
+      result => {},
+      err => console.log(err),
+      () =>  this.ngOnInit()
+    );
+ 
   }
 
 }

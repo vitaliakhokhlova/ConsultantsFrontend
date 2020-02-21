@@ -4,24 +4,53 @@
   (ngSubmit)="onSubmit()"
   novalidate
 >
-
+<table class="example-full-width" cellspacing="0"><tr>
+  <td>
   <app-mat-datepicker  
     controlName="birthday"    
     placeholder="Date de naissance" 
     local="fr"
     [startDate]="consultantForm.value.birthday ? consultantForm.value.birthday :startDate"
   ></app-mat-datepicker>
-  
-  <div *ngFor="let simpleinput of simpleinputs">
-    <mat-form-field class="example-full-width">
-      <input 
-        matInput 
-        type="text" 
-        [placeholder]="simpleinput.placeholder" 
-        [id]="simpleinput.name" 
-        [formControlName]="simpleinput.name"
-      >
-    </mat-form-field>
+</td>
+<td>
+<mat-form-field class="example-full-width">
+<input 
+matInput 
+type="text" 
+placeholder="Fichier de la photo" 
+formControlName="photoname"
+>
+</mat-form-field>
+</td>
+<td>
+  <mat-form-field class="example-full-width">
+  <input 
+  matInput 
+  type="text" 
+  placeholder="Mobilité" 
+  formControlName="mobility"
+  >
+  </mat-form-field>
+  </td></table>
+
+
+
+  <div *ngFor="let lineInputs of simpleInputs">
+  <table class="example-full-width" cellspacing="0"><tr>
+    <td *ngFor="let lineInput of lineInputs">
+      <mat-form-field class="example-full-width">
+        <input 
+          matInput 
+          type="text" 
+          [placeholder]="lineInput.placeholder" 
+          [id]="lineInput.name" 
+          [formControlName]="lineInput.name"
+        >
+        <control-messages [key]="lineInput.name"></control-messages>
+      </mat-form-field>
+    </td>
+    </tr></table>
   </div>
 
   <mat-form-field class="example-full-width">
@@ -34,8 +63,11 @@
     placeholder="Profile" 
     formControlName="profile"></textarea>
   </mat-form-field>
-<br><br>
+
+<br><br><br><br>
+
 <h3>Forces cognitives (drag and drop)</h3>
+<br><br>
 <div formArrayName="forces">
   <app-mat-drag-and-drop
     [destination]="forces"
@@ -45,6 +77,7 @@
   ></app-mat-drag-and-drop>
 </div>
 <br><br>
+
 <h3>Langues</h3>
 <div formArrayName="langues">
   <div  *ngFor="let langueConsultant of langues.controls; let i=index"  
@@ -121,23 +154,6 @@
         >                
         </app-reactive-form-array>  
       </p>
-      <!-- <table class="example-full-width" cellspacing="0"><tr>
-      <td>
-        <mat-form-field class="example-full-width">
-        <textarea  
-        matInput
-        formControlName="description" 
-        placeholder="Tâche"> 
-        </textarea>
-      </mat-form-field>
-    </td>
-    <td>
-     
-        <button  mat-button type="button" matSuffix mat-icon-button aria-label="Delete" (click)="delete( item.get('details'),k)">
-          <mat-icon>delete_forever</mat-icon>
-        </button>
-      </td>
-    </table> -->
 
   </div>
   <p style="margin-left: 200px">

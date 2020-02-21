@@ -111,7 +111,9 @@ export class ConsultantSearchComponent implements OnInit {
             competence => competence.parent2.description==description);  
             Object.keys(competence[0]).forEach(key =>
               {
+                if(key!='id'){
                 consultant[key] = competence[0][key];
+              }
               });          
         })
       });

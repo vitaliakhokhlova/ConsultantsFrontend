@@ -29,15 +29,18 @@ export class InputFormEditorComponent implements OnInit {
   isPatched = false;  
   langueItems: Array<LangueItem>;
   forceItems = new FormArray([]);
-  simpleinputs = [
-                {name: 'photoname', placeholder: 'Fichier de la photo'},
-                {name: 'firstname', placeholder: 'Prénom'}, 
-                {name: 'lastname', placeholder: 'Nom'},
-                {name: 'title', placeholder: 'Métier'},
-                {name: 'expression', placeholder: 'Citation'},
-                {name: 'author', placeholder: 'Auteur de la citation'},
-                {name: 'mobility', placeholder: 'Mobilité'},
-                {name: 'interests', placeholder: 'Intérêts'}];
+  simpleInputs=[
+    [
+      {name: 'firstname', placeholder: 'Prénom'}, 
+      {name: 'lastname', placeholder: 'Nom'},
+      {name: 'title', placeholder: 'Métier'}
+    ],
+    [
+      {name: 'expression', placeholder: 'Citation'},
+      {name: 'author', placeholder: 'Auteur de la citation'}
+    ],
+    [  {name: 'interests', placeholder: 'Intérêts'}]
+  ];
   
   historyObjectFields=['description','institution','place','dates'];
   historyObjectPlaceholders=['Description','Organisation','Ville','Dates'];
