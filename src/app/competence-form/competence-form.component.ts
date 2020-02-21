@@ -9,21 +9,20 @@ import { DataStorageService } from '../services/data-storage.service';
 import { CompetenceItemService } from '../services/competence-item.service';
 import { Observable, forkJoin } from 'rxjs';
 import { MatDialog } from '@angular/material';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from '../reusable-components/confirmation-dialog.component';
 
 @Component({
   selector: 'app-competence-form',
-  templateUrl: './competence-form.component.html',
-  styleUrls: ['./competence-form.component.css']
+  templateUrl: './competence-form.component.html'
 })
 export class CompetenceFormComponent implements OnInit {
 
-  headElements = ['Competence','Niveau', 'Expérience', 'Dernière utilisaton', 'Contexte','Intérêt'];
-  keysToShow = ["niveau", "experience", "annee", "contexte","interet"];
+  headerToShow: {property: string, placeholder: string}[] = [];
   consultant: Consultant;
   idConsultant: number;
   show: boolean;
   competencesForm: FormGroup;
+  
   @ViewChild('newCompetenceDialogTemplate', {static: false})
   newCompetenceDialogTemplate: TemplateRef<any>;
   newCompetence: string;
@@ -31,7 +30,6 @@ export class CompetenceFormComponent implements OnInit {
   constructor(
     private dataStorageService: DataStorageService,
     private consultantService: ConsultantService,
-    private competenceItemService: CompetenceItemService,
     private groupService: GroupService,
     private route: ActivatedRoute,
     private router: Router,
@@ -43,6 +41,7 @@ export class CompetenceFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.headerToShow = this.dataStorageService.competenceHeader;
     this.idConsultant = +this.route.snapshot.paramMap.get('id');
     this.createForm();
     this.dataStorageService.getConsultant(this.idConsultant)
@@ -98,7 +97,9 @@ export class CompetenceFormComponent implements OnInit {
         for (let group of groups){
           let newGroup = this.newGroup();
           newGroup.patchValue(group);
-          for (let item of group.items)
+
+          let sortedItems = this.sortArrayOfObjects(group.items, 'description');
+          for (let item of sortedItems)
           {
             let newItem = this.newCompetenceItem();
             newItem.patchValue(item);
@@ -125,6 +126,16 @@ export class CompetenceFormComponent implements OnInit {
         this.show = true;
       }
     );
+  }
+
+  sortArrayOfObjects(array: any[], property: string){
+    let sortedArray = array.sort((object1,object2)=>
+    {
+      if(object1[property]>object2[property]) return 1;
+      if(object1[property]<object2[property]) return -1;
+      return 0;
+    });
+    return sortedArray;
   }
 
   onSubmit(isEnd: boolean){

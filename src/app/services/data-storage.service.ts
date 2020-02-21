@@ -16,6 +16,14 @@ export class DataStorageService {
   forces: Array<ForceItem>;
   competenceItems: Array<CompetenceItem>;
 
+  competenceHeader = [
+    {property: "niveau", placeholder: "Niveau"},
+    {property: "experience", placeholder: "Expérience"},
+    {property: "annee", placeholder: "Dernière utilisation"},
+    {property: "contexte", placeholder: "Contexte"},
+    {property: "interet", placeholder: "Intérêt"}
+  ];
+
   constructor(
     private consultantService: ConsultantService,
     private langueService: LangueService,

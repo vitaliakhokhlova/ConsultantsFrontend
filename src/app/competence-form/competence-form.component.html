@@ -81,8 +81,11 @@ novalidate>
       <table mdbTable bordered="true" cellspacing="0">
         <thead>                 
           <tr>
-            <th *ngFor="let head of headElements" scope="col">
-              {{head}} 
+            <th>
+              Compétence
+            </th>
+            <th *ngFor="let head of headerToShow" scope="col">
+              {{head.placeholder}} 
             </th>
           </tr>
         </thead>         
@@ -92,11 +95,11 @@ novalidate>
               {{item.value.description}}
               <!-- <input formControlName="description"/> -->
             </th>
-            <td *ngFor="let key of keysToShow" formGroupName="consultantCompetence">
+            <td *ngFor="let key of headerToShow" formGroupName="consultantCompetence">
               <mat-form-field> 
-              <input matInput #competenceInput [formControlName]="key"  />
+              <input matInput #competenceInput [formControlName]="key.property"  />
               </mat-form-field>
-              <control-messages [key]="key"></control-messages>
+              <control-messages [key]="key.property"></control-messages>
             </td>
             <td> 
               <button type="button" (click)="empty(item)">Empty</button> 
@@ -111,11 +114,9 @@ novalidate>
   </div>
   
   <button type="submit" class="btn btn-primary btn-lg btn-block">Sauvegarder</button>   
-  {{competencesForm.value | json}}
 </form>  
 
 <ng-template #newCompetenceDialogTemplate let-data="newCompetence">
-
   <div align="center">
     <input  [(ngModel)]="newCompetence" >
   </div>

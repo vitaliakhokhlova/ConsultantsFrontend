@@ -1,28 +1,15 @@
 
-<!-- <router-outlet></router-outlet>
-<div class="doNotPrint">   
-<nav class="grid grid-pad">
-
-    <a routerLink="/search">        
-        <div class="module">Show all</div>
-    </a>
-        
-    <a routerLink="/edit/0">
-        <div class="module">New consultant</div>
-    </a>
-</nav>
-</div> -->
-
-<!-- bootstrap nabbar -->
   
 <mdb-navbar     
 SideClass="navbar navbar-expand-lg navbar-dark bg-primary" 
     [containerInside]="false"
 >
-
   <!-- Navbar brand -->
-  <mdb-navbar-brand><a class="navbar-brand" href="#">AUTICONSULT</a></mdb-navbar-brand>
-    <!-- <mdb-navbar-brand class="navbar-brand" >Consultants database</mdb-navbar-brand> -->
+     <mdb-navbar-brand>
+        <a class="navbar-brand" href="">
+            <i class="fa fa-home" aria-hidden="true"></i>Home
+        </a>
+    </mdb-navbar-brand>
     <links>
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
@@ -46,32 +33,3 @@ SideClass="navbar navbar-expand-lg navbar-dark bg-primary"
 <br><br>
 <router-outlet></router-outlet>
 <br><br>
-
-<!-- material design navbar -->
-  
-<!-- 
-        <mat-toolbar color="primary">
-            <mat-toolbar-row class="doNotPrint">
-            <div fxHide.gt-xs>
-                <button mat-icon-button (click)="sidenav.toggle()">
-                <mat-icon>menu</mat-icon>
-                </button>
-            </div>
-                <span class="menu-spacer"></span>
-                <div>
-                        <a mat-button routerLink="/search">
-                            <mat-icon class="icon">home</mat-icon>
-                            <span class="label">Show all</span>
-                        </a>
-      
-                        <a mat-button  routerLink="/edit/0">
-                            <span class="label">New consultant</span>
-                        </a>
-                  
-            </div>
-        </mat-toolbar-row>
-        </mat-toolbar>
-    
-            <router-outlet></router-outlet> -->
-       
-

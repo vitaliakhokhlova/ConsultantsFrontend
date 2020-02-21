@@ -1,0 +1,9 @@
+
+<div cdkDropListGroup  class="example-container" >
+    <div  cdkDropList  *ngFor="let list of lists; let i=index" [cdkDropListData]="list.controls" class="example-list" (cdkDropListDropped)="drop($event, i)"> 
+      <div cdkDrag class="example-box" *ngFor="let item of list.controls">
+        {{item.get(nameProperty).value}} 
+      </div>
+    </div>
+</div>
+

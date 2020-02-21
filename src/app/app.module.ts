@@ -1,10 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { HttpClientModule }    from '@angular/common/http';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import {
   MatSelectModule, 
@@ -18,47 +20,44 @@ import {
   MatToolbarModule,
   MatIconModule,
   MatListModule,
+  MatAutocompleteModule,
+  MatSortModule
 } from '@angular/material';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ConsultantdetailComponent } from './consultantdetail/consultantdetail.component';
+
+import { ConsultantProfileComponent } from './consultant-profile/consultant-profile.component';
 import { ConsultantSearchComponent } from './consultant-search/consultant-search.component';
 import { CompetenceFormComponent } from './competence-form/competence-form.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatAutocompleteComponent } from './form-elements/mat-autocomplete/mat-autocomplete.component';
-import { ListShowComponent } from './list-show/list-show.component';
-import { ListEditComponent } from './list-edit/list-edit.component';
-import { InputFormEditorComponent } from './input-form-editor/input-form-editor.component';
-import { GroupByPipe } from './pipes/group.pipe';
-import { MatDragAndDropComponent } from './form-elements/mat-drag-and-drop/mat-drag-and-drop.component';
-import { MatDatepickerComponent } from './form-elements/mat-datepicker/mat-datepicker.component';
-import { ReactiveFormArrayComponent } from './form-elements/reactive-form-array/reactive-form-array.component';
-import { MatSelectComponent } from './form-elements/mat-select/mat-select.component';
-import {MatSortModule} from '@angular/material/sort';
-import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
-import { ControlMessagesComponent } from './control-messages.component';
+import { MatAutocompleteComponent } from './reusable-components/mat-autocomplete.component';
+import { ListShowComponent } from './reusable-components/list-show/list-show.component';
+import { ConsultantFormComponent } from './consultant-form/consultant-form.component';
+import { MatDragAndDropComponent } from './reusable-components/mat-drag-and-drop/mat-drag-and-drop.component';
+import { MatDatepickerComponent } from './reusable-components/mat-datepicker.component';
+import { ReactiveFormArrayComponent } from './reusable-components/reactive-form-array/reactive-form-array.component';
+import { MatSelectComponent } from './reusable-components/mat-select.component';
+import { ConfirmationDialogComponent } from './reusable-components/confirmation-dialog.component';
+import { ControlMessagesComponent } from './reusable-components/control-messages.component';
+import { ConsultantCompetencesComponent } from './consultant-competences/consultant-competences.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ConsultantdetailComponent,
+    ConsultantProfileComponent,
     ConsultantSearchComponent,
     CompetenceFormComponent,
     ListShowComponent,
-    ListEditComponent,
-    InputFormEditorComponent,
-    GroupByPipe,
+    ConsultantFormComponent,
     MatAutocompleteComponent,
     MatDragAndDropComponent,
     MatDatepickerComponent,
     ReactiveFormArrayComponent,
     MatSelectComponent,
     ConfirmationDialogComponent,
-    ControlMessagesComponent
+    ControlMessagesComponent,
+    ConsultantCompetencesComponent
   ],
   imports: [
     BrowserModule,

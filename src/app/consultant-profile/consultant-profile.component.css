@@ -1,0 +1,133 @@
+div{
+    font-family: "Calibri";
+    font-size: 12pt;
+}
+
+.subheader{
+    font-weight: bold;
+}
+
+.header{
+    font-family: "Calibri", sans-serif;
+    font-weight: lighter;
+    font-size: 14pt;
+    color: rgb(50, 179, 145);    
+    font-weight: bold;
+    background: #FFF;
+}
+
+#logo{
+    margin-bottom: 0px;
+    width: 100%;
+    margin-right: 0px;
+    text-align: center;
+    background: linear-gradient(to right, #006699 0%, #99ffcc 100%);
+    -webkit-print-color-adjust: exact; 
+}
+
+.block{
+    /* border: 1pt solid rgb(212, 0, 50); */
+    border-top: 4px solid rgb(0, 160, 118);
+    margin-bottom: 25px;
+    /* margin-right: 25px;  */
+}
+
+/* .row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.column{
+    display: flex;
+    flex-direction: column;
+} */
+
+
+#name_block{
+    text-align: center;
+    vertical-align: center;
+}
+
+div#name{
+    /* height: 2.21cm; */
+    /* line-height: 2.21cm; */
+    /* color: rgb(212, 0, 50); */
+    font-family: "Calibri", sans-serif;
+    font-weight: bold;
+    font-size: 16pt;
+    /* width: 10.58cm; */
+}
+
+div#metier{
+    font-size: 16pt;
+    font-family: "Calibri", sans-serif;
+    font-weight: lighter;
+    /*color: rgb(118, 113, 133);    
+    font-weight: bold;
+    margin-top: -37px;
+    background: #FFF;
+    margin-left: auto;
+    margin-right: auto; 
+    width: 8cm; */
+}
+
+#photo{
+    margin-right: 50px;
+    margin-left : 50px;
+}
+
+#age{
+    margin-right: 50px;
+    margin-left : 50px;
+    width: 50%;
+    text-align: center;
+}
+
+#expression{
+    margin-top: 25px;
+    margin-bottom: 25px;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 11pt;
+    color: rgb(0, 112, 150);
+}
+
+/* #author{
+    font-style: italic;
+    color: rgb(212, 0, 50);
+    margin-right: 15px;
+    margin-left : 15px;
+    font-size: 10pt;
+} */
+#temps{
+    width: 6.35cm
+}
+
+ul {
+    list-style-image: url('/assets/eclair.jpg');
+}
+
+
+.year{
+    color: rgb(212, 0, 50);
+}
+
+#parcours_header{
+    font-weight: bold;
+}
+
+.module {
+    padding: 20px;
+    text-align: center;
+    color: #eee;
+    max-height: 120px;
+    min-width: 120px;
+    background-color: #607D8B;
+    border-radius: 2px;
+  }
+
+  @media print{
+    .doNotPrint{display:none !important;}
+  }

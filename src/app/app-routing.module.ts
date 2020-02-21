@@ -1,15 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ConsultantdetailComponent } from './consultantdetail/consultantdetail.component';
+import { ConsultantProfileComponent } from './consultant-profile/consultant-profile.component';
 import { ConsultantSearchComponent } from './consultant-search/consultant-search.component';
 import { CompetenceFormComponent} from './competence-form/competence-form.component';
-import { InputFormEditorComponent } from './input-form-editor/input-form-editor.component';
+import { ConsultantFormComponent } from './consultant-form/consultant-form.component';
+import { ConsultantCompetencesComponent } from './consultant-competences/consultant-competences.component';
 
 const routes: Routes = [
+  { path: '', component: ConsultantSearchComponent },
   { path: 'search', component: ConsultantSearchComponent },
-  { path: 'detail/:id', component: ConsultantdetailComponent },
-  { path: 'edit/:id', component: InputFormEditorComponent },
-  { path: 'competences/:id', component: CompetenceFormComponent}
+  { path: 'detail/:id', component: ConsultantProfileComponent },
+  { path: 'edit/:id', component: ConsultantFormComponent },
+  { path: 'competences/:id', component: ConsultantCompetencesComponent},
+  { path: 'edit_competences/:id', component: CompetenceFormComponent}
 ];
 
 @NgModule({

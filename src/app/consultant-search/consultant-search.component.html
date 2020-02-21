@@ -1,12 +1,13 @@
 <div class="container">
 <form 
+  *ngIf="showSearch"
   (ngSubmit)="onSubmitCriteria()" 
   [formGroup]="selectSearchForm" 
   novalidate
   >
       <app-mat-select
         controlName="selectFormControl"
-        [options]="options"
+        [options]="researchCriteriaOptions"
         propertyToShow="description"
         propertyToGet="property"
         placeholder="Choisir le critère de recherche"
@@ -23,7 +24,7 @@
 
 <br>
 
-<div *ngIf="competenceChoice">
+<div *ngIf="competenceChoice && showSearch">
 <form 
   [formGroup]="competenceChoice" 
   (ngSubmit)="onSubmitCompetenceChoice()"
@@ -46,15 +47,16 @@
     
 </form>
 </div>
-
+<div *ngIf="showList">
  <div *ngIf="consultants; else loading" >
   <app-list-show 
     [(inputArray)]="consultants"
-    [keysToShow]="keysToShow"
-    [headElements]="headElements"
-    (itemToDelete)="openDialog($event)"
+    [fieldsToShow]="headerToShow"
+    [buttonsArray]="buttonsArray"
+    (itemToEmit)="buttonFunction($event)"
   >
   </app-list-show>
+</div>
 </div>
 
 <ng-template #loading>
