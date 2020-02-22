@@ -69,7 +69,20 @@
     line-height: 27px;
   }
 }
-  
+
+
+::ng-deep .example-full-width {
+  width: 100%;
+}
+
+::ng-deep .row {
+  display: flex; /* 2. display flex to the rescue */
+  flex-direction: row;
+}
+
+::ng-deep .centeredButton {
+  text-align: center;
+}
   /*
   Copyright 2017-2018 Google Inc. All Rights Reserved.
   Use of this source code is governed by an MIT-style license that

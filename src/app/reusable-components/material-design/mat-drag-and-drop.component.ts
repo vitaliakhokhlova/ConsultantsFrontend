@@ -4,8 +4,19 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-mat-drag-and-drop',
-  templateUrl: './mat-drag-and-drop.component.html',
-  styleUrls: ['./mat-drag-and-drop.component.css']
+  styleUrls: ['./material-design.css'],
+  template: `  
+  <div cdkDropListGroup class="example-container" >
+  <div *ngFor="let list of lists; let i=index"> 
+    {{text[i]}}
+    <div cdkDropList  class="example-list" [cdkDropListData]="list.controls" (cdkDropListDropped)="drop($event, i)">
+    <div cdkDrag class="example-box" *ngFor="let item of list.controls">
+      {{item.get(nameProperty).value}} 
+    </div>
+  </div>
+  </div>
+  </div>
+  `
 })
 export class MatDragAndDropComponent implements OnInit {
 

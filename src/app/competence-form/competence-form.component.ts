@@ -1,13 +1,10 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { GroupService} from '../services/group.service';
-import { Consultant, InformaticCompetence, CompetenceGroup, CompetenceItem } from '../classes';
+import { Consultant, InformaticCompetence } from '../classes';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ConsultantService } from '../services/consultant.service';
-import { CompetenceService } from '../services/competence.service';
 import { DataStorageService } from '../services/data-storage.service';
-import { CompetenceItemService } from '../services/competence-item.service';
-import { Observable, forkJoin } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { ConfirmationDialogComponent } from '../reusable-components/confirmation-dialog.component';
 

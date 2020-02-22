@@ -5,7 +5,17 @@ import { DataStorageService } from '../services/data-storage.service';
 
 @Component({
   selector: 'app-consultant-competences',
-  templateUrl: './consultant-competences.component.html'
+  template: `
+  <div *ngIf="consultant">
+  <app-mat-table-sort [(inputArray)]="consultant.competences" [fieldsToShow]="headerToShow">
+  </app-mat-table-sort>
+  <div class="doNotPrint"> 
+      <a routerLink="/edit_competences/{{consultant.id}}">
+      <button mdbBtn color="primary" type="button" >Corriger le formulaire des competences</button>
+      </a>
+      </div>
+  </div>  
+  `  
 })
 export class ConsultantCompetencesComponent implements OnInit {
 

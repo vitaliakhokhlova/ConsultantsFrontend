@@ -49,13 +49,13 @@
 </div>
 <div *ngIf="showList">
  <div *ngIf="consultants; else loading" >
-  <app-list-show 
+  <app-mat-table-sort 
     [(inputArray)]="consultants"
     [fieldsToShow]="headerToShow"
     [buttonsArray]="buttonsArray"
     (itemToEmit)="buttonFunction($event)"
   >
-  </app-list-show>
+  </app-mat-table-sort>
 </div>
 </div>
 

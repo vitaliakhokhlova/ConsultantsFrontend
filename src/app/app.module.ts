@@ -31,16 +31,17 @@ import { AppComponent } from './app.component';
 import { ConsultantProfileComponent } from './consultant-profile/consultant-profile.component';
 import { ConsultantSearchComponent } from './consultant-search/consultant-search.component';
 import { CompetenceFormComponent } from './competence-form/competence-form.component';
-import { MatAutocompleteComponent } from './reusable-components/mat-autocomplete.component';
-import { ListShowComponent } from './reusable-components/list-show/list-show.component';
+import { MatAutocompleteComponent } from './reusable-components/material-design/mat-autocomplete.component';
+import { ListShowComponent } from './reusable-components/material-design/mat-table-sort.component';
 import { ConsultantFormComponent } from './consultant-form/consultant-form.component';
-import { MatDragAndDropComponent } from './reusable-components/mat-drag-and-drop/mat-drag-and-drop.component';
-import { MatDatepickerComponent } from './reusable-components/mat-datepicker.component';
-import { ReactiveFormArrayComponent } from './reusable-components/reactive-form-array/reactive-form-array.component';
-import { MatSelectComponent } from './reusable-components/mat-select.component';
+import { MatDragAndDropComponent } from './reusable-components/material-design/mat-drag-and-drop.component';
+import { MatDatepickerComponent } from './reusable-components/material-design/mat-datepicker.component';
+import { ReactiveFormArrayComponent } from './reusable-components/material-design/mat-input-list.component';
+import { MatSelectComponent } from './reusable-components/material-design/mat-select.component';
 import { ConfirmationDialogComponent } from './reusable-components/confirmation-dialog.component';
 import { ControlMessagesComponent } from './reusable-components/control-messages.component';
 import { ConsultantCompetencesComponent } from './consultant-competences/consultant-competences.component';
+import { ConsultantFormContainerComponent } from './consultant-form/consultant-form-container/consultant-form-container.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { ConsultantCompetencesComponent } from './consultant-competences/consult
     MatSelectComponent,
     ConfirmationDialogComponent,
     ControlMessagesComponent,
-    ConsultantCompetencesComponent
+    ConsultantCompetencesComponent,
+    ConsultantFormContainerComponent
   ],
   imports: [
     BrowserModule,

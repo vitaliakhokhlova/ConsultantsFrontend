@@ -1,9 +1,5 @@
 <div class="container" *ngIf="isPatched">
-<form 
-  [formGroup]="consultantForm" 
-  (ngSubmit)="onSubmit()"
-  novalidate
->
+<form [formGroup]="consultantForm" (ngSubmit)="onSubmit()" novalidate >
 <table class="example-full-width" cellspacing="0"><tr>
   <td>
   <app-mat-datepicker  
@@ -132,15 +128,12 @@ formControlName="photoname"
 <div *ngFor="let arrayName of historyArraysNames; let i=index">
 <h3>{{arrayName | titlecase}} </h3>
 <div [formArrayName]="arrayName">
-  <div 
-    *ngFor="let item of consultantForm.get(arrayName).controls; let j=index" 
-    [formGroupName]="j"
-  >
-    <app-reactive-form-array
+  <div *ngFor="let item of consultantForm.get(arrayName).controls; let j=index" [formGroupName]="j">
+    <app-mat-input-list 
       [properties]="historyObjectFields"
       [placeholders]="historyObjectPlaceholders" 
     >                
-    </app-reactive-form-array> 
+    </app-mat-input-list> 
 
     <div *ngIf="isWithChildren[i]" formArrayName="details">
       <div 
@@ -148,11 +141,11 @@ formControlName="photoname"
         [formGroupName]="k"
       >    
       <p style="margin-left: 200px">
-        <app-reactive-form-array
+        <app-mat-input-list
           [properties]="['description']"
           [placeholders]="['Tâche']" 
         >                
-        </app-reactive-form-array>  
+        </app-mat-input-list>  
       </p>
 
   </div>
