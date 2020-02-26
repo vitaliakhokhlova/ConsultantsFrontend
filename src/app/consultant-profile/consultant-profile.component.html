@@ -2,9 +2,9 @@
     <div id="logo"><img src='assets/logo.svg'></div>
 
     <div  id="name">
-        <span id="prenom">  
+        <span id="prenom">
             {{consultant.firstname }}
-        </span> 
+        </span>
         <span id="nom">
             {{consultant.lastname | uppercase}}
         </span>
@@ -16,9 +16,9 @@
     <div class="row">
         <div class="col-sm-4">
              <div id="photo">
-                <img src='assets/{{consultant.photoname}}' height="160">
-                <!-- <img src='assets/{{consultant.firstname|lowercase}}{{consultant.lastname|lowercase}}.jpg' height="160"> -->
-            </div>
+                <img *ngIf="consultant.userpic" [src]='consultant.userpic' height="160">
+                <img *ngIf="!consultant.userpic" src='assets/incognito.jpg' height="160">
+              </div>
                  <div id="age">{{age}}  ans</div>
         </div>
         <div class="col-sm-8">
@@ -29,9 +29,9 @@
                             {{f.parent2.description}}
                     </li>
                 </ul>
-            </div> 
+            </div>
             <span class="subheader">Mobilité : </span>
-            <span id="mobilite">{{consultant.mobility}}</span>           
+            <span id="mobilite">{{consultant.mobility}}</span>
         </div>
     </div>
     <div id="expression" align="center">« {{consultant.expression}} » &#8212; {{consultant.author}}</div>
@@ -41,31 +41,31 @@
     </div>
     <div class="block">
         <legend  class="header">Compétences techniques</legend>
-        <div id="competences">                     
-            <div  class="row" *ngFor="let g of groups">       
-                    <div class="col-md-3 subheader">{{g.description}} :</div> 
+        <div id="competences">
+            <div  class="row" *ngFor="let g of groups">
+                    <div class="col-md-3 subheader">{{g.description}} :</div>
                     <div class="col-md-9">
                         <span *ngFor="let c of g.items; last as isLast">
                            {{c.description}}<span *ngIf="!isLast">, </span>
-                        </span>        
-                </div>   
+                        </span>
+                </div>
             </div>
         </div>
-        <div class="doNotPrint"> 
-        <button 
-            mdbBtn 
-            color="primary" 
-            type="button" 
+        <div class="doNotPrint">
+        <button
+            mdbBtn
+            color="primary"
+            type="button"
             (click)="goTo('competences/'+consultant.id)">
             Voir le formulaire des competences
             </button>
         </div>
     </div>
-  
+
     <div class="block">
         <legend class="header">Formations</legend>
         <div  class="row" id="formations">
-            <div class="col-md-3 subheader">Diplômes :</div> 
+            <div class="col-md-3 subheader">Diplômes :</div>
             <div class="col-md-9">
                 <div *ngFor="let f of consultant.formations">
                     <span class="subheader">{{f.dates}} : </span>{{f.description}} - {{f.institution}} - {{f.place}}
@@ -77,7 +77,7 @@
         <legend class="header">Langues</legend>
         <div  id="langues">
             <div  class="row" *ngFor="let l of consultant.langues">
-                <div class="col-md-3 subheader" style="font-weight: bold;">{{l.parent2.description}} :</div> 
+                <div class="col-md-3 subheader" style="font-weight: bold;">{{l.parent2.description}} :</div>
                 <div class="col-md-3">{{l.niveau}} </div>
             </div>
         </div>
@@ -87,7 +87,7 @@
 
     <div *ngIf="consultant.projets.length" class="block" id="projets">
         <legend class="header">Projets Auticonsult</legend>
-        <div class="row" *ngFor="let p of consultant.projets">            
+        <div class="row" *ngFor="let p of consultant.projets">
             <div class="col-md-3">
                 <div class="subheader">{{p.dates}} :</div>
                 <div *ngIf="p.pictogram">
@@ -116,7 +116,7 @@
                 <li *ngFor="let d of p.details" id="parcours_details">
                         {{d.description}}
                 </li>
-            </div> 
+            </div>
         </div>
     </div>
 
@@ -124,18 +124,18 @@
         <legend class="header">Intérêts</legend>
         <div id="interets">{{consultant.interests}}</div>
     </div>
-    <div class="doNotPrint">   
-        <button 
-            mdbBtn color="primary" 
-            type="button" 
+    <div class="doNotPrint">
+        <button
+            mdbBtn color="primary"
+            type="button"
             (click)="goTo('edit/'+consultant.id)"
             >
             Corriger
         </button>
-        
-        <button 
-            mdbBtn color="primary" 
-            type="button" 
+
+        <button
+            mdbBtn color="primary"
+            type="button"
             (click)="onPrint()">
             Print
         </button>

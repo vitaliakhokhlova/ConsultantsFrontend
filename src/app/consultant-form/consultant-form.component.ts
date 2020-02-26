@@ -26,12 +26,12 @@ export class ConsultantFormComponent implements OnInit {
   consultantForm: RxFormGroup;
   matcher = new MyErrorStateMatcher();
   forces_loaded = false;
-  isPatched = false;  
+  isPatched = false;
   langueItems: Array<LangueItem>;
   forceItems = new FormArray([]);
   simpleInputs=[
     [
-      {name: 'firstname', placeholder: 'Prénom'}, 
+      {name: 'firstname', placeholder: 'Prénom'},
       {name: 'lastname', placeholder: 'Nom'},
       {name: 'title', placeholder: 'Métier'}
     ],
@@ -41,25 +41,29 @@ export class ConsultantFormComponent implements OnInit {
     ],
     [  {name: 'interests', placeholder: 'Intérêts'}]
   ];
-  
-  historyObjectFields=['description','institution','place','dates'];
-  historyObjectPlaceholders=['Description','Organisation','Ville','Dates'];
+
+  historyObjectFields=[
+    {property: 'description', placeholder:'Description' },
+    {property: 'institution', placeholder: 'Organisation'},
+    {property: 'place', placeholder: 'Ville'},
+    {property: 'dates', placeholder: 'Dates'}
+  ];
   startDate = new Date(1990, 0, 1);
   historyArraysNames = ['formations', 'projets', 'parcours'];
   isWithChildren = [false, true, true];
+  preview: string;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private fb: RxFormBuilder,
-    private forceFB: FormBuilder,
     private dataStorageService: DataStorageService,
     private consultantService: ConsultantService,
     private langueService: LangueService
     ) { }
 
-  ngOnInit() {   
-    const id = +this.route.snapshot.paramMap.get('id'); 
+  ngOnInit() {
+    const id = +this.route.snapshot.paramMap.get('id');
     this.createForm();
     this.patchForm(id);
   }
@@ -70,23 +74,23 @@ export class ConsultantFormComponent implements OnInit {
 
   patchForm(id: number){
     this.dataStorageService.getLangues().subscribe(
-      langues => 
+      langues =>
       {
         this.langueItems=langues;
       },
-      err => 
+      err =>
       {
         console.log(err);
-      },                    
-      () => 
-      { 
+      },
+      () =>
+      {
         this.dataStorageService.getConsultant(id).subscribe(
-          data => 
-            {      
+          data =>
+            {
               this.consultant = data;
               this.consultantForm.patchValue(data);
               this.consultantForm.patchValue({birthday: new Date(data.birthday)});
-              data.formations.forEach(x => this.formations.push(this.fb.group(x)));    
+              data.formations.forEach(x => this.formations.push(this.fb.group(x)));
               data.forces.forEach(x => this.forces.push(this.fb.group(x)));
               data.langues.forEach(x => {
                 let langue = this.fb.formGroup(new Langue());
@@ -109,7 +113,7 @@ export class ConsultantFormComponent implements OnInit {
               data.projets.forEach(x => {
                 if(!x.details.length)
                 {
-                  x.details.push(new ResourceWithDescription());     
+                  x.details.push(new ResourceWithDescription());
                 }
                 this.projets.push(this.fb.group(x));
               });
@@ -119,21 +123,21 @@ export class ConsultantFormComponent implements OnInit {
                 x.details.push(new ResourceWithDescription());
                 }
                 this.parcours.push(this.fb.group(x));
-              });              
+              });
             },
-          err => 
+          err =>
           {
             console.log(err);
           },
           () =>
-          {          
+          {
               this.dataStorageService.getForces().subscribe(
-                forces => 
-                { 
+                forces =>
+                {
                   let indexes = [];
                   this.consultant.forces.forEach(x => indexes.push(x.parent2.id));
                   forces = forces.filter(x => indexes.indexOf(x.id)==-1);
-                  forces.forEach(force => 
+                  forces.forEach(force =>
                     (<FormArray>this.forceItems).push(this.fb.group(
                       {
                         position: 0,
@@ -144,22 +148,22 @@ export class ConsultantFormComponent implements OnInit {
                 err => {
                   console.log(err);
                 },
-                () => 
-                { 
+                () =>
+                {
                   this.isPatched = true;
                   console.log("The form is patched");
-                });   
+                });
             }
-        );           
+        );
       }
-    ); 
+    );
   }
 
   get forces() {
     return this.consultantForm.get('forces') as FormArray;
   }
 
-  addForcesToForm(forces) {  
+  addForcesToForm(forces) {
     let i = 1;
     this.forces_loaded = true;
     for(let item of forces){
@@ -171,7 +175,7 @@ export class ConsultantFormComponent implements OnInit {
       this.forces.push(this.fb.group(force));
       i=i+1;
     }
-    this.forces_loaded = true;    
+    this.forces_loaded = true;
   }
   get formations(): FormArray {
     return this.consultantForm.get('formations') as RxFormArray;
@@ -213,6 +217,8 @@ export class ConsultantFormComponent implements OnInit {
   }
 
   onSubmit(showCompetences?) {
+    console.log( this.consultantForm.toFormData());
+
     if (this.consultantForm.valid) {
       let consultant = this.consultantForm.value;
       consultant.projets.forEach(projet =>{
@@ -222,15 +228,15 @@ export class ConsultantFormComponent implements OnInit {
         parcour.details = parcour.details.filter(detail => detail.description!="");
       });
       this.consultantService.update(consultant).subscribe(result=>{
-        this.dataStorageService.consultant = result;  
+        this.dataStorageService.consultant = result;
         if(showCompetences)
         {
           this.goTo(`edit_competences/${result.id}`);
         }
         else{
-          this.goTo(`detail/${result.id}`);    
+          this.goTo(`detail/${result.id}`);
         }
-       });       
+       });
     }
   }
 
@@ -243,11 +249,26 @@ export class ConsultantFormComponent implements OnInit {
     item.description = langueConsultant.value.parent2.description;
     this.langueService.update(item).subscribe(result => {
       langueConsultant.controls['parent2'].patchValue({"id": result.id, "description": result.description});
-    });	 
+    });
   }
 
   delete(array, i: number) {
     array.removeAt(i);
   }
-  
+
+  onFileChange(event){
+    if(event.target.files && event.target.files.length) {
+      let file =  event.target.files[0];
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.consultantForm.get('userpic').setValue(reader.result);
+        this.consultantForm.get('userpic').updateValueAndValidity();
+      }
+
+    }
+  }
+
+
+
 }

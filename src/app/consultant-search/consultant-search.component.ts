@@ -7,6 +7,7 @@ import { Validators, FormGroup, FormBuilder, ControlContainer } from '@angular/f
 import { DataStorageService } from '../services/data-storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../reusable-components/confirmation-dialog.component';
+import { concat } from 'rxjs';
 
 @Component({
   selector: 'app-consultant-search',
@@ -175,8 +176,8 @@ export class ConsultantSearchComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
       data: {
-        item: consultant.firstname.concat(" ",consultant.lastname), 
-        headerText: "Vous voulez supprimer le consultant ",
+        item: '', 
+        headerText: "Vous voulez supprimer le consultant " +consultant.firstname+" "+consultant.lastname,
         template: this.deleteDialogTemplate
       }
     });

@@ -2,29 +2,31 @@
 <form [formGroup]="consultantForm" (ngSubmit)="onSubmit()" novalidate >
 <table class="example-full-width" cellspacing="0"><tr>
   <td>
-  <app-mat-datepicker  
-    controlName="birthday"    
-    placeholder="Date de naissance" 
+  <app-mat-datepicker
+    controlName="birthday"
+    placeholder="Date de naissance"
     local="fr"
     [startDate]="consultantForm.value.birthday ? consultantForm.value.birthday :startDate"
   ></app-mat-datepicker>
 </td>
 <td>
-<mat-form-field class="example-full-width">
-<input 
-matInput 
-type="text" 
-placeholder="Fichier de la photo" 
+<!-- <mat-form-field class="example-full-width">
+<input
+matInput
+type="text"
+placeholder="Fichier de la photo"
 formControlName="photoname"
 >
-</mat-form-field>
+</mat-form-field> -->
+<img [src]="consultantForm.value.userpic" height="200" *ngIf="consultantForm.value.userpic">
+<input type="file" accept="image/*" (change)="onFileChange($event)">
 </td>
 <td>
   <mat-form-field class="example-full-width">
-  <input 
-  matInput 
-  type="text" 
-  placeholder="Mobilité" 
+  <input
+  matInput
+  type="text"
+  placeholder="Mobilité"
   formControlName="mobility"
   >
   </mat-form-field>
@@ -32,31 +34,31 @@ formControlName="photoname"
 
 
 
-  <div *ngFor="let lineInputs of simpleInputs">
+  <div *ngFor="let rows of simpleInputs">
   <table class="example-full-width" cellspacing="0"><tr>
-    <td *ngFor="let lineInput of lineInputs">
+    <td *ngFor="let column of rows">
       <mat-form-field class="example-full-width">
-        <input 
-          matInput 
-          type="text" 
-          [placeholder]="lineInput.placeholder" 
-          [id]="lineInput.name" 
-          [formControlName]="lineInput.name"
+        <input
+          matInput
+          type="text"
+          [placeholder]="column.placeholder"
+          [id]="column.name"
+          [formControlName]="column.name"
         >
-        <control-messages [key]="lineInput.name"></control-messages>
+        <control-messages [key]="column.name"></control-messages>
       </mat-form-field>
     </td>
     </tr></table>
   </div>
 
   <mat-form-field class="example-full-width">
-    <textarea 
+    <textarea
     matInput
     cdkTextareaAutosize
     #autosize="cdkTextareaAutosize"
     cdkAutosizeMinRows="1"
     cdkAutosizeMaxRows="10"
-    placeholder="Profile" 
+    placeholder="Profile"
     formControlName="profile"></textarea>
   </mat-form-field>
 
@@ -76,11 +78,11 @@ formControlName="photoname"
 
 <h3>Langues</h3>
 <div formArrayName="langues">
-  <div  *ngFor="let langueConsultant of langues.controls; let i=index"  
-  [formGroupName]="i">  
+  <div  *ngFor="let langueConsultant of langues.controls; let i=index"
+  [formGroupName]="i">
   <table cellspacing="0"><tr>
     <td>
-    <div formGroupName="parent2"> 
+    <div formGroupName="parent2">
       <app-mat-autocomplete
         controlName="description"
         [options] = "langueItems"
@@ -88,40 +90,40 @@ formControlName="photoname"
         property="description"
         (createNewOption)="createNewLanguage(langueConsultant)"
         >
-      </app-mat-autocomplete>  
+      </app-mat-autocomplete>
     </div>
   </td>
       <td>
-    <mat-form-field  fxFlex="20%"> 
-      <input 
-        matInput 
+    <mat-form-field  fxFlex="20%">
+      <input
+        matInput
         formControlName="niveau"
         placeholder="Niveau"
-        [errorStateMatcher]="matcher" 
+        [errorStateMatcher]="matcher"
         required
       >
       <mat-error *ngIf="langueConsultant.controls.niveau.hasError('maxLength')">
-        Max length 20 
+        Max length 20
       </mat-error>
       <mat-error *ngIf="langueConsultant.controls.niveau.hasError('required')">
         <strong>Required</strong>
       </mat-error>
-    </mat-form-field> 
+    </mat-form-field>
   </td>
   <td>
-    <button 
+    <button
     mat-button type="button" matSuffix mat-icon-button aria-label="Delete"
       (click)="delete(langues,i)">
       <mat-icon>delete_forever</mat-icon>
-    </button>    
-  </td>         
-  </tr>  
+    </button>
+  </td>
+  </tr>
   </table>
-  </div>  
+  </div>
   <button mat-fab type="button" (click)="addLangue()">
     <i class="fas fa-plus-circle"></i>
-  </button>  
-</div>  
+  </button>
+</div>
 
 <br><br>
 
@@ -129,62 +131,65 @@ formControlName="photoname"
 <h3>{{arrayName | titlecase}} </h3>
 <div [formArrayName]="arrayName">
   <div *ngFor="let item of consultantForm.get(arrayName).controls; let j=index" [formGroupName]="j">
-    <app-mat-input-list 
+    <app-mat-input-list
       [properties]="historyObjectFields"
-      [placeholders]="historyObjectPlaceholders" 
-    >                
-    </app-mat-input-list> 
+    >
+    </app-mat-input-list>
+    <div *ngIf="i==1">
+      <mat-form-field class="example-full-width">
+        <input matInput formControlName="pictogram" placeholder="Fichier du pictogramme">
+        </mat-form-field>
+    </div>
 
-    <div *ngIf="isWithChildren[i]" formArrayName="details">
-      <div 
-        *ngFor="let detail of item.get('details').controls; let k=index" 
+    <div *ngIf="isWithChildren[i]">
+      <div formArrayName="details">
+      <div
+        *ngFor="let detail of item.get('details').controls; let k=index"
         [formGroupName]="k"
-      >    
+      >
       <p style="margin-left: 200px">
         <app-mat-input-list
-          [properties]="['description']"
-          [placeholders]="['Tâche']" 
-        >                
-        </app-mat-input-list>  
+          [properties]="[{property:'description', placeholder: 'Tâche'}]">
+        </app-mat-input-list>
       </p>
-
+      </div>
   </div>
   <p style="margin-left: 200px">
     <button mat-fab type="button" (click)="addDetail(item)">
-      <i class="fas fa-plus-circle">Ajouter une tâche</i>   
-    </button>    
+      <i class="fas fa-plus-circle">Ajouter une tâche</i>
+    </button>
   </p>
-    </div>  
-   
+    </div>
+
     </div>
 
   <button mat-fab type="button" (click)="addHistoryObjectWithChildren(arrayName,isWithChildren[i])">
-    <i class="fas fa-plus-circle"></i>   
-  </button>  
-</div> 
+    <i class="fas fa-plus-circle"></i>
+  </button>
+</div>
 <br><br>
 </div>
 
 <br>
-<button 
-  mdbBtn 
-  color="primary" 
-  type="button" 
+<button
+  mdbBtn
+  color="primary"
+  type="button"
   [disabled]="!consultantForm.valid"
   (click)="onSubmit(true)">
   Sauvegarder et ouvrir le formulaire de competences
 </button>
 
-  <button 
-    mdbBtn 
-    color="primary" 
-    type="button" 
+  <button
+    mdbBtn
+    color="primary"
+    type="button"
     [disabled]="!consultantForm.valid"
     (click)="onSubmit(false)"
     >
     Sauvegarder et voir le profile
-  </button> 
-</form>  
+  </button>
+</form>
 
 <ng-template #loading>
   Loading (check console for errors)...

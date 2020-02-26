@@ -9,9 +9,9 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import {
-  MatSelectModule, 
-  MatFormFieldModule, 
-  MatInputModule, 
+  MatSelectModule,
+  MatFormFieldModule,
+  MatInputModule,
   MatDatepickerModule,
   MatNativeDateModule,
   MatDialogModule,
@@ -41,7 +41,6 @@ import { MatSelectComponent } from './reusable-components/material-design/mat-se
 import { ConfirmationDialogComponent } from './reusable-components/confirmation-dialog.component';
 import { ControlMessagesComponent } from './reusable-components/control-messages.component';
 import { ConsultantCompetencesComponent } from './consultant-competences/consultant-competences.component';
-import { ConsultantFormContainerComponent } from './consultant-form/consultant-form-container/consultant-form-container.component';
 
 @NgModule({
   declarations: [
@@ -58,8 +57,7 @@ import { ConsultantFormContainerComponent } from './consultant-form/consultant-f
     MatSelectComponent,
     ConfirmationDialogComponent,
     ControlMessagesComponent,
-    ConsultantCompetencesComponent,
-    ConsultantFormContainerComponent
+    ConsultantCompetencesComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-import {  propArray, prop, required, maxLength, propObject, maxNumber, minNumber } from '@rxweb/reactive-form-validators';  
+import {  propArray, prop, required, maxLength, propObject, maxNumber, minNumber } from '@rxweb/reactive-form-validators';
 
 
 export interface Deserializable {
@@ -45,10 +45,10 @@ export class HistoryObject extends Resource{
     @prop()
     place: string = "";
     @prop()
-    dates: string = ""; 
+    dates: string = "";
     @prop()
-    pictogram: string = ""; 
-}   
+    pictogram: string = "";
+}
 
 export class HistoryObjectWithChildren extends HistoryObject{
     @propArray()
@@ -117,9 +117,9 @@ export class Langue extends Competence{
 }
 
 
-export class Consultant extends Resource{ 
-        @prop() 
-        photoname?: string = "incognito.png"; 
+export class Consultant extends Resource{
+        @prop()
+        photoname?: string = "incognito.png";
         @required()
         lastname?: string = "";
         @required()
@@ -140,15 +140,17 @@ export class Consultant extends Resource{
         occupancy?: string = "";
         @prop()
         mobility?: string = "";
+        @prop()
+        userpic?: File = null;
 
         @propArray()
         formations?: Array<HistoryObject> = new Array<HistoryObject>();
         @propArray()
         parcours?: Array<HistoryObjectWithChildren> = new Array<HistoryObjectWithChildren>();
         @propArray()
-        projets?: Array<HistoryObjectWithChildren> = new Array<HistoryObjectWithChildren>(); 
+        projets?: Array<HistoryObjectWithChildren> = new Array<HistoryObjectWithChildren>();
         @propArray()
-        forces?: Array<Force> = new Array<Force> ();   
+        forces?: Array<Force> = new Array<Force> ();
         @propArray()
         competences?: Array<InformaticCompetence> = Array<InformaticCompetence>();
         @propArray()

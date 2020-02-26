@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, SkipSelf } from '@angular/core';
-import { FormArray, ControlContainer, FormGroupDirective, FormGroup, Form } from '@angular/forms';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormArray } from '@angular/forms';
+import { moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-mat-drag-and-drop',

@@ -8,6 +8,10 @@
     vertical-align: top;
     justify-content: space-between;
   }
+
+  table {
+    width: 100%;
+  }
   
   .example-list {
     border: solid 1px #ccc;
