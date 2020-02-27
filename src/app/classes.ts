@@ -8,21 +8,11 @@ export interface Deserializable {
 export class Resource {
     @prop()
     id?: number = 0;
-
-    // deserialize(input: any): this {
-    //     Object.assign(this, input);
-    //     return this;
-    // }
   }
 
 export class ResourceWithDescription extends Resource{
     @required({message: "Obligatoire"})
     description: string ="";
-
-    // deserialize(input: any): this {
-    //     Object.assign(this, input);
-    //     return this;
-    // }
 }
 
 
@@ -38,7 +28,7 @@ export class CompetenceItem extends ResourceWithDescription{
 
 export class HistoryObject extends Resource{
     @prop()
-    @required()
+    @required({message: "Obligatoire"})
     description: string = "";
     @prop()
     institution: string = "";
@@ -46,31 +36,17 @@ export class HistoryObject extends Resource{
     place: string = "";
     @prop()
     dates: string = "";
-    @prop()
-    pictogram: string = "";
 }
 
 export class HistoryObjectWithChildren extends HistoryObject{
+    @prop()
+    pictogram: string = "";
     @propArray()
     details:  Array<ResourceWithDescription> = new Array<ResourceWithDescription>();
-
-    // deserialize(input: any): this {
-    //     Object.assign(this, input);
-    //     if(input.details){
-    //     this.details = input.details.map(
-    //         item => new ResourceWithDescription().deserialize(item)
-    //         );
-    //     }
-    //     return this;
-    //    }
 }
 
 
 export class ForceItem extends ResourceWithDescription{
-    // deserialize(input: any): this {
-    //     Object.assign(this, input);
-    //     return this;
-    // }
 }
 
 export class Force extends Resource{
@@ -81,7 +57,6 @@ export class Force extends Resource{
 }
 
 export class LangueItem extends ResourceWithDescription{
-    //items?: Langue[];
     addNew?: string;
 }
 
@@ -155,35 +130,6 @@ export class Consultant extends Resource{
         competences?: Array<InformaticCompetence> = Array<InformaticCompetence>();
         @propArray()
         langues?: Array<Langue> = Array<Langue>();
-        // deserialize(input: any): this {
-        //    Object.assign(this, input);
-        //    if(input.formations){
-        //    this.formations = input.formations.map(
-        //         item => new HistoryObject().deserialize(item)
-        //        );
-        //    }
-        //    if(input.parcours){
-        //     this.parcours = input.parcours.map(
-        //         item => new HistoryObjectWithChildren().deserialize(item)
-        //     );
-        //    }
-        //    if(input.projets){
-        //     this.projets = input.projets.map(
-        //         item => new HistoryObjectWithChildren().deserialize(item)
-        //         );
-        //     }
-        //     if(input.forces){
-        //         this.forces = input.forces.map(
-        //             item => new Force().deserialize(item)
-        //             );
-        //         }
-        //     if(input.langues){
-        //         this.langues = input.langues.map(
-        //             item => new Langue().deserialize(item)
-        //             );
-        //         }
-        //    return this;
-        //   }
 }
 
 

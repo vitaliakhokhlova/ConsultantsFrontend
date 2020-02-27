@@ -50,6 +50,7 @@ export class ConsultantHistoryComponent implements OnInit {
   }
 
   addHistoryObjectWithChildren(arrayName: string, isWithDetails: boolean){
+    console.log(this.parentForm);
     let array = this.parentForm.get(arrayName) as FormArray;
     if(isWithDetails){
       array.push(this.fb.formGroup(new HistoryObjectWithChildren()) as RxFormGroup);

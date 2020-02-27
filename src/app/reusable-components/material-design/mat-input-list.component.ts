@@ -11,7 +11,7 @@ import { FormArray, ControlContainer } from '@angular/forms';
   styleUrls: ['./material-design.css'],
   template: `
   <table class="example-full-width" cellspacing="0"><tr>
-  <td *ngFor="let item of properties; let k=index">
+  <td class="align-top" *ngFor="let item of properties; let k=index">
       <mat-form-field class="example-full-width">
           <textarea  matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
               cdkAutosizeMinRows="1"
@@ -20,7 +20,9 @@ import { FormArray, ControlContainer } from '@angular/forms';
               [placeholder]="item.placeholder"
           >
           </textarea>
-      </mat-form-field>
+        </mat-form-field>
+        <small class="form-text text-danger" *ngFor="let message of formArray.controls[n].controls[item.property]['errorMessages']">{{message}}</small>
+      <!-- <control-messages [key]="item.property"></control-messages> -->
   </td>
   <td>
       <button  mat-button type="button" matSuffix mat-icon-button aria-label="Delete" (click)="delete()">
@@ -33,16 +35,18 @@ import { FormArray, ControlContainer } from '@angular/forms';
 export class ReactiveFormArrayComponent {
   @Input() properties: {property: string, placeholder: string}[];
 
-  constructor(private parentForm: ControlContainer) {
+  constructor(public parentForm: ControlContainer) {
     }
 
   get formArray(){
     return this.parentForm.control.parent as FormArray;
   }
 
+  get n(){
+    return this.parentForm.path[this.parentForm.path.length-1];
+  }
+
   delete() {
-    let last = this.parentForm.path.length-1;
-    let i = this.parentForm.path[last];
-    this.formArray.removeAt(+i);
+    this.formArray.removeAt(+this.n);
   }
 }

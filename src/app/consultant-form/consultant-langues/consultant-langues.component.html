@@ -3,7 +3,7 @@
 <div formArrayName="langues">
   <div  *ngFor="let langueConsultant of langues.controls; let i=index" [formGroupName]="i">
   <table cellspacing="0"><tr>
-    <td>
+    <td class="align-top">
     <div formGroupName="parent2">
 
       <app-mat-autocomplete
@@ -17,16 +17,18 @@
 
     </div>
   </td>
-      <td>
-    <mat-form-field  fxFlex="20%">
+      <td class="align-top">
+        <div>    <mat-form-field  fxFlex="20%">
       <input
         matInput
         formControlName="niveau"
         placeholder="Niveau"
         required
       >
-      <control-messages key="niveau"></control-messages>
     </mat-form-field>
+    <small class="form-text text-danger" *ngFor="let message of langueConsultant.controls.niveau['errorMessages']">{{message}}</small>
+  </div>
+
   </td>
   <td>
     <button

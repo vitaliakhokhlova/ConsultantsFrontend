@@ -10,7 +10,7 @@ import { ValidationService } from '../services/validation.service';
     deps: [[new SkipSelf(), ControlContainer]],
   }],
   template: `
-    <div *ngIf="errorMessage !== null">  {{errorMessage}}</div>
+    <small danger *ngIf="errorMessage !== null">  {{errorMessage}}</small>
   `
 })
 export class ControlMessagesComponent  {

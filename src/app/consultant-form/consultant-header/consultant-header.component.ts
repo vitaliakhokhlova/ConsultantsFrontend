@@ -40,7 +40,6 @@ export class ConsultantHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.parentForm = this.parentFormControlContainer.control as RxFormGroup;
-    this.parentForm.patchValue({birthday: new Date(this.consultant.birthday)});
   }
 
   onFileChange(event){
