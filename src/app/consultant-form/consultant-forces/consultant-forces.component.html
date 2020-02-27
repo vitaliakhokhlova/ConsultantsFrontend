@@ -1,0 +1,10 @@
+<h3>Forces cognitives (drag and drop)</h3>
+<br><br>
+<div formArrayName="forces">
+  <app-mat-drag-and-drop
+    [destination]="forces"
+    [orderProperty]="['position']"
+    [nameProperty]="['parent2','description']"
+    [source]="forceItems"
+  ></app-mat-drag-and-drop>
+</div>

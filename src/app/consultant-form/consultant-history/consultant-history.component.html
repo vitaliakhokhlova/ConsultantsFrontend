@@ -1,0 +1,47 @@
+<div *ngFor="let arrayName of historyArraysNames; let i=index">
+  <h3>{{arrayName | titlecase}} </h3>
+  <div [formArrayName]="arrayName">
+    <div *ngFor="let item of parentForm.get(arrayName).controls; let j=index" [formGroupName]="j">
+
+      <app-mat-input-list
+        [properties]="historyObjectFields"
+      >
+      </app-mat-input-list>
+
+      <div *ngIf="i==1">
+        <mat-form-field class="example-full-width">
+          <input matInput formControlName="pictogram" placeholder="Fichier du pictogramme">
+          </mat-form-field>
+      </div>
+
+      <div *ngIf="isWithChildren[i]">
+        <div formArrayName="details">
+        <div
+          *ngFor="let detail of item.get('details').controls; let k=index"
+          [formGroupName]="k"
+        >
+        <p style="margin-left: 200px">
+
+          <app-mat-input-list
+            [properties]="[{property:'description', placeholder: 'Tâche'}]">
+          </app-mat-input-list>
+
+        </p>
+        </div>
+    </div>
+    <p style="margin-left: 200px">
+
+      <button mat-fab type="button" (click)="addDetail(item)">
+        <i class="fas fa-plus-circle">Ajouter une tâche</i>
+      </button>
+    </p>
+      </div>
+
+      </div>
+
+    <button mat-fab type="button" (click)="addHistoryObjectWithChildren(arrayName,isWithChildren[i])">
+      <i class="fas fa-plus-circle"></i>
+    </button>
+  </div>
+  <br><br>
+  </div>

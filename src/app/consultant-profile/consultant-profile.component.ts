@@ -30,30 +30,29 @@ export class ConsultantProfileComponent implements OnInit {
       {
         this.consultant=result;
         this.calculateAge(result);
-        this.makeCompetenceGroups(result);    
-      });  
+        this.makeCompetenceGroups(result);
+      });
   }
 
   calculateAge(consultant: Consultant){
     let ms = new Date().valueOf() - new Date(consultant.birthday).valueOf();
-    this.age =Math.floor((ms / (1000 * 3600 * 24))/365.25);;	  
+    this.age =Math.floor((ms / (1000 * 3600 * 24))/365.25);;
   }
 
-  makeCompetenceGroups(consultant: Consultant){    
-    this.groups = new Array<CompetenceGroup>(); 
+  makeCompetenceGroups(consultant: Consultant){
+    this.groups = new Array<CompetenceGroup>();
     if(consultant.competences){
       for(let competence of consultant.competences){
         let newGroup = new CompetenceGroup();
         let parent = competence.parent2.parent2;
-        console.log(parent);
         if(typeof parent === 'number')
         {
           newGroup.id=parent;
-        }   
+        }
         else{
           newGroup.id=parent.deep_id;
           newGroup.description = parent.description;
-        }  
+        }
         let existingGroup = this.groups.filter(x => x.id == newGroup.id)[0];
         if(existingGroup){
           existingGroup.items.push({description: competence.parent2.description});
@@ -65,9 +64,9 @@ export class ConsultantProfileComponent implements OnInit {
           newGroup.items = new Array<CompetenceItem>();
           newGroup.items.push({description: competence.parent2.description});
           this.groups.push(newGroup);
-        }      
-      } 
-    }   
+        }
+      }
+    }
   }
 
   goTo(route: string){

@@ -1,0 +1,59 @@
+<table class="example-full-width" cellspacing="0"><tr>
+  <td>
+  <app-mat-datepicker
+    controlName="birthday"
+    placeholder="Date de naissance"
+    local="fr"
+    [startDate]="parentForm.value.birthday ? parentForm.value.birthday :startDate"
+  ></app-mat-datepicker>
+</td>
+<td>
+<!-- <mat-form-field class="example-full-width">
+<input
+matInput
+type="text"
+placeholder="Fichier de la photo"
+formControlName="photoname"
+>
+</mat-form-field> -->
+<img [src]="parentForm.value.userpic" height="200" *ngIf="parentForm.value.userpic">
+<input type="file" accept="image/*" (change)="onFileChange($event)">
+</td>
+<td>
+  <mat-form-field class="example-full-width">
+  <input
+  matInput
+  type="text"
+  placeholder="Mobilité"
+  formControlName="mobility"
+  >
+  </mat-form-field>
+  </td></table>
+
+  <div *ngFor="let rows of simpleInputs">
+  <table class="example-full-width" cellspacing="0"><tr>
+    <td *ngFor="let column of rows">
+      <mat-form-field class="example-full-width">
+        <input
+          matInput
+          type="text"
+          [placeholder]="column.placeholder"
+          [id]="column.name"
+          [formControlName]="column.name"
+        >
+        <control-messages [key]="column.name"></control-messages>
+      </mat-form-field>
+    </td>
+    </tr></table>
+  </div>
+
+  <mat-form-field class="example-full-width">
+    <textarea
+    matInput
+    cdkTextareaAutosize
+    #autosize="cdkTextareaAutosize"
+    cdkAutosizeMinRows="1"
+    cdkAutosizeMaxRows="10"
+    placeholder="Profile"
+    formControlName="profile"></textarea>
+  </mat-form-field>

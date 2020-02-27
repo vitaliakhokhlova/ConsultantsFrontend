@@ -19,7 +19,7 @@ export class CompetenceFormComponent implements OnInit {
   idConsultant: number;
   show: boolean;
   competencesForm: FormGroup;
-  
+
   @ViewChild('newCompetenceDialogTemplate', {static: false})
   newCompetenceDialogTemplate: TemplateRef<any>;
   newCompetence: string;
@@ -32,7 +32,7 @@ export class CompetenceFormComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private dialog: MatDialog
-  ) 
+  )
   {
       this.show=false;
   }
@@ -44,7 +44,7 @@ export class CompetenceFormComponent implements OnInit {
     this.dataStorageService.getConsultant(this.idConsultant)
     .subscribe(result=>
       {
-        this.consultant=result;       
+        this.consultant=result;
         this.patchForm(result);
       });
   }
@@ -53,12 +53,12 @@ export class CompetenceFormComponent implements OnInit {
     this.competencesForm = this.fb.group({
         groups: this.fb.array([])
        });
-  }  
+  }
 
   get groups(): FormArray{
     return this.competencesForm.get('groups') as FormArray;
   }
-  
+
   newGroup(): FormGroup{
     return this.fb.group({
       id: 0,
@@ -86,7 +86,7 @@ export class CompetenceFormComponent implements OnInit {
     });
   }
 
-  patchForm(consultant: Consultant){    
+  patchForm(consultant: Consultant){
     let comp = consultant.competences;
     this.groupService.getAll().subscribe(
       groups =>
@@ -94,16 +94,17 @@ export class CompetenceFormComponent implements OnInit {
         for (let group of groups){
           let newGroup = this.newGroup();
           newGroup.patchValue(group);
-
-          let sortedItems = this.sortArrayOfObjects(group.items, 'description');
+          let sortedItems = [];
+          //sortedItems = this.sortArrayOfObjects(group.items, 'description');
+          sortedItems = group.items; //already sorted on backend
           for (let item of sortedItems)
           {
             let newItem = this.newCompetenceItem();
             newItem.patchValue(item);
             for(let consultantCompetence of comp)
-              {          
+              {
                 if(consultantCompetence.parent2.id==item.id)
-                {   
+                {
                   newItem.controls.consultantCompetence.patchValue(consultantCompetence);
                   comp = comp.filter(x => x !== consultantCompetence);
                   break;
@@ -114,7 +115,7 @@ export class CompetenceFormComponent implements OnInit {
           this.groups.push(newGroup);
         }
       },
-      err => 
+      err =>
       {
         console.log(err);
       },
@@ -147,7 +148,7 @@ export class CompetenceFormComponent implements OnInit {
             {
               item.consultantCompetence.parent = {id: this.idConsultant};
               item.consultantCompetence.parent2={
-              id: item.id, 
+              id: item.id,
               description: item.description,
               parent2: {id: group.id}};
               console.log(item.consultantCompetence);
@@ -156,19 +157,19 @@ export class CompetenceFormComponent implements OnInit {
           }
         )
       }
-    );    
+    );
     console.log(this.consultant);
     this.consultantService.update(this.consultant).subscribe(result=>{
       this.dataStorageService.consultant = result;
       if(isEnd){
       this.router.navigate([`detail/${result.id}`]);
     }
-     });    
+     });
   }
-  
-  empty(item) {    
+
+  empty(item) {
     item.controls.consultantCompetence.reset();
-    item.value.consultantCompetence = new InformaticCompetence();  
+    item.value.consultantCompetence = new InformaticCompetence();
     item.controls.consultantCompetence = this.newConsultantCompetence();
   }
 
@@ -181,7 +182,7 @@ export class CompetenceFormComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '700px',
       data: {
-        item:  this.groups.controls[i].value.description, 
+        item:  this.groups.controls[i].value.description,
         headerText: "Entrez le nom de la nouvelle compétence informatique dans le groupe ",
         template: this.newCompetenceDialogTemplate
       }
@@ -209,7 +210,7 @@ export class CompetenceFormComponent implements OnInit {
       err => console.log(err),
       () =>  this.ngOnInit()
     );
- 
+
   }
 
 }

@@ -4,13 +4,13 @@ import { ValidationService } from '../services/validation.service';
 
 @Component({
   selector: 'control-messages',
-  viewProviders: [{ 
-    provide: ControlContainer, 
+  viewProviders: [{
+    provide: ControlContainer,
     useFactory: (container: ControlContainer) => container,
     deps: [[new SkipSelf(), ControlContainer]],
   }],
   template: `
-    <div *ngIf="errorMessage !== null">  {{errorMessage}}</div>  
+    <div *ngIf="errorMessage !== null">  {{errorMessage}}</div>
   `
 })
 export class ControlMessagesComponent  {
@@ -23,13 +23,13 @@ export class ControlMessagesComponent  {
     return this.parentForm.control.get(this.key);
   }
 
-  get errorMessage() {  
+  get errorMessage() {
     for (let propertyName in this.control.errors) {
       if (
-        this.control.errors.hasOwnProperty(propertyName) &&
-        this.control.touched
+        this.control.errors.hasOwnProperty(propertyName)
       ) {
-        return ValidationService.getValidatorErrorMessage(
+        let validatorValue = this.control.errors[propertyName];
+        return validatorValue.message? validatorValue.message : ValidationService.getValidatorErrorMessage(
           propertyName,
           this.control.errors[propertyName]
         );

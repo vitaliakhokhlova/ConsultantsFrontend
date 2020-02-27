@@ -10,7 +10,7 @@ const routes: Routes = [
   { path: '', component: ConsultantSearchComponent },
   { path: 'search', component: ConsultantSearchComponent },
   { path: 'detail/:id', component: ConsultantProfileComponent },
-  { path: 'edit/:id', component: ConsultantFormComponent },
+  { path: 'edit/:id', component: ConsultantFormComponent,  runGuardsAndResolvers: 'always' },
   { path: 'competences/:id', component: ConsultantCompetencesComponent},
   { path: 'edit_competences/:id', component: CompetenceFormComponent}
 ];

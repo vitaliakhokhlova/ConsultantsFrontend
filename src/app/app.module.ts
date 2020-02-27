@@ -41,6 +41,10 @@ import { MatSelectComponent } from './reusable-components/material-design/mat-se
 import { ConfirmationDialogComponent } from './reusable-components/confirmation-dialog.component';
 import { ControlMessagesComponent } from './reusable-components/control-messages.component';
 import { ConsultantCompetencesComponent } from './consultant-competences/consultant-competences.component';
+import { ConsultantHistoryComponent } from './consultant-form/consultant-history/consultant-history.component';
+import { ConsultantLanguesComponent } from './consultant-form/consultant-langues/consultant-langues.component';
+import { ConsultantForcesComponent } from './consultant-form/consultant-forces/consultant-forces.component';
+import { ConsultantHeaderComponent } from './consultant-form/consultant-header/consultant-header.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +61,11 @@ import { ConsultantCompetencesComponent } from './consultant-competences/consult
     MatSelectComponent,
     ConfirmationDialogComponent,
     ControlMessagesComponent,
-    ConsultantCompetencesComponent
+    ConsultantCompetencesComponent,
+    ConsultantHistoryComponent,
+    ConsultantLanguesComponent,
+    ConsultantForcesComponent,
+    ConsultantHeaderComponent
   ],
   imports: [
     BrowserModule,

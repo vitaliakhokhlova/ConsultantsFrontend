@@ -16,8 +16,8 @@ export class Resource {
   }
 
 export class ResourceWithDescription extends Resource{
-    @required()
-    description?: string ="";
+    @required({message: "Obligatoire"})
+    description: string ="";
 
     // deserialize(input: any): this {
     //     Object.assign(this, input);
@@ -111,8 +111,8 @@ export class Langue extends Competence{
     @propObject()
     parent2: LangueItem = new LangueItem();
     @prop()
-    @maxLength({value: 20})
-    @required()
+    @maxLength({value: 20, message: "20 symboles max"})
+    @required({message: "Obligatoire"})
     niveau: string = "";
 }
 
