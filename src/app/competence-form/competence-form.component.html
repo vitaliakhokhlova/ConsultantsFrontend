@@ -1,5 +1,5 @@
 <div *ngIf="consultant">
-<h1>LISTE DE COMPETENCES IT DU CONSULTANT:</h1> 
+<h1>LISTE DE COMPETENCES IT DU CONSULTANT:</h1>
 <h2> {{consultant.firstname}} {{consultant.lastname}}</h2>
 
   Merci d’évaluer vos compétences !
@@ -67,28 +67,25 @@ Merci d’avance.
 Bon courage !
 <br>
 </div>
-<form 
-*ngIf="show" 
-[formGroup]="competencesForm" 
-(ngSubmit)="onSubmit(true)"
-novalidate>
-  <div formArrayName="groups">   
+
+<form *ngIf="show" [formGroup]="competencesForm" (ngSubmit)="onSubmit(true)" novalidate>
+  <div formArrayName="groups">
     <div *ngFor="let group of groups.controls; let i=index" [formGroupName]="i">
       <div>
           <h3>{{group.value.description}}</h3>
       </div>
       <div formArrayName="items">
       <table mdbTable bordered="true" cellspacing="0">
-        <thead>                 
+        <thead>
           <tr>
             <th>
               Compétence
             </th>
             <th *ngFor="let head of headerToShow" scope="col">
-              {{head.placeholder}} 
+              {{head.placeholder}}
             </th>
           </tr>
-        </thead>         
+        </thead>
         <tbody *ngFor="let item of group.controls.items.controls ; let j=index" [formGroupName]="j">
           <tr mdbTableCol>
             <th scope="row">
@@ -96,25 +93,25 @@ novalidate>
               <!-- <input formControlName="description"/> -->
             </th>
             <td *ngFor="let key of headerToShow" formGroupName="consultantCompetence">
-              <mat-form-field> 
+              <mat-form-field>
               <input matInput #competenceInput [formControlName]="key.property"  />
               </mat-form-field>
               <control-messages [key]="key.property"></control-messages>
             </td>
-            <td> 
-              <button type="button" (click)="empty(item)">Empty</button> 
-            </td>         
-          </tr>      
-        </tbody>  
-               
+            <td>
+              <button type="button" (click)="empty(item)">Empty</button>
+            </td>
+          </tr>
+        </tbody>
+
       </table>
-    </div> 
-      <button type="button" (click)="addCompetence(i)">Ajouter une compétence</button>
+    </div>
+      <button type="button" (click)="createNewCompetenceInDB(i)">Ajouter une compétence</button>
     </div>
   </div>
-  
-  <button type="submit" class="btn btn-primary btn-lg btn-block">Sauvegarder</button>   
-</form>  
+
+  <button type="submit" class="btn btn-primary btn-lg btn-block">Sauvegarder</button>
+</form>
 
 <ng-template #newCompetenceDialogTemplate let-data="newCompetence">
   <div align="center">

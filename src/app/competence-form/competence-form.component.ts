@@ -71,11 +71,11 @@ export class CompetenceFormComponent implements OnInit {
     return this.fb.group({
       id: 0,
       description: ['', Validators.required],
-      consultantCompetence: this.newConsultantCompetence()
+      consultantCompetence: this.addCompetenceToForm()
     });
   }
 
-  newConsultantCompetence(){
+  addCompetenceToForm(){
     return this.fb.group({
       id: 0,
       niveau: ['', [Validators.min(0), Validators.max(9)]],
@@ -84,6 +84,17 @@ export class CompetenceFormComponent implements OnInit {
       interet: '',
       contexte: ''
     });
+  }
+
+  createNewCompetenceInDBToConsultant(item, group_id: number){
+    item.consultantCompetence.parent = {id: this.idConsultant};
+    item.consultantCompetence.parent2=
+    {
+      id: item.id,
+      description: item.description,
+      parent2: {id: group_id}
+    };
+    this.consultant.competences.push(item.consultantCompetence);
   }
 
   patchForm(consultant: Consultant){
@@ -136,44 +147,41 @@ export class CompetenceFormComponent implements OnInit {
     return sortedArray;
   }
 
-  onSubmit(isEnd: boolean){
+  updateCompetences(){
     this.consultant.competences = [];
-    this.groups.value.forEach(
-      group =>
+    this.groups.value.forEach(group =>
       {
-        group.items.forEach(
-          item =>
+        group.items.forEach(item =>
           {
             if(item.consultantCompetence.niveau!=0)
             {
-              item.consultantCompetence.parent = {id: this.idConsultant};
-              item.consultantCompetence.parent2={
-              id: item.id,
-              description: item.description,
-              parent2: {id: group.id}};
-              console.log(item.consultantCompetence);
-              this.consultant.competences.push(item.consultantCompetence);
+              this.createNewCompetenceInDBToConsultant(item, group.id);
             }
           }
         )
       }
     );
-    console.log(this.consultant);
-    this.consultantService.update(this.consultant).subscribe(result=>{
-      this.dataStorageService.consultant = result;
-      if(isEnd){
-      this.router.navigate([`detail/${result.id}`]);
-    }
+  }
+
+  onSubmit(isEnd: boolean){
+    this.updateCompetences();
+    this.consultantService.update(this.consultant).subscribe(result=>
+      {
+        this.dataStorageService.consultant = result;
+        if(isEnd)
+        {
+          this.router.navigate([`detail/${result.id}`]);
+        }
      });
   }
 
   empty(item) {
     item.controls.consultantCompetence.reset();
     item.value.consultantCompetence = new InformaticCompetence();
-    item.controls.consultantCompetence = this.newConsultantCompetence();
+    item.controls.consultantCompetence = this.addCompetenceToForm();
   }
 
-  addCompetence(i: number){
+  createNewCompetenceInDB(i: number){
     this.onSubmit(false);
     this.openDialog(i);
   }
